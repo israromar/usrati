@@ -13,14 +13,12 @@ export default function AuthNavigatorView() {
         name="SignIn"
         component={SignInScreen}
         options={{
-          // title: 'Sign In',
           headerShown: false,
         }}
       />
       <Stack.Screen
         name="SignUp"
         options={{
-          // title: 'Sign In',
           headerShown: false,
         }}
         component={SignUpScreen}
