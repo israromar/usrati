@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,23 +8,45 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+// import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+// import {getUser} from '../../store/actions/user.actions';
 
-const SignIn = () => {
+const SignIn = ({onSignInPress}: any) => {
+  console.log('SignIn -> props', onSignInPress);
   const navigation = useNavigation();
-  const onLoginPress = () => {
-    navigation.navigate('AppStack');
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // const onLoginPress = () => {
+  //   navigation.navigate('AppStack');
+  // };
+
+  console.log(email);
+  console.log(password);
   return (
     <View style={styles.wrap}>
       <View>
         <ScrollView style={{padding: 20}}>
           <Text style={{fontSize: 27, textAlign: 'center'}}>Login</Text>
-          <TextInput style={styles.inputFields} placeholder="Username" />
-          <TextInput style={styles.inputFields} placeholder="Password" />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Username"
+            onChangeText={(val) => setEmail(val)}
+            value={email}
+          />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Password"
+            onChangeText={(val) => setPassword(val)}
+            value={password}
+          />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
-              <Button onPress={onLoginPress} title="Login" />
+              <Button
+                onPress={() => onSignInPress(email, password)}
+                title="Sign In"
+              />
             </View>
           </View>
         </ScrollView>
@@ -69,5 +92,15 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
 });
+
+// const mapStateToProps = (state: any) => ({
+//   user: state.user,
+// });
+// const mapDispatchToProps = (dispatch: any) => ({
+//   onLogin: (user: any) => {
+//     dispatch(getUser(user));
+//   },
+// });
+// const SignInContainer = connect(mapStateToProps, mapDispatchToProps)(SignIn);
 
 export default SignIn;

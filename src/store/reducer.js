@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 
 // ## Generator Reducer Imports
 import gallery from '../modules/gallery/GalleryState';
