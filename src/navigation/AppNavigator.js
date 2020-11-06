@@ -1,30 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { createStackNavigator, Header } from '@react-navigation/stack';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import StackNavigationData from './stackNavigationData';
 
 const Stack = createStackNavigator();
 
 export default function NavigatorView(props) {
-  const headerLeftComponentMenu = () => (
-    <TouchableOpacity
-      onPress={() => props.navigation.toggleDrawer()}
-      style={{
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-      }}
-    >
-      <Image
-        source={require('../../assets/images/drawer/menu.png')}
-        resizeMode="contain"
-        style={{
-          height: 20,
-        }}
-      />
-    </TouchableOpacity>
-  );
-
   return (
     <Stack.Navigator>
       {StackNavigationData.map((item, idx) => (
@@ -33,7 +15,7 @@ export default function NavigatorView(props) {
           name={item.name}
           component={item.component}
           options={{
-            headerLeft: item.headerLeft || headerLeftComponentMenu,
+            headerLeft: item?.headerLeft,
             headerBackground: () => (
               <Image
                 style={styles.headerImage}

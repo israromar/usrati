@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const Loading = () => (
+export const Loading = () => (
   <View
     style={{
       flex: 1,
@@ -25,5 +26,3 @@ const Loading = () => (
     {/* <View style={{ width: 50, height: 50, backgroundColor: 'steelblue' }} /> */}
   </View>
 );
-
-export default Loading;

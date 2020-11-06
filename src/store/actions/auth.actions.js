@@ -1,9 +1,26 @@
-import { LOGIN_SUCCESS, LOGOUT } from './types';
+import { SIGNUP_SUCCESS, LOGIN_SUCCESS, LOGOUT, RESTORE_TOKEN } from './types';
 
-export const login = (username, password) => (dispatch) => {
+export const restoreToken = ({ token }) => (dispatch) => {
+  dispatch({ type: RESTORE_TOKEN, payload: token });
+};
+
+export const signUp = ({ fullName, userName, email, password }) => (
+  dispatch,
+) => {
+  dispatch({
+    type: SIGNUP_SUCCESS,
+    payload: 'dummy-auth-token',
+    // payload: { email, password },
+  });
+
+  return Promise.resolve();
+};
+
+export const login = ({ email, password }) => (dispatch) => {
   dispatch({
     type: LOGIN_SUCCESS,
-    payload: { user: { username, password } },
+    payload: 'dummy-auth-token',
+    // payload: { email, password },
   });
 
   return Promise.resolve();

@@ -8,22 +8,16 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-// import {connect} from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-// import {getUser} from '../../store/actions/user.actions';
 
-const SignIn = ({ onSignInPress }: any) => {
-  console.log('SignIn -> props', onSignInPress);
+interface ISignIn {
+  onSignInPress(obj: { email: string; password: string }): void;
+}
+export const SignIn = ({ onSignInPress }: ISignIn) => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // const onLoginPress = () => {
-  //   navigation.navigate('AppStack');
-  // };
-
-  console.log(email);
-  console.log(password);
   return (
     <View style={styles.wrap}>
       <View>
@@ -31,20 +25,20 @@ const SignIn = ({ onSignInPress }: any) => {
           <Text style={{ fontSize: 27, textAlign: 'center' }}>Login</Text>
           <TextInput
             style={styles.inputFields}
-            placeholder="Username"
-            onChangeText={(val) => setEmail(val)}
+            placeholder="Email"
+            onChangeText={setEmail}
             value={email}
           />
           <TextInput
             style={styles.inputFields}
             placeholder="Password"
-            onChangeText={(val) => setPassword(val)}
+            onChangeText={setPassword}
             value={password}
           />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button
-                onPress={() => onSignInPress(email, password)}
+                onPress={() => onSignInPress({ email, password })}
                 title="Sign In"
               />
             </View>
@@ -92,15 +86,3 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
 });
-
-// const mapStateToProps = (state: any) => ({
-//   user: state.user,
-// });
-// const mapDispatchToProps = (dispatch: any) => ({
-//   onLogin: (user: any) => {
-//     dispatch(getUser(user));
-//   },
-// });
-// const SignInContainer = connect(mapStateToProps, mapDispatchToProps)(SignIn);
-
-export default SignIn;

@@ -1,6 +1,6 @@
 import React from 'react';
-import LoadingScreen from '../../screens/loading';
+import { Loading } from '../../screens';
 
-const Loading = () => <LoadingScreen />;
+const Loading = () => <Loading />;
 
 export default Loading;

@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,22 +9,58 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-const SignUp = () => {
+interface ISignUp {
+  onSignUpPress(obj: {
+    fullName: string;
+    userName: string;
+    email: string;
+    password: string;
+  }): void;
+}
+export const SignUp = ({ onSignUpPress }: ISignUp) => {
   const navigation = useNavigation();
-  const onLoginPress = () => {};
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <View style={styles.wrap}>
       <View>
         <ScrollView style={{ padding: 20 }}>
           <Text style={{ fontSize: 27, textAlign: 'center' }}>Sign Up</Text>
-          <TextInput style={styles.inputFields} placeholder="Full Name" />
-          <TextInput style={styles.inputFields} placeholder="Username" />
-          <TextInput style={styles.inputFields} placeholder="Email" />
-          <TextInput style={styles.inputFields} placeholder="Password" />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Full Name"
+            onChangeText={setFullName}
+            value={fullName}
+          />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Username"
+            onChangeText={setUserName}
+            value={userName}
+          />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Email"
+            onChangeText={setEmail}
+            value={email}
+          />
+          <TextInput
+            style={styles.inputFields}
+            placeholder="Password"
+            onChangeText={setPassword}
+            value={password}
+          />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
-              <Button onPress={onLoginPress} title="Sign Up" />
+              <Button
+                onPress={() =>
+                  onSignUpPress({ fullName, userName, email, password })
+                }
+                title="Sign Up"
+              />
             </View>
           </View>
         </ScrollView>
@@ -67,5 +104,3 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
 });
-
-export default SignUp;

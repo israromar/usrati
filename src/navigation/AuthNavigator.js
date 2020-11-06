@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import SignInScreen from '../containers/signIn';
-import SignUpScreen from '../containers/signUp';
+import SignIn from '../containers/signIn';
+import SignUp from '../containers/signUp';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +11,7 @@ export default function AuthNavigatorView() {
     <Stack.Navigator>
       <Stack.Screen
         name="SignIn"
-        component={SignInScreen}
+        component={SignIn}
         options={{
           headerShown: false,
         }}
@@ -21,7 +21,7 @@ export default function AuthNavigatorView() {
         options={{
           headerShown: false,
         }}
-        component={SignUpScreen}
+        component={SignUp}
       />
     </Stack.Navigator>
   );

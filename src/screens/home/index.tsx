@@ -1,17 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  View,
-  Text,
-  Button,
-  ScrollView,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Home = () => {
+export const Home = ({ onSignOutPress }: any) => {
   const navigation = useNavigation();
-  const onLoginPress = () => {};
   return (
     <View style={styles.wrap}>
       <View>
@@ -24,10 +17,7 @@ const Home = () => {
 
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
-          <Button
-            onPress={() => navigation.navigate('SignIn')}
-            title="Logout"
-          />
+          <Button onPress={onSignOutPress} title="Logout" />
         </View>
       </View>
     </View>
@@ -60,5 +50,3 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
 });
-
-export default Home;

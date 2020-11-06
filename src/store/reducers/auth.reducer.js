@@ -1,16 +1,44 @@
-import {LOGIN_SUCCESS} from '../actions/types';
+import {
+  SIGNUP_SUCCESS,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  RESTORE_TOKEN,
+} from '../actions/types';
 
-const initialState = {isLoggedIn: false, user: null};
+const initialState = { isLoading: false, isLoggedIn: false, user: null };
 
 export default function (state = initialState, action) {
-  const {type, payload} = action;
-  console.log('type, payload', type, payload);
+  const { type, payload } = action;
   switch (type) {
+    case RESTORE_TOKEN: {
+      return {
+        ...state,
+        userToken: action.payload,
+        isLoading: false,
+        isLoggedIn: false,
+      };
+    }
+    case SIGNUP_SUCCESS: {
+      return {
+        ...state,
+        userToken: payload,
+        isLoading: false,
+        isLoggedIn: true,
+      };
+    }
     case LOGIN_SUCCESS: {
       return {
         ...state,
+        userToken: payload,
+        isLoading: false,
         isLoggedIn: true,
-        user: payload.user,
+      };
+    }
+    case LOGOUT: {
+      return {
+        usertToken: null,
+        isLoading: false,
+        isLoggedIn: false,
       };
     }
     default:
