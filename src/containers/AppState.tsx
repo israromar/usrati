@@ -1,11 +1,11 @@
 // @flow
 type AppStateType = {
-  isFirstOpen: boolean,
+  isFirstOpen: boolean;
 };
 
 type ActionType = {
-  type: string,
-  payload?: any,
+  type: string;
+  payload?: any;
 };
 
 export const initialState: AppStateType = {

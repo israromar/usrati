@@ -1,17 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 // import {useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Entypo';
-import {colors, fonts} from '../../styles';
-import {Button, RadioGroup} from '../../components';
+import { colors, fonts } from '../../styles';
+import { Button, RadioGroup } from '../../components';
 
 export default function ComponentsScreen(props) {
   // const route = useRoute();
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{paddingBottom: 20}}>
+      contentContainerStyle={{ paddingBottom: 20 }}
+    >
       <View style={styles.componentsSection}>
         <Text style={styles.componentSectionHeader}>Radio Group</Text>
 
@@ -20,7 +21,7 @@ export default function ComponentsScreen(props) {
           items={['One', 'Two', 'Three']}
           selectedIndex={props.radioGroupsState[0]}
           onChange={(index) =>
-            props.setRadioGroupsState({...props.radioGroupsState, 0: index})
+            props.setRadioGroupsState({ ...props.radioGroupsState, 0: index })
           }
         />
 
@@ -38,7 +39,7 @@ export default function ComponentsScreen(props) {
           items={['One', 'Two', 'Three', 'Four']}
           selectedIndex={props.radioGroupsState[1]}
           onChange={(index) =>
-            props.setRadioGroupsState({...props.radioGroupsState, 1: index})
+            props.setRadioGroupsState({ ...props.radioGroupsState, 1: index })
           }
         />
       </View>
@@ -48,47 +49,47 @@ export default function ComponentsScreen(props) {
 
         <View style={styles.demoButtonsContainer}>
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             primary
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             secondary
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             primary
             rounded
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             secondary
             rounded
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             primary
             bordered
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             secondary
             bordered
             caption="Button"
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             primary
             bordered
             rounded
@@ -96,7 +97,7 @@ export default function ComponentsScreen(props) {
             onPress={() => {}}
           />
           <Button
-            style={[styles.demoButton, {flexBasis: '47%'}]}
+            style={[styles.demoButton, { flexBasis: '47%' }]}
             secondary
             bordered
             rounded
@@ -114,7 +115,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoButton}
             action
             bgColor="#958FDA"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="chevron-thin-right" size={20} color="white" />
             </Text>
@@ -123,7 +125,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoActionButton}
             action
             bgColor="#4F44C1"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="controller-paus" size={20} color="white" />
             </Text>
@@ -132,7 +135,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoActionButton}
             action
             bgColor="#3CD4A0"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="magnifying-glass" size={20} color="white" />
             </Text>
@@ -141,7 +145,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoActionButton}
             action
             bgColor="#EF1F78"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="paper-plane" size={20} color="white" />
             </Text>
@@ -150,7 +155,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoActionButton}
             action
             bgColor="#52B1F4"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="flash" size={20} color="white" />
             </Text>
@@ -159,7 +165,8 @@ export default function ComponentsScreen(props) {
             style={styles.demoActionButton}
             action
             bgColor="#19D4E6"
-            onPress={() => {}}>
+            onPress={() => {}}
+          >
             <Text>
               <Icon name="reply-all" size={20} color="white" />
             </Text>
@@ -205,37 +212,37 @@ export default function ComponentsScreen(props) {
         </View>
         <View style={styles.demoIconsContainer}>
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="bookmark"
             size={25}
             color="#5759CB"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="chat"
             size={25}
             color="#5759CB"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="behance"
             size={25}
             color="#5759CB"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="calendar"
             size={25}
             color="#5759CB"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="camera"
             size={25}
             color="#5759CB"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="flattr"
             size={25}
             color="#5759CB"
@@ -281,37 +288,37 @@ export default function ComponentsScreen(props) {
         </View>
         <View style={styles.demoIconsContainer}>
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="documents"
             size={25}
             color="#EF1F78"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="download"
             size={25}
             color="#EF1F78"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="dribbble"
             size={25}
             color="#EF1F78"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="drop"
             size={25}
             color="#EF1F78"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="erase"
             size={25}
             color="#EF1F78"
           />
           <Icon
-            style={[styles.demoIcon, {opacity: 0.5}]}
+            style={[styles.demoIcon, { opacity: 0.5 }]}
             name="foursquare"
             size={25}
             color="#EF1F78"
@@ -319,7 +326,7 @@ export default function ComponentsScreen(props) {
         </View>
 
         <Button
-          style={[styles.demoButton, {flex: 1}]}
+          style={[styles.demoButton, { flex: 1 }]}
           primary
           bordered
           caption="More Icons"

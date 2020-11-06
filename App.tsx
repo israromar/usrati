@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
-import {Platform} from 'react-native';
+import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 // import {Route} from './src/navigation/routes';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from './src/store';
-import {StatusBar} from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/store';
+import { StatusBar } from 'react-native';
 import AppView from './src/containers/appView';
 
 // import RNBootSplash from 'react-native-bootsplash';

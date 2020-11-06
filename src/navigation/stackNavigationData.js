@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {TouchableOpacity, Image} from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
 
 import TabNavigator from './MainTabNavigator';
 import GalleryScreen from '../containers/gallery/GalleryViewContainer';
@@ -12,7 +12,7 @@ import GalleryScreen from '../containers/gallery/GalleryViewContainer';
 // import ChartsScreen from '../charts/ChartsViewContainer';
 // import AuthScreen from '../auth/AuthViewContainer';
 
-import {colors, fonts} from '../styles';
+import { colors, fonts } from '../styles';
 
 const headerLeftComponent = (props) => (
   <TouchableOpacity
@@ -20,7 +20,8 @@ const headerLeftComponent = (props) => (
     style={{
       paddingHorizontal: 16,
       paddingVertical: 12,
-    }}>
+    }}
+  >
     <Image
       source={require('../../assets/images/icons/arrow-back.png')}
       resizeMode="contain"
@@ -38,7 +39,7 @@ const StackNavigationData = [
     name: 'Home',
     component: TabNavigator,
     headerLeft: null,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -49,7 +50,7 @@ const StackNavigationData = [
     name: 'Charts',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -60,7 +61,7 @@ const StackNavigationData = [
     name: 'Blog',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -71,7 +72,7 @@ const StackNavigationData = [
     name: 'Gallery',
     component: GalleryScreen,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -82,7 +83,7 @@ const StackNavigationData = [
     name: 'Profile',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -93,7 +94,7 @@ const StackNavigationData = [
     name: 'Article',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -104,7 +105,7 @@ const StackNavigationData = [
     name: 'Chat',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -115,7 +116,7 @@ const StackNavigationData = [
     name: 'Messages',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,
@@ -126,7 +127,7 @@ const StackNavigationData = [
     name: 'Auth',
     component: TabNavigator,
     headerLeft: headerLeftComponent,
-    headerBackground: {source: headerBackground},
+    headerBackground: { source: headerBackground },
     headerTitleStyle: {
       fontFamily: fonts.primaryRegular,
       color: colors.white,

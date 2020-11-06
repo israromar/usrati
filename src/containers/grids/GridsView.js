@@ -19,14 +19,14 @@ export default class GridsScreen extends React.Component {
       this.props.tabIndex
     ];
 
-  _openArticle = article => {
+  _openArticle = (article) => {
     this.props.navigation.navigate('Article', {
       article,
     });
   };
 
-  renderRowOne = rowData => {
-    const cellViews = rowData.item.map(item => (
+  renderRowOne = (rowData) => {
+    const cellViews = rowData.item.map((item) => (
       <TouchableOpacity key={item.id} onPress={() => this._openArticle(item)}>
         <View style={styles.itemOneContainer}>
           <View style={styles.itemOneImageContainer}>
@@ -130,7 +130,7 @@ export default class GridsScreen extends React.Component {
           />
         </View>
         <FlatList
-          keyExtractor={item =>
+          keyExtractor={(item) =>
             item.id
               ? `${this.props.tabIndex}-${item.id}`
               : `${item[0] && item[0].id}`

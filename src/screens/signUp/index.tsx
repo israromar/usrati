@@ -7,7 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -15,8 +15,8 @@ const SignUp = () => {
   return (
     <View style={styles.wrap}>
       <View>
-        <ScrollView style={{padding: 20}}>
-          <Text style={{fontSize: 27, textAlign: 'center'}}>Sign Up</Text>
+        <ScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 27, textAlign: 'center' }}>Sign Up</Text>
           <TextInput style={styles.inputFields} placeholder="Full Name" />
           <TextInput style={styles.inputFields} placeholder="Username" />
           <TextInput style={styles.inputFields} placeholder="Email" />

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -45,15 +45,15 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   return (
-    <DrawerContentScrollView {...props} style={{padding: 0}}>
+    <DrawerContentScrollView {...props} style={{ padding: 0 }}>
       <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
           source={require('../../../assets/images/drawer/user.png')}
         />
-        <View style={{paddingLeft: 15}}>
+        <View style={{ paddingLeft: 15 }}>
           <Text style={styles.userName}>John Doe</Text>
-          <Text style={{color: '#4BC1FD'}}>Johndoe@gmail.com</Text>
+          <Text style={{ color: '#4BC1FD' }}>Johndoe@gmail.com</Text>
         </View>
       </View>
       <View style={styles.divider} />
@@ -62,7 +62,7 @@ function CustomDrawerContent(props) {
           key={`drawer_item-${idx + 1}`}
           label={() => (
             <View style={styles.menuLabelFlex}>
-              <Image style={{width: 20, height: 20}} source={item.icon} />
+              <Image style={{ width: 20, height: 20 }} source={item.icon} />
               <Text style={styles.menuTitle}>{item.name}</Text>
             </View>
           )}
@@ -73,7 +73,7 @@ function CustomDrawerContent(props) {
       <DrawerItem
         label={() => (
           <View style={styles.menuLabelFlex}>
-            <Image style={{width: 20, height: 20}} source={iconBlog} />
+            <Image style={{ width: 20, height: 20 }} source={iconBlog} />
             <Text style={styles.menuTitle}>Blog</Text>
           </View>
         )}
@@ -83,7 +83,7 @@ function CustomDrawerContent(props) {
       <DrawerItem
         label={() => (
           <View style={styles.menuLabelFlex}>
-            <Image style={{width: 20, height: 20}} source={iconSettings} />
+            <Image style={{ width: 20, height: 20 }} source={iconSettings} />
             <Text style={styles.menuTitle}>Settings</Text>
           </View>
         )}
@@ -99,7 +99,8 @@ export default function App() {
       drawerStyle={{
         backgroundColor: '#3C38B1',
       }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
       <Drawer.Screen name="Homes" component={NavigatorView} />
     </Drawer.Navigator>
   );

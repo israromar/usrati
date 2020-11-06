@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
   StyleSheet,
 } from 'react-native';
 // import {connect} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 // import {getUser} from '../../store/actions/user.actions';
 
-const SignIn = ({onSignInPress}: any) => {
+const SignIn = ({ onSignInPress }: any) => {
   console.log('SignIn -> props', onSignInPress);
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -27,8 +27,8 @@ const SignIn = ({onSignInPress}: any) => {
   return (
     <View style={styles.wrap}>
       <View>
-        <ScrollView style={{padding: 20}}>
-          <Text style={{fontSize: 27, textAlign: 'center'}}>Login</Text>
+        <ScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 27, textAlign: 'center' }}>Login</Text>
           <TextInput
             style={styles.inputFields}
             placeholder="Username"

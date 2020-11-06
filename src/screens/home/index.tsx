@@ -7,7 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -15,8 +15,10 @@ const Home = () => {
   return (
     <View style={styles.wrap}>
       <View>
-        <ScrollView style={{padding: 20}}>
-          <Text style={{fontSize: 27, textAlign: 'center'}}>Welcome Home</Text>
+        <ScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 27, textAlign: 'center' }}>
+            Welcome Home
+          </Text>
         </ScrollView>
       </View>
 

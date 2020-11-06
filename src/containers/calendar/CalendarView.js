@@ -21,7 +21,7 @@ class CalendarScreen extends React.Component {
   renderItem(item) {
     const labels =
       item.labels &&
-      item.labels.map(label => (
+      item.labels.map((label) => (
         <View
           key={`label-${label}`}
           style={{

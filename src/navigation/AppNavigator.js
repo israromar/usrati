@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {createStackNavigator, Header} from '@react-navigation/stack';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { createStackNavigator, Header } from '@react-navigation/stack';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import StackNavigationData from './stackNavigationData';
 
 const Stack = createStackNavigator();
@@ -13,7 +13,8 @@ export default function NavigatorView(props) {
       style={{
         paddingHorizontal: 16,
         paddingVertical: 12,
-      }}>
+      }}
+    >
       <Image
         source={require('../../assets/images/drawer/menu.png')}
         resizeMode="contain"

@@ -1,7 +1,7 @@
-import {applyMiddleware, createStore, compose} from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
-import {createLogger} from 'redux-logger';
-import {persistStore, persistReducer} from 'redux-persist';
+import { createLogger } from 'redux-logger';
+import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CombinedReducers from './reducers';
 // Redux Debugger

@@ -11,7 +11,7 @@ import _ from 'lodash';
  * @returns {*} Placeholder views
  */
 function renderPlaceholderViews(count) {
-  return _.times(count, index => <View key={`placeholder-${index}`} />);
+  return _.times(count, (index) => <View key={`placeholder-${index}`} />);
 }
 
 // Ref needed

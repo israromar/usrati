@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import AuthStackNavigator from './AuthNavigator';
 import AppStackNavigator from './AppNavigator';
 
@@ -15,7 +15,7 @@ const AppRootStack = () => {
       setUser({});
     }, 500);
   }, []);
-
+  // debugger;
   return (
     <RootStack.Navigator>
       <RootStack.Screen

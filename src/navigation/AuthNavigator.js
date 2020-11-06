@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import SignInScreen from '../containers/signIn';
 import SignUpScreen from '../containers/signUp';
 

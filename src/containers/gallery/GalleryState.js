@@ -101,7 +101,7 @@ function clearImages() {
 }
 
 export function loadImages() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(startImagesLoading());
     // Connect to the API here
     dispatch(imagesLoaded(stubImages));
@@ -109,7 +109,7 @@ export function loadImages() {
 }
 
 export function refreshImages() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(startImagesLoading());
     dispatch(clearImages());
     dispatch(imagesLoaded(stubImages));

@@ -6,7 +6,7 @@ import { colors } from '../../styles';
 import { GridRow } from '../../components';
 
 export default function GalleryScreen(props) {
-  const _keyExtractor = item =>
+  const _keyExtractor = (item) =>
     item.id ? `${item.id}` : `${item[0] && item[0].id}`;
 
   const _renderItem = ({ item, index }) => {
@@ -20,7 +20,7 @@ export default function GalleryScreen(props) {
 
     return (
       <View key={item[0].id} style={styles.imagesRow}>
-        {item.map(singleItem => (
+        {item.map((singleItem) => (
           <View key={singleItem.id} style={styles.imageContainer}>
             <Lightbox>
               <Image style={styles.image} source={{ uri: singleItem.link }} />

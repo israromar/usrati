@@ -6,10 +6,10 @@ import {
   ImageBackground,
   Button,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {fonts, colors} from '../../styles';
-import {Text} from '../../components/StyledText';
+import { fonts, colors } from '../../styles';
+import { Text } from '../../components/StyledText';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -30,7 +30,8 @@ export default function HomeScreen() {
       <ImageBackground
         source={require('../../../assets/images/background.png')}
         style={styles.bgImage}
-        resizeMode="cover">
+        resizeMode="cover"
+      >
         <View style={styles.section}>
           <Text size={20} white>
             Home
@@ -56,7 +57,7 @@ export default function HomeScreen() {
             mobile application and saves you $20 000*
           </Text>
           <View style={styles.priceContainer}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Text white bold size={50} style={styles.price}>
                 $99
               </Text>
