@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react';
+import * as eva from '@eva-design/eva';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { restoreToken } from '../store/actions/auth.actions';
@@ -11,23 +14,26 @@ export interface IAppRooStack {
     userToken: string;
     user: { username: string; password: string };
   };
+  theme: { activeTheme: string };
 }
 
 const AppRootStack = () => {
   const dispatch = useDispatch();
-  const { isLoggedIn, user, userToken } = useSelector((state: IAppRooStack) => {
-    console.log('AppRootStack -> state', state);
-    return state?.auth;
+  const {
+    auth: { isLoggedIn, user, userToken },
+    theme: { activeTheme },
+  } = useSelector((state: IAppRooStack) => {
+    return state;
   });
 
   useEffect(() => {
+    // AsyncStorage.clear();
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let token;
 
       try {
         token = await AsyncStorage.getItem('userToken');
-        console.log('bootstrapAsync -> userToken', userToken);
       } catch (e) {
         // Restoring token failed
       }
@@ -36,15 +42,27 @@ const AppRootStack = () => {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      if (userToken !== null) dispatch(restoreToken({ token }));
+      if (token !== null) {
+        dispatch(restoreToken({ token }));
+      }
     };
     bootstrapAsync();
   }, []);
 
-  return isLoggedIn && userToken ? (
-    <AppStackNavigator />
-  ) : (
-    <AuthStackNavigator />
+  return (
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider
+        {...eva}
+        theme={activeTheme === 'Light' ? eva.light : eva.dark}
+      >
+        {isLoggedIn && userToken ? (
+          <AppStackNavigator />
+        ) : (
+          <AuthStackNavigator />
+        )}
+      </ApplicationProvider>
+    </>
   );
 };
 

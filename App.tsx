@@ -1,5 +1,9 @@
-import 'react-native-gesture-handler';
+/* eslint-disable react-native/no-inline-styles */
+// import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, Layout, Button } from '@ui-kitten/components';
+
 import { Platform } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -18,12 +22,14 @@ const App = () => {
   }, []);
   return (
     <NavigationContainer>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
-          <AppView />
-        </PersistGate>
-      </Provider>
+      <ApplicationProvider {...eva} theme={eva.dark}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
+            <AppView />
+          </PersistGate>
+        </Provider>
+      </ApplicationProvider>
     </NavigationContainer>
   );
 };

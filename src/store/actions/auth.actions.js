@@ -1,14 +1,20 @@
-import { SIGNUP_SUCCESS, LOGIN_SUCCESS, LOGOUT, RESTORE_TOKEN } from './types';
+import { userConstants } from '../../constants/user.constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const restoreToken = ({ token }) => (dispatch) => {
-  dispatch({ type: RESTORE_TOKEN, payload: token });
+  dispatch({ type: userConstants.RESTORE_TOKEN, payload: token });
 };
 
-export const signUp = ({ fullName, userName, email, password }) => (
-  dispatch,
-) => {
+export const signUp = ({
+  firstName,
+  lastName,
+  dob,
+  email,
+  password,
+  termsAccepted,
+}) => (dispatch) => {
   dispatch({
-    type: SIGNUP_SUCCESS,
+    type: userConstants.SIGNUP_SUCCESS,
     payload: 'dummy-auth-token',
     // payload: { email, password },
   });
@@ -17,8 +23,9 @@ export const signUp = ({ fullName, userName, email, password }) => (
 };
 
 export const login = ({ email, password }) => (dispatch) => {
+  AsyncStorage.setItem('userToken', 'dummy-auth-token');
   dispatch({
-    type: LOGIN_SUCCESS,
+    type: userConstants.LOGIN_SUCCESS,
     payload: 'dummy-auth-token',
     // payload: { email, password },
   });
@@ -28,6 +35,6 @@ export const login = ({ email, password }) => (dispatch) => {
 
 export const logout = () => (dispatch) => {
   dispatch({
-    type: LOGOUT,
+    type: userConstants.LOGOUT,
   });
 };

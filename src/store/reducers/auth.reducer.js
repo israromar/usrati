@@ -1,24 +1,18 @@
-import {
-  SIGNUP_SUCCESS,
-  LOGIN_SUCCESS,
-  LOGOUT,
-  RESTORE_TOKEN,
-} from '../actions/types';
-
+import { userConstants } from '../../constants/user.constants';
 const initialState = { isLoading: false, isLoggedIn: false, user: null };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case RESTORE_TOKEN: {
+    case userConstants.RESTORE_TOKEN: {
       return {
         ...state,
         userToken: action.payload,
         isLoading: false,
-        isLoggedIn: false,
+        isLoggedIn: true,
       };
     }
-    case SIGNUP_SUCCESS: {
+    case userConstants.SIGNUP_SUCCESS: {
       return {
         ...state,
         userToken: payload,
@@ -26,7 +20,7 @@ export default function (state = initialState, action) {
         isLoggedIn: true,
       };
     }
-    case LOGIN_SUCCESS: {
+    case userConstants.LOGIN_SUCCESS: {
       return {
         ...state,
         userToken: payload,
@@ -34,7 +28,7 @@ export default function (state = initialState, action) {
         isLoggedIn: true,
       };
     }
-    case LOGOUT: {
+    case userConstants.LOGOUT: {
       return {
         usertToken: null,
         isLoading: false,

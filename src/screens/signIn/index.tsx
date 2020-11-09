@@ -1,88 +1,137 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Button,
-  ScrollView,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Button, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 
+import { ImageOverlay } from './extra/image-overlay.component';
+import { EyeIcon, EyeOffIcon, PersonIcon } from './extra/icons';
+import { KeyboardAvoidingView } from './extra/3rd-party';
+// import img from '../../../assets/images/signin-image-background.jpg';
+// import img1 from '../../../assets/images/RNS_nerd.png';
+import { ISignIn as IPropsSignIn } from '../../containers/signIn';
+
 interface ISignIn {
-  onSignInPress(obj: { email: string; password: string }): void;
+  signIn(obj: IPropsSignIn): void;
 }
-export const SignIn = ({ onSignInPress }: ISignIn) => {
+
+export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
+  const onSignInButtonPress = (): void => {
+    signIn({ email, password });
+  };
+
+  const onSignUpButtonPress = (): void => {
+    navigation.navigate('SignUp');
+  };
+
+  const onForgotPasswordButtonPress = (): void => {
+    navigation.navigate('ForgotPassword');
+  };
+
+  const onPasswordIconPress = (): void => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   return (
-    <View style={styles.wrap}>
-      <View>
-        <ScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 27, textAlign: 'center' }}>Login</Text>
-          <TextInput
-            style={styles.inputFields}
+    <KeyboardAvoidingView>
+      <ImageOverlay
+        style={styles.container}
+        source={require('./assets/image-background.jpg')}
+      >
+        <View style={styles.headerContainer}>
+          <Text category="h1" status="control">
+            Hello
+          </Text>
+          <Text style={styles.signInLabel} category="s1" status="control">
+            Sign in to your account
+          </Text>
+        </View>
+        <View style={styles.formContainer}>
+          <Input
+            status="control"
             placeholder="Email"
-            onChangeText={setEmail}
+            accessoryLeft={PersonIcon}
             value={email}
+            onChangeText={setEmail}
           />
-          <TextInput
-            style={styles.inputFields}
+          <Input
+            style={styles.passwordInput}
+            status="control"
             placeholder="Password"
-            onChangeText={setPassword}
+            accessoryLeft={passwordVisible ? EyeIcon : EyeOffIcon}
             value={password}
+            secureTextEntry={!passwordVisible}
+            onChangeText={setPassword}
+            onIconPress={onPasswordIconPress}
           />
-          <View style={styles.buttonContainer}>
-            <View style={styles.button}>
-              <Button
-                onPress={() => onSignInPress({ email, password })}
-                title="Sign In"
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-
-      <View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
+          <View style={styles.forgotPasswordContainer}>
             <Button
-              onPress={() => navigation.navigate('SignUp')}
-              title="Sign Up"
-            />
+              style={styles.forgotPasswordButton}
+              appearance="ghost"
+              status="control"
+              onPress={onForgotPasswordButtonPress}
+            >
+              Forgot your password?
+            </Button>
           </View>
         </View>
-      </View>
-    </View>
+        <Button
+          style={styles.signInButton}
+          status="control"
+          size="giant"
+          onPress={onSignInButtonPress}
+        >
+          SIGN IN
+        </Button>
+        <Button
+          style={styles.signUpButton}
+          appearance="ghost"
+          status="control"
+          onPress={onSignUpButtonPress}
+        >
+          Don't have an account? Sign Up
+        </Button>
+      </ImageOverlay>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  wrap: {
+  container: {
     flex: 1,
-    flexDirection: 'column',
+  },
+  headerContainer: {
     justifyContent: 'center',
-    alignItems: 'stretch',
-    alignContent: 'space-around',
-  },
-  inputFields: {
-    borderWidth: 1 / 2,
-    borderColor: 'grey',
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-  },
-  buttonContainer: {
-    // backgroundColor: 'red',
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    minHeight: 216,
   },
-  button: {
-    // borderRadius: 0,
-    minWidth: 150,
+  formContainer: {
+    flex: 1,
+    marginTop: 32,
+    paddingHorizontal: 16,
+  },
+  signInLabel: {
+    marginTop: 16,
+  },
+  signInButton: {
+    marginHorizontal: 16,
+  },
+  signUpButton: {
+    marginVertical: 12,
+    marginHorizontal: 16,
+  },
+  forgotPasswordContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  passwordInput: {
+    marginTop: 16,
+  },
+  forgotPasswordButton: {
+    paddingHorizontal: 0,
   },
 });

@@ -3,23 +3,32 @@ import { useDispatch } from 'react-redux';
 import { signUp } from '../../store/actions/auth.actions';
 import { SignUpScreen } from '../../screens';
 
-const SignOut = () => {
+export interface ISignUp {
+  firstName: string;
+  lastName: string;
+  dob: Date;
+  email: string;
+  password: string;
+  termsAccepted: boolean;
+}
+
+const SignUp = () => {
   const dispatch = useDispatch();
+
   const handleSignUpPress = ({
-    fullName,
-    userName,
+    firstName,
+    lastName,
     email,
+    dob,
     password,
-  }: {
-    fullName: string;
-    userName: string;
-    email: string;
-    password: string;
-  }) => {
-    dispatch(signUp({ fullName, userName, email, password }));
+    termsAccepted,
+  }: ISignUp) => {
+    dispatch(
+      signUp({ firstName, lastName, dob, email, password, termsAccepted }),
+    );
   };
 
-  return <SignUpScreen onSignUpPress={handleSignUpPress} />;
+  return <SignUpScreen signUp={handleSignUpPress} />;
 };
 
-export default SignOut;
+export default SignUp;
