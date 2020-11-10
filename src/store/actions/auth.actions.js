@@ -34,6 +34,7 @@ export const login = ({ email, password }) => (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
+  AsyncStorage.removeItem('userToken');
   dispatch({
     type: userConstants.LOGOUT,
   });

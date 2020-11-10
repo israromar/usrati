@@ -1,0 +1,15 @@
+{
+    "appName": "Blitzlesen",
+    "navigation": {
+        "home": "Startseite",
+        "highScores": "Highscores",
+        "settings": "Einstellungen"
+    },
+    "home": {
+        "welcome": "Willkommen im %{appName}!",
+        "hello": "heeeeeellloo"
+    },
+    "start_practice": {
+        "practice": "asdlkjl lqjeqwheojlqk lqkwjl "
+    }
+}

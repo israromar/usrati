@@ -1,1 +1,34 @@
-{}
+{
+    "appName": "Usrati",
+    "navigation": {
+        "home": "Home",
+        "highScores": "High Score",
+        "settings": "Settings",
+        "calender": "Calender",
+        "grids": "Grids",
+        "pages": "Pages",
+        "components": "Components"
+    },
+    "signIn": {},
+    "signOut": {},
+    "home": {
+        "welcome": "Welcome",
+        "hello": "Hello",
+        "theme": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "enableDarkMode": "Enable Dark Mode",
+        "disableDarkMode": "Disable Dark Mode",
+        "enableLightMode": "Enable Light Mode",
+        "selectLanguage": "Select Language",
+        "selectedLanguage": "Selected Language",
+        "english": "English",
+        "arabic": "Arabic",
+        "deutsch": "Detuch",
+        "signIn": "Sign In",
+        "signOut": "Sing Out"
+    },
+    "start_practice": {
+        "practice": "Practice"
+    }
+}

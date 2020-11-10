@@ -1,0 +1,34 @@
+{
+  "appName": "Usrati",
+  "navigation": {
+    "home": "الصفحة الرئيسية",
+    "highScores": "أهلاً بالعالم",
+    "settings": "أهلاً بالعالم",
+    "calender": "التقويم",
+    "grids": "شبكات",
+    "pages": "الصفحات",
+    "components": "مكونات"
+  },
+  "signIn": {},
+  "signOut": {},
+  "home": {
+    "welcome": "أهلاً بالعالم",
+    "hello": "أهلاً بالعالم",
+    "theme": "موضوع",
+    "light": "ضوء",
+    "dark": "داكن",
+    "enableDarkMode": "تفعيل الوضع الداكن",
+    "disableDarkMode": "تعطيل الوضع الداكن",
+    "enableLightMode": "تمكين وضع الضوء",
+    "selectLanguage": "اختار اللغة",
+    "selectedLanguage": "اللغة المختارة",
+    "english": "الإنجليزية",
+    "arabic": "عربى",
+    "deutsch": "الألمانية",
+    "signIn": "تسجيل الدخول",
+    "signOut": "خروج"
+  },
+  "start_practice": {
+    "practice": "ممارسة"
+  }
+}

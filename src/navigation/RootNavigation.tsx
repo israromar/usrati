@@ -4,6 +4,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { restoreToken } from '../store/actions/auth.actions';
 import AuthStackNavigator from './AuthNavigator';
 import AppStackNavigator from './AppNavigator';
@@ -15,6 +16,7 @@ export interface IAppRooStack {
     user: { username: string; password: string };
   };
   theme: { activeTheme: string };
+  language: { activeLanguage: string };
 }
 
 const AppRootStack = () => {
@@ -54,7 +56,7 @@ const AppRootStack = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         {...eva}
-        theme={activeTheme === 'Light' ? eva.light : eva.dark}
+        theme={activeTheme === 'light' ? eva.light : eva.dark}
       >
         {isLoggedIn && userToken ? (
           <AppStackNavigator />

@@ -7,6 +7,7 @@ import StackNavigationData from './stackNavigationData';
 const Stack = createStackNavigator();
 
 export default function NavigatorView(props) {
+  console.log('NavigatorView -> props', props);
   return (
     <Stack.Navigator>
       {StackNavigationData.map((item, idx) => (
