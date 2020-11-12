@@ -53,7 +53,10 @@ export const Home = ({
         <Text category="h6">{i18n.t('home.selectLanguage')}</Text>
         <RadioGroup selectedIndex={selectedIndex} onChange={handleLocaleChange}>
           {languages.map((language) => (
-            <Radio status={language.isActive ? 'success' : 'info'}>
+            <Radio
+              key={language}
+              status={language.isActive ? 'success' : 'info'}
+            >
               {language.name}
             </Radio>
           ))}
@@ -61,7 +64,7 @@ export const Home = ({
       </Layout>
 
       <Layout style={styles.layout} level="3" />
-      <Layout style={styles.layout} level="2" />
+
       <Layout style={styles.layout} level="1">
         <Button
           style={styles.button}

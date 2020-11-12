@@ -1,67 +1,30 @@
-/* eslint-disable react-native/no-inline-styles */
-import * as React from 'react';
-import { Text, View, Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { colors } from '../styles';
-
+import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
 import tabNavigationData from './tabNavigationData';
 
-const Tab = createBottomTabNavigator();
+const { Navigator, Screen } = createBottomTabNavigator();
 
-export default function BottomTabs() {
+const BottomTabBar = ({ navigation, state }) => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{ style: { height: Platform.OS === 'ios' ? 90 : 50 } }}
+    <BottomNavigation
+      selectedIndex={state.index}
+      onSelect={(index) => navigation.navigate(state.routeNames[index])}
+      appearance="noIndicator"
     >
-      {tabNavigationData.map((item, idx) => (
-        <Tab.Screen
-          key={`tab_item${idx + 1}`}
-          name={item.name}
-          component={item.component}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={styles.tabBarItemContainer}>
-                <Image
-                  resizeMode="contain"
-                  source={item.icon}
-                  style={[
-                    styles.tabBarIcon,
-                    focused && styles.tabBarIconFocused,
-                  ]}
-                />
-              </View>
-            ),
-            tabBarLabel: ({ focused }) => (
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: focused ? colors.primary : colors.gray,
-                }}
-              >
-                {item.name}
-              </Text>
-            ),
-          }}
-        />
-      ))}
-    </Tab.Navigator>
+      {tabNavigationData.map(({ name, icon }) => {
+        return <BottomNavigationTab key={name} title={name} icon={icon} />;
+      })}
+    </BottomNavigation>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  tabBarItemContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.white,
-    paddingHorizontal: 10,
-    bottom: Platform.OS === 'ios' ? -5 : 0,
-  },
-  tabBarIcon: {
-    width: 23,
-    height: 23,
-  },
-  tabBarIconFocused: {
-    tintColor: colors.primary,
-  },
-});
+const TabNavigator = () => (
+  <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    {tabNavigationData.map(({ name, component }) => (
+      <Screen key={name} name={name} component={component} />
+    ))}
+  </Navigator>
+);
+
+export default TabNavigator;

@@ -306,6 +306,8 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
+  - ReactNativeLocalization (2.1.6):
+    - React
   - ReactNativeUiLib (3.0.4):
     - React
   - RNCAsyncStorage (1.13.2):
@@ -384,6 +386,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeLocalization (from `../node_modules/react-native-localization`)
   - ReactNativeUiLib (from `../node_modules/react-native-ui-lib/lib`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
@@ -473,6 +476,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeLocalization:
+    :path: "../node_modules/react-native-localization"
   ReactNativeUiLib:
     :path: "../node_modules/react-native-ui-lib/lib"
   RNCAsyncStorage:
@@ -540,6 +545,7 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
+  ReactNativeLocalization: dbb269b27d8a84bb22b9c2cdec38ba780b51dd72
   ReactNativeUiLib: cde7263a7d308b60161cd286f95c9433e79f2f7d
   RNCAsyncStorage: 05bae7ecfab1cbd5441993f1ca098f7c3b3f8d0e
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f

@@ -31,21 +31,23 @@ const HomeContainer = () => {
     {
       locale: 'en',
       name: 'English',
+      englishName: 'English',
       isActive: false,
     },
     {
       locale: 'ar',
-      name: 'Arabic',
+      name: 'عربى',
       englishName: 'Arabic',
       isActive: false,
     },
     {
       locale: 'de',
-      name: 'French',
+      name: 'Français',
       englishName: 'French',
       isActive: false,
     },
   ]);
+
   useEffect(() => {
     languages.map((lan, i) => {
       if (lan.locale === activeLanguage) {
@@ -76,7 +78,7 @@ const HomeContainer = () => {
 
   const handleLocaleChange = (index: number) => {
     selectedIndex !== index &&
-      Alert.alert('Change language?', null, [
+      Alert.alert(`Change language to ${languages[index].englishName}?`, null, [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Change',

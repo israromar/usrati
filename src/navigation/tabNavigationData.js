@@ -1,40 +1,43 @@
-import HomeScreen from '../containers/home';
-import CalendarScreen from '../containers/calendar/CalendarViewContainer';
-import GridsScreen from '../containers/grids/GridsViewContainer';
-import PagesScreen from '../containers/pages/PagesViewContainer';
-import ComponentsScreen from '../containers/components/ComponentsViewContainer';
+import React from 'react';
+import { Icon } from '@ui-kitten/components';
 
-const iconHome = require('../../assets/images/tabbar/home.png');
-const iconCalendar = require('../../assets/images/tabbar/calendar.png');
-const iconGrids = require('../../assets/images/tabbar/grids.png');
-const iconPages = require('../../assets/images/tabbar/pages.png');
-const iconComponents = require('../../assets/images/tabbar/components.png');
+import HomeScreen from '../containers/home';
+import CalendarScreen from '../containers/calender';
+import GridsScreen from '../containers/grid';
+import PagesScreen from '../containers/page';
+
+const HomeIcon = (props) => {
+  return <Icon {...props} appearance="ghost" name="home-outline" />;
+};
+
+const CalenderIcon = (props) => <Icon {...props} name="calendar-outline" />;
+const GridIcon = (props) => <Icon {...props} name="grid-outline" />;
+const PagesIcon = (props) => <Icon {...props} name="list-outline" />;
 
 const tabNavigationData = [
   {
+    id: 1,
     name: 'Home',
     component: HomeScreen,
-    icon: iconHome,
+    icon: HomeIcon,
   },
   {
+    id: 2,
     name: 'Calendar',
     component: CalendarScreen,
-    icon: iconCalendar,
+    icon: CalenderIcon,
   },
   {
+    id: 3,
     name: 'Grids',
     component: GridsScreen,
-    icon: iconGrids,
+    icon: GridIcon,
   },
   {
+    id: 4,
     name: 'Pages',
     component: PagesScreen,
-    icon: iconPages,
-  },
-  {
-    name: 'Components',
-    component: ComponentsScreen,
-    icon: iconComponents,
+    icon: PagesIcon,
   },
 ];
 

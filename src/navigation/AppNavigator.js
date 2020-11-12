@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { createStackNavigator, Header } from '@react-navigation/stack';
 import { Image, StyleSheet } from 'react-native';
@@ -7,7 +6,6 @@ import StackNavigationData from './stackNavigationData';
 const Stack = createStackNavigator();
 
 export default function NavigatorView(props) {
-  console.log('NavigatorView -> props', props);
   return (
     <Stack.Navigator>
       {StackNavigationData.map((item, idx) => (

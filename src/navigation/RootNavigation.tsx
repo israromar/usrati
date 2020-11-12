@@ -22,7 +22,7 @@ export interface IAppRooStack {
 const AppRootStack = () => {
   const dispatch = useDispatch();
   const {
-    auth: { isLoggedIn, user, userToken },
+    auth: { isLoggedIn, userToken },
     theme: { activeTheme },
   } = useSelector((state: IAppRooStack) => {
     return state;

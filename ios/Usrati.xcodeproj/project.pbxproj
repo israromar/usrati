@@ -39,6 +39,13 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = Usrati;
 		};
+		046896AC255D8692003FFFC7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 046896A8255D8692003FFFC7 /* ReactNativeLocalization.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7B5D9D0A1B6AD0EA00CF3A83;
+			remoteInfo = ReactNativeLocalization;
+		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -53,6 +60,7 @@
 		00E356EE1AD99517003FC87E /* UsratiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UsratiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UsratiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UsratiTests.m; sourceTree = "<group>"; };
+		046896A8255D8692003FFFC7 /* ReactNativeLocalization.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeLocalization.xcodeproj; path = "../node_modules/react-native-localization/ios/ReactNativeLocalization.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Usrati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Usrati.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Usrati/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Usrati/AppDelegate.m; sourceTree = "<group>"; };
@@ -140,6 +148,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		046896A9255D8692003FFFC7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				046896AD255D8692003FFFC7 /* libReactNativeLocalization.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* Usrati */ = {
 			isa = PBXGroup;
 			children = (
@@ -170,6 +186,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				046896A8255D8692003FFFC7 /* ReactNativeLocalization.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -353,6 +370,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 046896A9255D8692003FFFC7 /* Products */;
+					ProjectRef = 046896A8255D8692003FFFC7 /* ReactNativeLocalization.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* Usrati */,
@@ -362,6 +385,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		046896AD255D8692003FFFC7 /* libReactNativeLocalization.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeLocalization.a;
+			remoteRef = 046896AC255D8692003FFFC7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
