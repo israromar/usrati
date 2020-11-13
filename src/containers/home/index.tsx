@@ -7,6 +7,7 @@ import { changeLanguage } from '../../store/actions/language.actions';
 import { HomeScreen } from '../../screens';
 import { IAppRooStack } from '../../navigation/RootNavigation';
 import i18n from '../../translations';
+import { Header } from './header';
 
 const HomeContainer = () => {
   const {
@@ -93,15 +94,18 @@ const HomeContainer = () => {
   };
 
   return (
-    <HomeScreen
-      onSignOutPress={handleSignOutPress}
-      onThemeToggle={handleThemeToogle}
-      checked={checked}
-      activeTheme={activeTheme}
-      handleLocaleChange={handleLocaleChange}
-      languages={languages}
-      selectedIndex={selectedIndex}
-    />
+    <>
+      <Header />
+      <HomeScreen
+        onSignOutPress={handleSignOutPress}
+        onThemeToggle={handleThemeToogle}
+        checked={checked}
+        activeTheme={activeTheme}
+        handleLocaleChange={handleLocaleChange}
+        languages={languages}
+        selectedIndex={selectedIndex}
+      />
+    </>
   );
 };
 

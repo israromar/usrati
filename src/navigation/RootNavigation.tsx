@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import * as eva from '@eva-design/eva';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,7 +21,6 @@ const AppRootStack = () => {
   const dispatch = useDispatch();
   const {
     auth: { isLoggedIn, userToken },
-    theme: { activeTheme },
   } = useSelector((state: IAppRooStack) => {
     return state;
   });
@@ -52,19 +49,9 @@ const AppRootStack = () => {
   }, []);
 
   return (
-    <>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider
-        {...eva}
-        theme={activeTheme === 'light' ? eva.light : eva.dark}
-      >
-        {isLoggedIn && userToken ? (
-          <AppStackNavigator />
-        ) : (
-          <AuthStackNavigator />
-        )}
-      </ApplicationProvider>
-    </>
+    <NavigationContainer>
+      {isLoggedIn && userToken ? <AppStackNavigator /> : <AuthStackNavigator />}
+    </NavigationContainer>
   );
 };
 
