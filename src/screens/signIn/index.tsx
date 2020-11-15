@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Input, Text } from '@ui-kitten/components';
+import { Button, Spinner, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 
 import { ImageOverlay } from './extra/image-overlay.component';
 import { EyeIcon, EyeOffIcon, PersonIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-// import img from '../../../assets/images/signin-image-background.jpg';
-// import img1 from '../../../assets/images/RNS_nerd.png';
 import { ISignIn as IPropsSignIn } from '../../containers/signIn';
 
 interface ISignIn {
@@ -19,6 +17,12 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
+  const LoadingIndicator = (props: any) => (
+    <View style={[props.style, styles.indicator]}>
+      <Spinner size="medium" />
+    </View>
+  );
 
   const onSignInButtonPress = (): void => {
     signIn({ email, password });
@@ -84,6 +88,7 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
           status="control"
           size="giant"
           onPress={onSignInButtonPress}
+          accessoryLeft={LoadingIndicator}
         >
           SIGN IN
         </Button>
@@ -133,5 +138,9 @@ const styles = StyleSheet.create({
   },
   forgotPasswordButton: {
     paddingHorizontal: 0,
+  },
+  indicator: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

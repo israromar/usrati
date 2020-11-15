@@ -152,11 +152,12 @@ export const SignUp = ({ signUp }: ISignUp): React.ReactElement => {
           style={styles.termsCheckBox}
           textStyle={styles.termsCheckBoxText}
           checked={termsAccepted}
-          text={
+          onChange={(checked: boolean) => setTermsAccepted(checked)}
+        >
+          {
             'By creating an account, I agree to the Ewa Terms of\nUse and Privacy Policy'
           }
-          onChange={(checked: boolean) => setTermsAccepted(checked)}
-        />
+        </CheckBox>
       </View>
       <Button
         style={styles.signUpButton}
@@ -239,10 +240,11 @@ const themedStyles = StyleService.create({
   },
   termsCheckBox: {
     marginTop: 20,
+    // backgroundColor: 'red'
   },
   termsCheckBoxText: {
     fontSize: 11,
     lineHeight: 14,
-    color: 'text-hint-color',
+    color: 'red',
   },
 });
