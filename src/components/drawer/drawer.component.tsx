@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageProps, ImageStyle, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   Avatar,
   Layout,
@@ -7,50 +7,30 @@ import {
   Divider,
   Drawer,
   DrawerItem,
-  Icon,
-  IconElement,
   Button,
 } from '@ui-kitten/components';
 
-import i18n from '../translations';
-
-const PersonIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="person-outline" />
-);
-const ListsIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="list-outline" />
-);
-const TopicsIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="message-circle-outline" />
-);
-const BookmarksIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="bookmark-outline" />
-);
-const MomentsIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="flash-outline" />
-);
-const ForwardIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="arrow-ios-forward" />
-);
-const ChevronDownIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="arrow-ios-downward-outline" />
-);
-const ChevronUpIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="arrow-ios-upward-outline" />
-);
-const BulbIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="bulb-outline" />
-);
-const QrIcon = (props: any): React.ReactElement<ImageProps> => (
-  <Icon {...props} name="grid-outline" />
-);
+import ToggleButton, { IToggleButton } from '../toggle-button.component';
+import i18n from '../../translations';
+import {
+  PersonIcon,
+  ListsIcon,
+  BookmarksIcon,
+  TopicsIcon,
+  MomentsIcon,
+  ForwardIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  BulbIcon,
+  QrIcon,
+} from './icons';
 
 const Header = () => (
   <Layout style={styles.headerWrap}>
     <Layout>
       <Avatar
         size="giant"
-        source={require('../../assets/images/drawer/user.png')}
+        source={require('../../../assets/images/drawer/user.png')}
       />
       <Layout style={styles.nameWrap}>
         <Layout>
@@ -92,7 +72,21 @@ const Footer = () => (
   </>
 );
 
-const DrawerContent = ({ navigation, state }) => {
+const toggle = () => {
+  return (
+    <ToggleButton
+      title={i18n.t('home.theme')}
+      activeTheme={true ? i18n.t('home.light') : i18n.t('home.dark')}
+      // onToggle={onThemeToggle}
+      checked={true}
+      label={
+        false ? i18n.t('home.enableDarkMode') : i18n.t('home.disableDarkMode')
+      }
+    />
+  );
+};
+
+const DrawerContent = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
 
   return (
@@ -130,6 +124,7 @@ const DrawerContent = ({ navigation, state }) => {
         accessoryRight={ForwardIcon}
       />
       <Divider />
+      <DrawerItem accessoryRight={toggle} />
       <DrawerItem
         style={styles.itemOne}
         title={i18n.t('drawer.settingsAndPrivacy')}

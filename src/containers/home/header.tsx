@@ -13,6 +13,9 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerActions } from '@react-navigation/native';
 
+interface IHeader {
+  onSignOutPress: () => void;
+}
 const BackIcon = (props: ImageProps) => <Icon {...props} name="menu" />;
 
 const EditIcon = (props: ImageProps) => <Icon {...props} name="edit" />;
@@ -25,7 +28,7 @@ const InfoIcon = (props: ImageProps) => <Icon {...props} name="info" />;
 
 const LogoutIcon = (props: ImageProps) => <Icon {...props} name="log-out" />;
 
-export const Header = () => {
+export const Header = ({ onSignOutPress }: IHeader) => {
   const { dispatch } = useNavigation();
   const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -46,7 +49,11 @@ export const Header = () => {
         onBackdropPress={toggleMenu}
       >
         <MenuItem accessoryLeft={InfoIcon} title="About" />
-        <MenuItem accessoryLeft={LogoutIcon} title="Logout" />
+        <MenuItem
+          accessoryLeft={LogoutIcon}
+          title="Logout"
+          onPress={onSignOutPress}
+        />
       </OverflowMenu>
     </React.Fragment>
   );
@@ -78,6 +85,8 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
   container: {
+    borderWidth: 0.25,
+    borderColor: '#808080',
     // marginTop: 45,
     // minHeight: 70,
     // backgroundColor: 'red',

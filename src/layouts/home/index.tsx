@@ -18,9 +18,9 @@ import ToggleButton, {
 const SignoutIcon = (props: any) => <Icon {...props} name="log-out-outline" />;
 
 interface IHome {
-  onThemeToggle: () => {};
-  onSignOutPress: () => {};
-  handleLocaleChange: () => {};
+  onThemeToggle: () => void;
+  onSignOutPress: () => void;
+  handleLocaleChange: () => void;
   selectedIndex: number;
   languages: [];
 }

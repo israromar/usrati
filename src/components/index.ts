@@ -5,7 +5,7 @@ import GridRow from './grid-row.component';
 import TextInput from './text-input.component';
 import SegmentedControl from './segmented-control.component';
 import ToggleButton from './toggle-button.component';
-import DrawerContent from './drawer.component';
+import DrawerContent from './drawer/drawer.component';
 export {
   // ## Generator Components Exports
   Button,

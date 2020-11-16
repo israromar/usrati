@@ -34,6 +34,7 @@ const TabNavigator = () => {
 const styles = StyleSheet.create({
   bottomTabs: {
     borderWidth: 0.25,
+    borderColor: '#808080',
   },
 });
 

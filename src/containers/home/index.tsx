@@ -12,20 +12,18 @@ import { Header } from './header';
 const HomeContainer = () => {
   const {
     language: { activeLanguage },
+    theme: { activeTheme },
   } = useSelector((state: IAppRooStack) => state);
+
   const dispatch = useDispatch();
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(activeTheme === 'dark' ? true : false);
 
   useEffect(() => {
     i18n.locale = activeLanguage;
     dispatch(toggleTheme({ theme: activeTheme }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLanguage]);
 
-  const {
-    theme: { activeTheme },
-  } = useSelector((state) => {
-    return state;
-  });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [languages, setLanguages] = useState([
@@ -59,6 +57,7 @@ const HomeContainer = () => {
         setLanguages(updated);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleThemeToogle = (isChecked: boolean) => {
@@ -95,7 +94,7 @@ const HomeContainer = () => {
 
   return (
     <>
-      <Header />
+      <Header onSignOutPress={handleSignOutPress} />
       <HomeScreen
         onSignOutPress={handleSignOutPress}
         onThemeToggle={handleThemeToogle}
