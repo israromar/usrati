@@ -28,7 +28,15 @@
     "signIn": "تسجيل الدخول",
     "signOut": "خروج"
   },
-  "start_practice": {
-    "practice": "ممارسة"
+  "drawer": {
+    "following": "التالية",
+    "followers": "متابعون",
+    "profile": "الملف الشخصي",
+    "lists": "سجل",
+    "topics": "المواضيع",
+    "bookmarks": "إشارات مرجعية",
+    "moments": "لحظات",
+    "settingsAndPrivacy": "الإعدادات والخصوصية",
+    "helpCenter": "مركز المساعدة"
   }
 }

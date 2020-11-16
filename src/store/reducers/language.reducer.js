@@ -6,7 +6,6 @@ let initialState = {
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log('languageConstants type, payload', type, payload);
   switch (type) {
     case languageConstants.CHANGE_LANGUAGE: {
       return {

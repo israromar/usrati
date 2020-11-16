@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/actions/auth.actions';
 import { toggleTheme } from '../../store/actions/theme.actions';
 import { changeLanguage } from '../../store/actions/language.actions';
-import { HomeScreen } from '../../screens';
-import { IAppRooStack } from '../../navigation/RootNavigation';
+import { HomeScreen } from '../../layouts';
+import { IAppRooStack } from '../../navigation/root-navigation';
 import i18n from '../../translations';
 import { Header } from './header';
 

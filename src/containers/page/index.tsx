@@ -1,5 +1,5 @@
 import React from 'react';
-import { PagesScreen } from '../../screens';
+import { PagesScreen } from '../../layouts';
 
 export default function Pages() {
   return <PagesScreen />;

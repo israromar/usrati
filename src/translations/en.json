@@ -28,7 +28,15 @@
         "signIn": "Sign In",
         "signOut": "Sing Out"
     },
-    "start_practice": {
-        "practice": "Practice"
+    "drawer": {
+        "following": "Following",
+        "followers": "Followers",
+        "profile": "Profile",
+        "lists": "Lists",
+        "topics": "Topics",
+        "bookmarks": "Bookmarks",
+        "moments": "Moments",
+        "settingsAndPrivacy": "Settings and privacy",
+        "helpCenter": "Help Center"
     }
 }

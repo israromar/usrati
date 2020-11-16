@@ -4,14 +4,13 @@ import { createLogger } from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CombinedReducers from './reducers';
+
 // Redux Debugger
 let composeEnhancer = compose;
 if (__DEV__) {
   composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 }
-// const CombinedReducers = {
-//   appData: Reducers,
-// };
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,

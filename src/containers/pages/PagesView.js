@@ -26,6 +26,7 @@ export default function PagesScreen(props) {
           />
           <Text style={styles.itemText}>Charts</Text>
         </TouchableOpacity>
+        z
         <TouchableOpacity
           onPress={() => props.navigation.navigate('Gallery')}
           style={styles.item}
