@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/actions/auth.actions';
 import { toggleTheme } from '../../store/actions/theme.actions';
 import { changeLanguage } from '../../store/actions/language.actions';
-import { HomeScreen } from '../../layouts';
+import { SettingsScreen } from '../../layouts';
 import { IAppRooStack } from '../../navigation/root-navigation';
-import i18n from '../../translations';
-import { Header } from './header';
 
-export const HomeContainer = () => {
+export const SettingsContainer = () => {
   const {
     language: { activeLanguage },
     theme: { activeTheme },
@@ -17,15 +14,6 @@ export const HomeContainer = () => {
 
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(activeTheme === 'dark' ? true : false);
-
-  useEffect(() => {
-    i18n.locale = activeLanguage;
-    dispatch(toggleTheme({ theme: activeTheme }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeLanguage]);
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   const [languages, setLanguages] = useState([
     {
       locale: 'en',
@@ -46,19 +34,7 @@ export const HomeContainer = () => {
       isActive: false,
     },
   ]);
-
-  useEffect(() => {
-    languages.map((lan, i) => {
-      if (lan.locale === activeLanguage) {
-        setSelectedIndex(i);
-        let updated = languages;
-        updated[i].isActive = true;
-        updated[selectedIndex].isActive = false;
-        setLanguages(updated);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleThemeToogle = (isChecked: boolean) => {
     setChecked(isChecked);
@@ -88,22 +64,14 @@ export const HomeContainer = () => {
       ]);
   };
 
-  const handleSignOutPress = () => {
-    dispatch(logout());
-  };
-
   return (
-    <>
-      <Header onSignOutPress={handleSignOutPress} />
-      <HomeScreen
-        onSignOutPress={handleSignOutPress}
-        onThemeToggle={handleThemeToogle}
-        checked={checked}
-        activeTheme={activeTheme}
-        handleLocaleChange={handleLocaleChange}
-        languages={languages}
-        selectedIndex={selectedIndex}
-      />
-    </>
+    <SettingsScreen
+      activeTheme={activeTheme}
+      onThemeToggle={handleThemeToogle}
+      checked={checked}
+      languages={languages}
+      selectedIndex={selectedIndex}
+      onLocaleChange={handleLocaleChange}
+    />
   );
 };

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { userConstants } from '../../constants/user.constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,13 +13,23 @@ export const signUp = ({
   email,
   password,
   termsAccepted,
-}) => (dispatch) => {
+}) => (dispatch, getState) => {
+  console.log('getState', getState());
+  // Initial action dispatched
+  dispatch({ type: userConstants.SIGNUP_REQUEST });
   dispatch({
     type: userConstants.SIGNUP_SUCCESS,
     payload: 'dummy-auth-token',
-    // payload: { email, password },
   });
 
+  // axios.post('/api/auth/regitser').then(
+  //   (user) =>
+  //     dispatch({
+  //       type: userConstants.SIGNUP_SUCCESS,
+  //       payload: 'dummy-auth-token',
+  //     }),
+  //   (err) => dispatch({ type: userConstants.SIGNUP_FAIL, err }),
+  // );
   return Promise.resolve();
 };
 

@@ -21,7 +21,6 @@ const AppRootStack = () => {
   const dispatch = useDispatch();
   const {
     auth: { isLoggedIn, userToken },
-    theme: { activeTheme },
   } = useSelector((state: IAppRooStack) => {
     return state;
   });
@@ -51,11 +50,7 @@ const AppRootStack = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn && userToken ? (
-        <AppStackNavigator {...activeTheme} />
-      ) : (
-        <AuthStackNavigator />
-      )}
+      {isLoggedIn && userToken ? <AppStackNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>
   );
 };

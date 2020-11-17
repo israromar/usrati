@@ -1,6 +1,6 @@
 import React from 'react';
 import { GridsScreen } from '../../layouts';
 
-export default function Grids() {
+export const GridsContainer = () => {
   return <GridsScreen />;
-}
+};

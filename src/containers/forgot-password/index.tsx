@@ -10,7 +10,7 @@ export interface IForgotPassword {
   email: string;
 }
 
-const SignUp = () => {
+export const ForgotContainer = () => {
   // const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const handleSubmit = ({ email }: IForgotPassword) => {
@@ -21,5 +21,3 @@ const SignUp = () => {
 
   return <ForgotPasswordScreen onSubmit={handleSubmit} />;
 };
-
-export default SignUp;

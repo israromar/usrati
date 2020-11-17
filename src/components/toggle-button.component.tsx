@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Layout, Toggle, Text } from '@ui-kitten/components';
+import { Toggle, Text } from '@ui-kitten/components';
 
 export interface IToggleButton {
   title: string;
   label: string;
   activeTheme: string;
-  onToggle: () => {};
+  onToggle: () => void;
   checked: boolean;
 }
 
@@ -18,13 +18,11 @@ const ToggleButton = ({
   checked,
 }: IToggleButton) => {
   return (
-    <Layout style={styles.layout}>
+    <React.Fragment>
       <Text style={styles.text}>{`${title}: ${activeTheme}`}</Text>
-      <Layout style={styles.innerLayout}>
-        <Text>{label}</Text>
-        <Toggle checked={checked} onChange={onToggle} style={styles.toggle} />
-      </Layout>
-    </Layout>
+      <Text>{label}</Text>
+      <Toggle checked={checked} onChange={onToggle} style={styles.toggle} />
+    </React.Fragment>
   );
 };
 
