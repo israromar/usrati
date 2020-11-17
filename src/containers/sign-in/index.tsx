@@ -8,7 +8,7 @@ export interface ISignIn {
   password: string;
 }
 
-const SignIn = () => {
+export const SignInContainer = () => {
   const dispatch = useDispatch();
 
   const handleSignInPress = ({ email, password }: ISignIn) => {
@@ -17,5 +17,3 @@ const SignIn = () => {
 
   return <SignInScreen signIn={handleSignInPress} />;
 };
-
-export default SignIn;

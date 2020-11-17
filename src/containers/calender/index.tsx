@@ -1,6 +1,6 @@
 import React from 'react';
 import { CalendarScreen } from '../../layouts';
 
-export default function Calender() {
+export const CalendarContainer = () => {
   return <CalendarScreen />;
-}
+};

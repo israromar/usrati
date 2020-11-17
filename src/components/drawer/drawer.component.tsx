@@ -10,7 +10,6 @@ import {
   Button,
 } from '@ui-kitten/components';
 
-import ToggleButton, { IToggleButton } from '../toggle-button.component';
 import i18n from '../../translations';
 import {
   PersonIcon,
@@ -72,21 +71,7 @@ const Footer = () => (
   </>
 );
 
-const toggle = () => {
-  return (
-    <ToggleButton
-      title={i18n.t('home.theme')}
-      activeTheme={true ? i18n.t('home.light') : i18n.t('home.dark')}
-      // onToggle={onThemeToggle}
-      checked={true}
-      label={
-        false ? i18n.t('home.enableDarkMode') : i18n.t('home.disableDarkMode')
-      }
-    />
-  );
-};
-
-const DrawerContent = () => {
+const DrawerContent = ({ navigation, state }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
 
   return (
@@ -124,10 +109,10 @@ const DrawerContent = () => {
         accessoryRight={ForwardIcon}
       />
       <Divider />
-      <DrawerItem accessoryRight={toggle} />
       <DrawerItem
         style={styles.itemOne}
         title={i18n.t('drawer.settingsAndPrivacy')}
+        onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
     </Drawer>

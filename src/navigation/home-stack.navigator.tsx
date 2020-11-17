@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
 import tabNavigationData from './tab-navigation-data';
-import { SettingsStackNavigator } from './settings-stack.navigator';
-import { AppRoute } from './app-routes';
+import { SettingsScreen } from '../containers';
+
 const { Navigator, Screen } = createBottomTabNavigator();
 
 const BottomTabBar = ({ navigation: { navigate }, state }: any) => {
@@ -28,7 +28,7 @@ const TabNavigator = () => {
       {tabNavigationData?.map(({ name, component }) => (
         <Screen key={name} name={name} component={component} />
       ))}
-      <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
+      <Screen name={'Settings'} component={SettingsScreen} />
     </Navigator>
   );
 };

@@ -12,7 +12,7 @@ export interface ISignUp {
   termsAccepted: boolean;
 }
 
-const SignUp = () => {
+export const SignUpContainer = () => {
   const dispatch = useDispatch();
 
   const handleSignUpPress = ({
@@ -30,5 +30,3 @@ const SignUp = () => {
 
   return <SignUpScreen signUp={handleSignUpPress} />;
 };
-
-export default SignUp;
