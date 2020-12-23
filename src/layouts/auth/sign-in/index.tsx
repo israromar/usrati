@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Button, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 
 import { AppRoute } from '../../../navigation/app-routes';
-import { ImageOverlay } from './extra/image-overlay.component';
+// import { ImageOverlay } from './extra/image-overlay.component';
+import { Header } from '../../../components/header/header.component';
 import { EyeIcon, EyeOffIcon, PersonIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
+import { InputField } from '../../../components/inputs/input.component';
+import { placeholder } from 'i18n-js';
 
 interface ISignIn {
   signIn(obj: IPropsSignIn): void;
@@ -43,28 +46,18 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
 
   return (
     <KeyboardAvoidingView>
-      <ImageOverlay
-        style={styles.container}
-        source={require('./assets/image-background.jpg')}
-      >
-        <View style={styles.headerContainer}>
-          <Text category="h1" status="control">
-            Hello
-          </Text>
-          <Text style={styles.signInLabel} category="s1" status="control">
-            Sign in to your account
-          </Text>
-        </View>
+      <View style={styles.container}>
+        <Header headerText={'Sign In'} />
         <View style={styles.formContainer}>
-          <Input
-            status="control"
+          <InputField
+            status={'control'}
             placeholder="Email"
             accessoryLeft={PersonIcon}
             value={email}
-            onChangeText={setEmail}
+            onChange={setEmail}
           />
-          <Input
-            style={styles.passwordInput}
+
+          <InputField
             status="control"
             placeholder="Password"
             accessoryLeft={passwordVisible ? EyeIcon : EyeOffIcon}
@@ -73,16 +66,6 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
             onChangeText={setPassword}
             onIconPress={onPasswordIconPress}
           />
-          <View style={styles.forgotPasswordContainer}>
-            <Button
-              style={styles.forgotPasswordButton}
-              appearance="ghost"
-              status="control"
-              onPress={onForgotPasswordButtonPress}
-            >
-              Forgot your password?
-            </Button>
-          </View>
         </View>
         <Button
           style={styles.signInButton}
@@ -101,7 +84,7 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
         >
           Don't have an account? Sign Up
         </Button>
-      </ImageOverlay>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -109,25 +92,32 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
   },
+
   headerContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 216,
+    alignItems: 'flex-start',
+    minHeight: 192,
+    paddingHorizontal: 28,
   },
   formContainer: {
     flex: 1,
-    marginTop: 32,
-    paddingHorizontal: 16,
+    marginTop: 0,
+    position: 'relative',
+    zIndex: 10,
+    paddingTop: 50,
+    justifyContent: 'center',
+    paddingHorizontal: 28,
   },
-  signInLabel: {
-    marginTop: 16,
-  },
+
   signInButton: {
-    marginHorizontal: 16,
+    marginHorizontal: 28,
+    backgroundColor: '#6F99EB',
+    color: 'white',
   },
   signUpButton: {
-    marginVertical: 12,
+    marginVertical: 0,
     marginHorizontal: 16,
   },
   forgotPasswordContainer: {
