@@ -32,12 +32,6 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const [password, setPassword] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  // const LoadingIndicator = (props: any) => (
-  //   <View style={[props.style, styles.indicator]}>
-  //     <Spinner size="medium" />
-  //   </View>
-  // );
-
   const onSignInButtonPress = (): void => {
     signIn({ email, password });
   };
