@@ -4,28 +4,16 @@ import { signUp } from '../../store/actions/auth.actions';
 import { SignUpScreen } from '../../layouts';
 
 export interface ISignUp {
-  firstName: string;
-  lastName: string;
-  dob: Date;
+  userName: string;
   email: string;
   password: string;
-  termsAccepted: boolean;
 }
 
 export const SignUpContainer = () => {
   const dispatch = useDispatch();
 
-  const handleSignUpPress = ({
-    firstName,
-    lastName,
-    email,
-    dob,
-    password,
-    termsAccepted,
-  }: ISignUp) => {
-    dispatch(
-      signUp({ firstName, lastName, dob, email, password, termsAccepted }),
-    );
+  const handleSignUpPress = ({ userName, email, password }: ISignUp) => {
+    dispatch(signUp({ userName, email, password }));
   };
 
   return <SignUpScreen signUp={handleSignUpPress} />;

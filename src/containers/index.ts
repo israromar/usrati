@@ -1,3 +1,4 @@
+export { WelcomeContainer as AuthWelcomeScreen } from './welcome';
 export { SignInContainer as SignInScreen } from './sign-in';
 export { SignUpContainer as SignUpScreen } from './sign-up';
 

@@ -27,7 +27,7 @@ const RootNavigation: React.FC = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva[activeTheme]}>
         <SafeAreaView style={styles.topSafeArea} />
-        <StatusBar barStyle={'light-content'} />
+        <StatusBar barStyle={'light-content'} backgroundColor={'#6F99EB'} />
         <AppNavigator />
       </ApplicationProvider>
     </React.Fragment>

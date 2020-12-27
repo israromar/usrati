@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { userConstants } from '../../constants/user.constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,14 +7,10 @@ export const restoreToken = ({ token }) => (dispatch) => {
   dispatch({ type: userConstants.RESTORE_TOKEN, payload: token });
 };
 
-export const signUp = ({
-  firstName,
-  lastName,
-  dob,
-  email,
-  password,
-  termsAccepted,
-}) => (dispatch, getState) => {
+export const signUp = ({ userName, email, password }) => (
+  dispatch,
+  getState,
+) => {
   console.log('getState', getState());
   // Initial action dispatched
   dispatch({ type: userConstants.SIGNUP_REQUEST });

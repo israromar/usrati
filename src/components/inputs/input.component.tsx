@@ -11,7 +11,7 @@ export const InputField = ({
 }) => {
   return (
     <Input
-      style={styles.InputField}
+      // style={styles.InputField}
       status={status}
       placeholder={placeholder}
       accessoryRight={accessoryLeft}
@@ -24,6 +24,6 @@ export const InputField = ({
 const styles = StyleSheet.create({
   InputField: {
     borderWidth: 0,
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
   },
 });

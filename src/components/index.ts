@@ -6,6 +6,7 @@ import TextInput from './text-input.component';
 import SegmentedControl from './segmented-control.component';
 import ToggleButton from './toggle-button.component';
 import DrawerContent from './drawer/drawer.component';
+// import ImageOverlay from './image-overlay.component';
 
 export {
   // ## Generator Components Exports
@@ -16,4 +17,7 @@ export {
   SegmentedControl,
   ToggleButton,
   DrawerContent,
+  // ImageOverlay,
 };
+
+export { default as ImageOverlay } from './image-overlay.component';
