@@ -36,7 +36,7 @@ export const Home = ({
 }: IHome & IToggleButton & LayoutElement) => {
   return (
     <Layout style={styles.container}>
-      <ToggleButton
+      {/* <ToggleButton
         title={i18n.t('home.theme')}
         activeTheme={
           activeTheme === 'light' ? i18n.t('home.light') : i18n.t('home.dark')
@@ -48,7 +48,7 @@ export const Home = ({
             ? i18n.t('home.enableDarkMode')
             : i18n.t('home.disableDarkMode')
         }
-      />
+      /> */}
       <Layout style={styles.layout} level="4">
         <Text>{i18n.t('home.selectedLanguage')}</Text>
         <Text>{languages[selectedIndex]?.name}</Text>

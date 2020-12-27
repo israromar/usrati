@@ -28,7 +28,7 @@ const ImageOverlay = (
     const { overlayColor, ...imageBackgroundStyle } = StyleSheet.flatten(style);
 
     return (
-        <ImageBackground {...imageBackgroundProps} style={imageBackgroundStyle}>
+        <ImageBackground {...imageBackgroundProps} style={[imageBackgroundStyle]}>
             <View
                 style={[
                     StyleSheet.absoluteFill,
