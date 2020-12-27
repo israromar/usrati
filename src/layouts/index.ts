@@ -1,4 +1,5 @@
 export { Loading as LoadingScreen } from './loading';
+export { Welcome as WelcomeScreen } from './auth/welcome';
 export { SignIn as SignInScreen } from './auth/sign-in';
 export { SignUp as SignUpScreen } from './auth/sign-up';
 export { ForgotPassword as ForgotPasswordScreen } from './auth/forgot-password';
