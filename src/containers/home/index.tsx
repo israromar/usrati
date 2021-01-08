@@ -94,7 +94,7 @@ export const HomeContainer = () => {
 
   return (
     <>
-      <Header onSignOutPress={handleSignOutPress} />
+      {/* <Header onSignOutPress={handleSignOutPress} /> */}
       <HomeScreen
         onSignOutPress={handleSignOutPress}
         onThemeToggle={handleThemeToogle}

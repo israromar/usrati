@@ -25,7 +25,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
     <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
       <ImageOverlay
         style={styles.headerContainer}
-        source={require('../../../../assets/images/vector.png')}
+        source={require('../../../assets/images/vector.png')}
       >
         <View style={styles.headerElements}>
           <Text category="h5" status="control">

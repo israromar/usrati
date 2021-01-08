@@ -7,7 +7,7 @@ export const restoreToken = ({ token }) => (dispatch) => {
   dispatch({ type: userConstants.RESTORE_TOKEN, payload: token });
 };
 
-export const signUp = ({ userName, email, password }) => (
+export const signUp = ({ username, email, password }) => (
   dispatch,
   getState,
 ) => {

@@ -17,7 +17,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
     <>
       <ImageOverlay
         style={styles.headerContainer}
-        source={require('../../../../assets/images/vector.png')}
+        source={require('../../../assets/images/vector.png')}
       >
         <View style={styles.headerElements}>
           <Text style={styles.title} category="h1" status="control">
@@ -26,7 +26,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
           <Layout style={{ backgroundColor: 'none', top: 30 }}>
             <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
               <Image
-                source={require('../../../../assets/images/parent-group.png')}
+                source={require('../../../assets/images/parent-group.png')}
               />
               <Text style={styles.innerText} category="h5" status="control">
                 A Parent
@@ -36,7 +36,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
           <Layout style={{ backgroundColor: 'none', top: 50 }}>
             <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
               <Image
-                source={require('../../../../assets/images/child-group.png')}
+                source={require('../../../assets/images/child-group.png')}
               />
               <Text style={styles.innerText} category="h5" status="control">
                 A Child

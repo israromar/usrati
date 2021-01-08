@@ -7,13 +7,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export const Header = ({ headerText, onBackPress }: any) => {
   return (
     <ImageBackground
-      source={require('../../../assets/images/vector.png')}
+      source={require('../../assets/images/vector.png')}
       resizeMode={'cover'}
       style={styles.imageBackground}
     >
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={onBackPress}>
-          <Image source={require('../../../assets/images/backarrow.png')} />
+          <Image source={require('../../assets/images/backarrow.png')} />
         </TouchableOpacity>
         <Text category="h1" status="control">
           {headerText}

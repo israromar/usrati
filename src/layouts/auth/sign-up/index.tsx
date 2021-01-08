@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Layout, Icon, Button, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
+import { validate } from 'validate.js';
 
 import { ImageOverlay } from '../../../components';
 import { AppRoute } from '../../../navigation/app-routes';
@@ -16,6 +17,7 @@ import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignUp as IPropsSignUp } from '../../../containers/sign-up';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Swiper } from '../common/swiper';
+import { constraints } from '../../../utils/constraints';
 
 interface ISignIn {
   signUp(obj: IPropsSignUp): void;
@@ -23,17 +25,63 @@ interface ISignIn {
 
 export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
-  const [userName, setUserName] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [userNameError, setUserNameError] = useState<boolean>(false);
+  const [userNameErrorMsg, setUserNameErrorMsg] = useState<string>('');
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [emailErrorMsg, setEmailErrorMsg] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
   const onSignInButtonPress = (): void => {
     navigate(AppRoute.SIGN_IN);
   };
 
+  const handleInput = (
+    inputField: (v: React.SetStateAction<string>) => void,
+    inputFieldError: (v: boolean) => void,
+    value: React.SetStateAction<string>,
+  ) => {
+    inputField(value);
+    inputFieldError(false);
+  };
+
   const onSignUpButtonPress = (): void => {
-    signUp({ email, password });
+    const validationResult = validate(
+      { username, email, password },
+      constraints,
+    );
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 61 ~ onSignInButtonPress ~ validationResult',
+      validationResult,
+    );
+    if (
+      validationResult?.username &&
+      validationResult?.email &&
+      validationResult?.password
+    ) {
+      setUserNameError(true);
+      setUserNameErrorMsg(validationResult?.username[0]);
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else if (validationResult?.username) {
+      setUserNameError(true);
+      setUserNameErrorMsg(validationResult?.username[0]);
+    } else if (validationResult?.email) {
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+    } else if (validationResult?.password) {
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else {
+      // signIn({ email, password });
+      signUp({ username, email, password });
+    }
   };
 
   const onForgotPasswordButtonPress = (): void => {
@@ -54,11 +102,13 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
     </TouchableWithoutFeedback>
   );
 
+  console.log('nameeeee:', username, email, password);
+
   return (
     <KeyboardAvoidingView style={{ backgroundColor: 'white' }}>
       <ImageOverlay
         style={styles.headerContainer}
-        source={require('../../../../assets/images/vector.png')}
+        source={require('../../../assets/images/vector.png')}
       >
         <View style={styles.headerElements}>
           <TouchableOpacity onPress={hanldeBackPress}>
@@ -75,25 +125,37 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
         <Layout style={styles.formContainer}>
           <Input
             style={styles.input}
-            value={userName}
-            placeholder="Username"
+            value={username.trim()}
+            caption={userNameError ? userNameErrorMsg : ''}
+            status={userNameError ? 'danger' : 'basic'}
+            placeholder="username"
             accessoryRight={PersonIcon}
-            onChangeText={(nextValue) => setUserName(nextValue)}
+            onChangeText={(nextValue) =>
+              handleInput(setUsername, setUserNameError, nextValue)
+            }
           />
           <Input
             style={styles.input}
-            value={email}
+            value={email.trim()}
+            caption={emailError ? emailErrorMsg : ''}
+            status={emailError ? 'danger' : 'basic'}
             placeholder="Email"
             accessoryRight={AtIcon}
-            onChangeText={(nextValue) => setEmail(nextValue)}
+            onChangeText={(nextValue) =>
+              handleInput(setEmail, setEmailError, nextValue)
+            }
           />
           <Input
             style={styles.input}
-            value={password}
+            value={password.trim()}
+            caption={passwordError ? passwordErrorMsg : ''}
+            status={passwordError ? 'danger' : 'basic'}
             placeholder="Password"
             accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
-            onChangeText={(nextValue) => setPassword(nextValue)}
+            onChangeText={(nextValue) =>
+              handleInput(setPassword, setPasswordError, nextValue)
+            }
           />
         </Layout>
         <Layout style={styles.bottomContainer}>

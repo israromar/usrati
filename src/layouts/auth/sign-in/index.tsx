@@ -8,18 +8,18 @@ import {
 } from 'react-native';
 import { Layout, Icon, Button, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
+import { validate } from 'validate.js';
 
 import { AppRoute } from '../../../navigation/app-routes';
 import { ImageOverlay } from '../../../components';
-import { EyeIcon, EyeOffIcon, AtIcon } from './extra/icons';
+import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
-import { InputField } from '../../../components/inputs/input.component';
-import { Loading } from '../../loading';
-import {
-  TouchableOpacity,
-  TouchableHighlight,
-} from 'react-native-gesture-handler';
+// import { InputField } from '../../../components/inputs/input.component';
+// import { Loading } from '../../loading';
+import { constraints } from '../../../utils/constraints';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { Swiper } from '../common/swiper';
 
 interface ISignIn {
@@ -29,11 +29,42 @@ interface ISignIn {
 export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
   const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [emailErrorMsg, setEmailErrorMsg] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
+  const handleInput = (
+    inputField: string,
+    value: React.SetStateAction<string>,
+  ) => {
+    if (inputField === 'email') {
+      setEmailError(false);
+      setEmail(value.replace(/\s/g, ''));
+    } else {
+      setPasswordError(false);
+      setPassword(value);
+    }
+  };
+
   const onSignInButtonPress = (): void => {
-    signIn({ email, password });
+    const validationResult = validate({ email, password }, constraints);
+    if (validationResult?.email && validationResult?.password) {
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else if (validationResult?.email) {
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+    } else if (validationResult?.password) {
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else {
+      signIn({ email, password });
+    }
   };
 
   const onSignUpButtonPress = (): void => {
@@ -62,7 +93,7 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
     <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
       <ImageOverlay
         style={styles.headerContainer}
-        source={require('../../../../assets/images/vector.png')}
+        source={require('../../../assets/images/vector.png')}
       >
         <View style={styles.headerElements}>
           <TouchableOpacity onPress={hanldeBackPress}>
@@ -78,16 +109,22 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
         <Layout style={styles.formContainer}>
           <Input
             style={{ marginTop: 10 }}
+            value={email.trim()}
+            caption={emailError ? emailErrorMsg : ''}
+            status={emailError ? 'danger' : 'basic'}
             placeholder="Email"
             accessoryRight={AtIcon}
-            onChangeText={(nextValue) => setEmail(nextValue)}
+            onChangeText={(nextValue) => handleInput('email', nextValue)}
           />
           <Input
             style={{ marginTop: 10 }}
+            value={password.trim()}
+            caption={passwordError ? passwordErrorMsg : ''}
+            status={passwordError ? 'danger' : 'basic'}
             placeholder="Password"
             accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
-            onChangeText={(nextValue) => setPassword(nextValue)}
+            onChangeText={(nextValue) => handleInput('password', nextValue)}
           />
         </Layout>
         <Layout style={styles.bottomContainer}>
