@@ -49,7 +49,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
               Sign In
             </Button>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onButtonPress(AppRoute.ONBOARDING)}>
+          <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
             <Button style={styles.signUpButton} size="giant" appearance="ghost">
               Sign Up
             </Button>

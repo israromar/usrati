@@ -9,7 +9,7 @@ import {
   RadioGroup,
   LayoutElement,
 } from '@ui-kitten/components';
-import * as Progress from 'react-native-progress';
+// import * as Progress from 'react-native-progress';
 
 import i18n from '../../translations';
 import ToggleButton, {
@@ -62,21 +62,16 @@ export const Home = ({
         </View>
       </ImageOverlay>
       <Layout style={styles.progressWrap}>
-        <Layout style={styles.progressCard}>
-          <Text>Progress</Text>
-          {/* <Progress.Bar progress={0.3} width={200} /> */}
-          <Progress.Pie progress={0.4} size={50} />
-        </Layout>
-        <Layout style={styles.progressCard}>
-          <Layout>
-            <Text>Physics</Text>
-          </Layout>
-          <Layout>
-            <Text>Exercise</Text>
-          </Layout>
-          <Layout>
-            <Text>Prayers</Text>
-          </Layout>
+        <Layout style={styles.layout} level="1">
+          <Button
+            style={styles.button}
+            appearance="outline"
+            onPress={onSignOutPress}
+            accessoryLeft={SignoutIcon}
+          >
+            {i18n.t('home.signOut')}
+          </Button>
+          <Text>{i18n.t('home.hello')}</Text>
         </Layout>
       </Layout>
     </Layout>

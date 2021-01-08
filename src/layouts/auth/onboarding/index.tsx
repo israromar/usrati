@@ -24,7 +24,9 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
             Are You
           </Text>
           <Layout style={{ backgroundColor: 'none', top: 30 }}>
-            <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
+            <TouchableOpacity
+              onPress={() => onButtonPress(AppRoute.AUTH_WELCOME)}
+            >
               <Image
                 source={require('../../../assets/images/parent-group.png')}
               />
@@ -34,7 +36,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
             </TouchableOpacity>
           </Layout>
           <Layout style={{ backgroundColor: 'none', top: 50 }}>
-            <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
+            <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_IN)}>
               <Image
                 source={require('../../../assets/images/child-group.png')}
               />

@@ -9,3 +9,7 @@ export { Calendar as CalendarScreen } from './calendar';
 export { Grids as GridsScreen } from './grids';
 export { Pages as PagesScreen } from './pages';
 export { Settings as SettingsScreen } from './settings';
+export {
+  Parent as ParentScreen,
+  Child as ChildScreen,
+} from './family-onboarding';

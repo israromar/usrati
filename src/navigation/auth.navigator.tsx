@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 export const AuthNavigator = (): React.ReactElement => {
   return (
-    <Stack.Navigator headerMode="none" initialRouteName={AppRoute.AUTH_WELCOME}>
+    <Stack.Navigator headerMode="none" initialRouteName={AppRoute.ONBOARDING}>
       <Stack.Screen
         name={AppRoute.AUTH_WELCOME}
         component={AuthWelcomeScreen}

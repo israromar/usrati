@@ -6,7 +6,14 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Layout, Icon, Button, Input, Text } from '@ui-kitten/components';
+import {
+  Avatar,
+  Layout,
+  Icon,
+  Button,
+  Input,
+  Text,
+} from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js';
 
@@ -14,7 +21,9 @@ import { AppRoute } from '../../../navigation/app-routes';
 import { ImageOverlay } from '../../../components';
 import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+
+// import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
 // import { InputField } from '../../../components/inputs/input.component';
 // import { Loading } from '../../loading';
 import { constraints } from '../../../utils/constraints';
@@ -22,11 +31,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Swiper } from '../common/swiper';
 
-interface ISignIn {
-  signIn(obj: IPropsSignIn): void;
-}
+// interface ISignIn {
+//   Parent(obj: IPropsSignIn): void;
+// }
 
-export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
+export const Parent = ({}): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
@@ -50,25 +59,25 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   };
 
   const onSignInButtonPress = (): void => {
-    // const validationResult = validate({ email, password }, constraints);
-    // if (validationResult?.email && validationResult?.password) {
-    //   setEmailError(true);
-    //   setEmailErrorMsg(validationResult?.email[0]);
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else if (validationResult?.email) {
-    //   setEmailError(true);
-    //   setEmailErrorMsg(validationResult?.email[0]);
-    // } else if (validationResult?.password) {
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else {
-    signIn({ email, password });
-    // }
+    const validationResult = validate({ email, password }, constraints);
+    if (validationResult?.email && validationResult?.password) {
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else if (validationResult?.email) {
+      setEmailError(true);
+      setEmailErrorMsg(validationResult?.email[0]);
+    } else if (validationResult?.password) {
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else {
+      Parent({ email, password });
+    }
   };
 
-  const onSignUpButtonPress = (): void => {
-    navigate(AppRoute.SIGN_UP);
+  const onAddParentButtonPress = (): void => {
+    navigate(AppRoute.ADD_CHILD);
   };
 
   const onForgotPasswordButtonPress = (): void => {
@@ -89,6 +98,8 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
     </TouchableWithoutFeedback>
   );
 
+  console.log('hereeeeeeeee-09-9-09-0');
+
   return (
     <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
       <ImageOverlay
@@ -96,24 +107,29 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
         source={require('../../../assets/images/vector.png')}
       >
         <View style={styles.headerElements}>
-          <TouchableOpacity onPress={hanldeBackPress}>
+          {/* <TouchableOpacity onPress={hanldeBackPress}>
             <Image source={require('./assets/backarrow.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text category="h1" status="control">
-            Sign In
+            Guardian
           </Text>
         </View>
       </ImageOverlay>
       <Layout>
-        <Image style={styles.stretch} source={require('./assets/group.png')} />
+        <Avatar
+          style={styles.avatar}
+          size="giant"
+          source={require('./assets/guardian-avatar.png')}
+        />
+
         <Layout style={styles.formContainer}>
           <Input
             style={{ marginTop: 10 }}
             value={email.trim()}
             caption={emailError ? emailErrorMsg : ''}
             status={emailError ? 'danger' : 'basic'}
-            placeholder="Email"
-            accessoryRight={AtIcon}
+            placeholder="User Name"
+            // accessoryRight={AtIcon}
             onChangeText={(nextValue) => handleInput('email', nextValue)}
           />
           <Input
@@ -122,29 +138,22 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
             caption={passwordError ? passwordErrorMsg : ''}
             status={passwordError ? 'danger' : 'basic'}
             placeholder="Password"
-            accessoryRight={renderIcon}
+            // accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
             onChangeText={(nextValue) => handleInput('password', nextValue)}
           />
         </Layout>
         <Layout style={styles.bottomContainer}>
-          <TouchableOpacity onPress={onSignInButtonPress}>
+          <TouchableOpacity onPress={onAddParentButtonPress}>
             <Button
               style={styles.signInButton}
               status="control"
               size="giant"
               appearance="ghost"
             >
-              Sign In
+              Add
             </Button>
           </TouchableOpacity>
-          <Layout style={styles.bottomText}>
-            <Text style={{ color: '#B5AFAF' }}>Don't have an account? </Text>
-            <TouchableOpacity onPress={onSignUpButtonPress}>
-              <Text style={{ color: '#6F99EB' }}>Sign Up</Text>
-            </TouchableOpacity>
-          </Layout>
-          <Swiper style={{ top: 25 }} position={2} />
         </Layout>
       </Layout>
     </KeyboardAvoidingView>
@@ -154,6 +163,13 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  avatar: {
+    alignSelf: 'center',
+    width: 150,
+    height: 150,
+    // margin: 8,
+    top: -80,
   },
   socialAuthContainer: {
     // marginTop: 24,
@@ -171,11 +187,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   headerElements: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    minHeight: 75,
-    bottom: 40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    bottom: 15,
   },
   bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
