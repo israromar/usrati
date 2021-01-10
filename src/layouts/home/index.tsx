@@ -5,8 +5,6 @@ import {
   Button,
   Icon,
   Text,
-  Radio,
-  RadioGroup,
   LayoutElement,
 } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';

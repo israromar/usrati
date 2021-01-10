@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Text } from '@ui-kitten/components';
+import { Text } from '@ui-kitten/components';
 import { ImageBackground, Image, View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // import { colors, fonts } from '../styles';
@@ -13,7 +13,7 @@ export const Header = ({ headerText, onBackPress }: any) => {
     >
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={onBackPress}>
-          <Image source={require('../../assets/images/backarrow.png')} />
+          <Image source={require('../../../assets/images/backarrow.png')} />
         </TouchableOpacity>
         <Text category="h1" status="control">
           {headerText}
