@@ -12,4 +12,5 @@ export { Settings as SettingsScreen } from './settings';
 export {
   Parent as ParentScreen,
   Child as ChildScreen,
+  FamilySetup as FamilySetupScreen,
 } from './family-onboarding';

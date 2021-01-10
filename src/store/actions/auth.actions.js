@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { userConstants } from '../../constants/user.constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createUser, login } from '../../services/api';
@@ -18,7 +17,6 @@ export const signUp = ({ username, email, password }) => (
   createUser({ username, password, userType: 'parent' })
     .then((res) => {
       console.log('res: ', res);
-      // return;
       dispatch({
         type: userConstants.SIGNUP_SUCCESS,
         payload: res?.token,
@@ -37,12 +35,14 @@ export const signUp = ({ username, email, password }) => (
 export const signIn = ({ username, password }) => (dispatch) => {
   login({ username, password })
     .then((res) => {
-      console.log('res: ', res);
-      AsyncStorage.setItem('userToken', 'dummy-auth-token');
-      dispatch({
-        type: userConstants.LOGIN_SUCCESS,
-        payload: res?.token,
-      });
+      console.log('login success: ', res);
+      if (res) {
+        AsyncStorage.setItem('userToken', res.token);
+        dispatch({
+          type: userConstants.LOGIN_SUCCESS,
+          payload: res,
+        });
+      }
     })
     .catch((err) => {
       console.log('errordasda: ', err);

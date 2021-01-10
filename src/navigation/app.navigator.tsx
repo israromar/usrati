@@ -12,7 +12,7 @@ export const AppNavigator = (): React.ReactElement => {
   return (
     <Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
-      initialRouteName={AppRoute.ADD_PARENT}
+      initialRouteName={AppRoute.FAMILY_SETUP}
     >
       {StackNavigationData.map((item, idx) => (
         <Screen

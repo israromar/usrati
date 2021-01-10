@@ -17,28 +17,18 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
     <>
       <ImageOverlay
         style={styles.headerContainer}
-<<<<<<< HEAD
         source={require('../../../assets/images/vector.png')}
-=======
-        source={require('../../../../assets/images/vector.png')}
->>>>>>> 1e659b0e0b279806bdc0e5e89e9f78c4463a1b25
       >
         <View style={styles.headerElements}>
           <Text style={styles.title} category="h1" status="control">
             Are You
           </Text>
           <Layout style={{ backgroundColor: 'none', top: 30 }}>
-<<<<<<< HEAD
             <TouchableOpacity
               onPress={() => onButtonPress(AppRoute.AUTH_WELCOME)}
             >
               <Image
                 source={require('../../../assets/images/parent-group.png')}
-=======
-            <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
-              <Image
-                source={require('../../../../assets/images/parent-group.png')}
->>>>>>> 1e659b0e0b279806bdc0e5e89e9f78c4463a1b25
               />
               <Text style={styles.innerText} category="h5" status="control">
                 A Parent
@@ -46,15 +36,9 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
             </TouchableOpacity>
           </Layout>
           <Layout style={{ backgroundColor: 'none', top: 50 }}>
-<<<<<<< HEAD
             <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_IN)}>
               <Image
                 source={require('../../../assets/images/child-group.png')}
-=======
-            <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
-              <Image
-                source={require('../../../../assets/images/child-group.png')}
->>>>>>> 1e659b0e0b279806bdc0e5e89e9f78c4463a1b25
               />
               <Text style={styles.innerText} category="h5" status="control">
                 A Child

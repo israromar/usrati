@@ -7,6 +7,7 @@ export {
   AddParentContainer as AddParentScreen,
   AddChildContainer as AddChildScreen,
 } from './family-onboarding';
+export { FamilySetupContainer as FamilySetupScreen } from './family-setup';
 export { HomeContainer as HomeScreen } from './home';
 export { CalendarContainer as CalendarScreen } from './calender';
 export { GridsContainer as GridsScreen } from './grid';
