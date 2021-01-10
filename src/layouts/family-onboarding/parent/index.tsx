@@ -16,12 +16,13 @@ import {
 } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js';
+import { useDispatch } from 'react-redux';
 
 import { AppRoute } from '../../../navigation/app-routes';
 import { ImageOverlay } from '../../../components';
 import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+// import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 // import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
 // import { InputField } from '../../../components/inputs/input.component';
@@ -30,6 +31,8 @@ import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Swiper } from '../common/swiper';
+import i18n from '../../../translations';
+import { logout } from '../../../store/actions/auth.actions';
 
 // interface ISignIn {
 //   Parent(obj: IPropsSignIn): void;
@@ -37,6 +40,8 @@ import { Swiper } from '../common/swiper';
 
 export const Parent = ({}): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [emailErrorMsg, setEmailErrorMsg] = useState<string>('');
@@ -100,6 +105,10 @@ export const Parent = ({}): React.ReactElement => {
 
   console.log('hereeeeeeeee-09-9-09-0');
 
+  const onSignOutPress = () => {
+    dispatch(logout());
+  };
+
   return (
     <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
       <ImageOverlay
@@ -154,6 +163,14 @@ export const Parent = ({}): React.ReactElement => {
               Add
             </Button>
           </TouchableOpacity>
+
+          <Layout style={{ top: 20 }}>
+            <TouchableOpacity onPress={onSignOutPress}>
+              <Button style={styles.singOutButton} appearance="outline">
+                {i18n.t('home.signOut')}
+              </Button>
+            </TouchableOpacity>
+          </Layout>
         </Layout>
       </Layout>
     </KeyboardAvoidingView>
@@ -164,6 +181,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  singOutButton: { top: 0, maxWidth: 100, minWidth: 50, alignSelf: 'center' },
   avatar: {
     alignSelf: 'center',
     width: 150,

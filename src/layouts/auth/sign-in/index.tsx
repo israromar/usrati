@@ -28,9 +28,9 @@ interface ISignIn {
 
 export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
-  const [email, setEmail] = useState<string>('');
-  const [emailError, setEmailError] = useState<boolean>(false);
-  const [emailErrorMsg, setEmailErrorMsg] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<boolean>(false);
+  const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
@@ -40,9 +40,9 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
     inputField: string,
     value: React.SetStateAction<string>,
   ) => {
-    if (inputField === 'email') {
-      setEmailError(false);
-      setEmail(value.replace(/\s/g, ''));
+    if (inputField === 'username') {
+      setUsernameError(false);
+      setUsername(value.replace(/\s/g, ''));
     } else {
       setPasswordError(false);
       setPassword(value);
@@ -50,20 +50,20 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   };
 
   const onSignInButtonPress = (): void => {
-    // const validationResult = validate({ email, password }, constraints);
-    // if (validationResult?.email && validationResult?.password) {
-    //   setEmailError(true);
-    //   setEmailErrorMsg(validationResult?.email[0]);
+    // const validationResult = validate({ username, password }, constraints);
+    // if (validationResult?.username && validationResult?.password) {
+    //   setUsernameError(true);
+    //   setUsernameErrorMsg(validationResult?.username[0]);
     //   setPasswordError(true);
     //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else if (validationResult?.email) {
-    //   setEmailError(true);
-    //   setEmailErrorMsg(validationResult?.email[0]);
+    // } else if (validationResult?.username) {
+    //   setUsernameError(true);
+    //   setUsernameErrorMsg(validationResult?.username[0]);
     // } else if (validationResult?.password) {
     //   setPasswordError(true);
     //   setPasswordErrorMsg(validationResult?.password[0]);
     // } else {
-    signIn({ email, password });
+    signIn({ username, password });
     // }
   };
 
@@ -109,12 +109,12 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
         <Layout style={styles.formContainer}>
           <Input
             style={{ marginTop: 10 }}
-            value={email.trim()}
-            caption={emailError ? emailErrorMsg : ''}
-            status={emailError ? 'danger' : 'basic'}
-            placeholder="Email"
+            value={username.trim()}
+            caption={usernameError ? usernameErrorMsg : ''}
+            status={usernameError ? 'danger' : 'basic'}
+            placeholder="Username"
             accessoryRight={AtIcon}
-            onChangeText={(nextValue) => handleInput('email', nextValue)}
+            onChangeText={(nextValue) => handleInput('username', nextValue)}
           />
           <Input
             style={{ marginTop: 10 }}

@@ -16,27 +16,27 @@ import { getUser } from '../helpers';
  * @type {AxiosInstance}
  */
 const usrati = axios.create({
-  baseURL: 'http://usrati-app.herokuapp.com/api/',
+  baseURL: 'http://157.230.254.77/',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
 
-usrati.interceptors.request.use(
-  (config) => {
-    return getUser().then((user) => {
-      user = JSON.parse(user);
-      if (user && user.token) {
-        config.headers.Authorization = `Bearer ${user.token}`;
-      }
-      console.log(config);
-      return Promise.resolve(config);
-    });
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+// usrati.interceptors.request.use(
+//   (config) => {
+//     return getUser().then((user) => {
+//       user = JSON.parse(user);
+//       if (user && user.token) {
+//         config.headers.Authorization = `Bearer ${user.token}`;
+//       }
+//       console.log(config);
+//       return Promise.resolve(config);
+//     });
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   },
+// );
 
 export default usrati;

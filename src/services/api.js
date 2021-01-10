@@ -2,22 +2,26 @@ import http from './usrati';
 
 export function login(payload) {
   return http
-    .post('auth', payload)
+    .post('user/auth/login', payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 7 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 11 ~ login ~ error', error);
       console.error(error);
     });
 }
 
-export function createStudent(payload) {
+export function createUser(payload) {
   return http
-    .post('students', payload)
+    .post('user', payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 18 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 23 ~ createUser ~ error', error);
       throw error.response.data;
     });
 }
