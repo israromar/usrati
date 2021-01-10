@@ -1,35 +1,70 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
-import { Button, Input, Text } from '@ui-kitten/components';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { Layout, Icon, Button, Input, Text } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
+import { validate } from 'validate.js';
 
 import { AppRoute } from '../../../navigation/app-routes';
-// import { ImageOverlay } from './extra/image-overlay.component';
-import { Header } from '../../../components/header/header.component';
-import { EyeIcon, EyeOffIcon, PersonIcon } from './extra/icons';
+import { ImageOverlay } from '../../../components';
+import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
-import { InputField } from '../../../components/inputs/input.component';
-import { placeholder } from 'i18n-js';
+// import { InputField } from '../../../components/inputs/input.component';
+// import { Loading } from '../../loading';
+import { constraints } from '../../../utils/constraints';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { Swiper } from '../common/swiper';
 
 interface ISignIn {
   signIn(obj: IPropsSignIn): void;
 }
 
 export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
-  const { navigate } = useNavigation();
-  const [email, setEmail] = useState<string>('');
+  const { navigate, ...rest } = useNavigation();
+  const [username, setUsername] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<boolean>(false);
+  const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
+  const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  // const LoadingIndicator = (props: any) => (
-  //   <View style={[props.style, styles.indicator]}>
-  //     <Spinner size="medium" />
-  //   </View>
-  // );
+  const handleInput = (
+    inputField: string,
+    value: React.SetStateAction<string>,
+  ) => {
+    if (inputField === 'username') {
+      setUsernameError(false);
+      setUsername(value.replace(/\s/g, ''));
+    } else {
+      setPasswordError(false);
+      setPassword(value);
+    }
+  };
 
   const onSignInButtonPress = (): void => {
-    signIn({ email, password });
+    // const validationResult = validate({ username, password }, constraints);
+    // if (validationResult?.username && validationResult?.password) {
+    //   setUsernameError(true);
+    //   setUsernameErrorMsg(validationResult?.username[0]);
+    //   setPasswordError(true);
+    //   setPasswordErrorMsg(validationResult?.password[0]);
+    // } else if (validationResult?.username) {
+    //   setUsernameError(true);
+    //   setUsernameErrorMsg(validationResult?.username[0]);
+    // } else if (validationResult?.password) {
+    //   setPasswordError(true);
+    //   setPasswordErrorMsg(validationResult?.password[0]);
+    // } else {
+    signIn({ username, password });
+    // }
   };
 
   const onSignUpButtonPress = (): void => {
@@ -40,51 +75,78 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
     navigate(AppRoute.RESET_PASSWORD);
   };
 
-  const onPasswordIconPress = (): void => {
-    setPasswordVisible(!passwordVisible);
+  const hanldeBackPress = () => {
+    rest.goBack();
   };
 
-  return (
-    <KeyboardAvoidingView>
-      <View style={styles.container}>
-        <Header headerText={'Sign In'} />
-        <View style={styles.formContainer}>
-          <InputField
-            status={'control'}
-            placeholder="Email"
-            accessoryLeft={PersonIcon}
-            value={email}
-            onChange={setEmail}
-          />
+  const toggleSecureEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
 
-          <InputField
-            status="control"
-            placeholder="Password"
-            accessoryLeft={passwordVisible ? EyeIcon : EyeOffIcon}
-            value={password}
-            secureTextEntry={!passwordVisible}
-            onChangeText={setPassword}
-            onIconPress={onPasswordIconPress}
-          />
+  const renderIcon = (props: any) => (
+    <TouchableWithoutFeedback onPress={toggleSecureEntry}>
+      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+    </TouchableWithoutFeedback>
+  );
+
+  return (
+    <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
+      <ImageOverlay
+        style={styles.headerContainer}
+        source={require('../../../assets/images/vector.png')}
+      >
+        <View style={styles.headerElements}>
+          <TouchableOpacity onPress={hanldeBackPress}>
+            <Image source={require('./assets/backarrow.png')} />
+          </TouchableOpacity>
+          <Text category="h1" status="control">
+            Sign In
+          </Text>
         </View>
-        <Button
-          style={styles.signInButton}
-          status="control"
-          size="giant"
-          onPress={onSignInButtonPress}
-          // accessoryLeft={LoadingIndicator}
-        >
-          SIGN IN
-        </Button>
-        <Button
-          style={styles.signUpButton}
-          appearance="ghost"
-          status="control"
-          onPress={onSignUpButtonPress}
-        >
-          Don't have an account? Sign Up
-        </Button>
-      </View>
+      </ImageOverlay>
+      <Layout>
+        <Image style={styles.stretch} source={require('./assets/group.png')} />
+        <Layout style={styles.formContainer}>
+          <Input
+            style={{ marginTop: 10 }}
+            value={username.trim()}
+            caption={usernameError ? usernameErrorMsg : ''}
+            status={usernameError ? 'danger' : 'basic'}
+            placeholder="Username"
+            accessoryRight={AtIcon}
+            onChangeText={(nextValue) => handleInput('username', nextValue)}
+          />
+          <Input
+            style={{ marginTop: 10 }}
+            value={password.trim()}
+            caption={passwordError ? passwordErrorMsg : ''}
+            status={passwordError ? 'danger' : 'basic'}
+            placeholder="Password"
+            accessoryRight={renderIcon}
+            secureTextEntry={secureTextEntry}
+            onChangeText={(nextValue) => handleInput('password', nextValue)}
+          />
+        </Layout>
+        <Layout style={styles.bottomContainer}>
+          <TouchableOpacity onPress={onSignInButtonPress}>
+            <Button
+              style={styles.signInButton}
+              status="control"
+              size="giant"
+              appearance="ghost"
+            >
+              Sign In
+            </Button>
+          </TouchableOpacity>
+          <Layout style={styles.bottomText}>
+            <Text style={{ color: '#B5AFAF' }}>Don't have an account? </Text>
+            <TouchableOpacity onPress={onSignUpButtonPress}>
+              <Text style={{ color: '#6F99EB' }}>Sign Up</Text>
+            </TouchableOpacity>
+          </Layout>
+          <Swiper style={{ top: 25 }} position={2} />
+        </Layout>
+      </Layout>
     </KeyboardAvoidingView>
   );
 };
@@ -92,33 +154,51 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%',
   },
-
+  socialAuthContainer: {
+    // marginTop: 24,
+  },
+  stretch: {
+    height: 200,
+    top: -80,
+    alignSelf: 'center',
+    resizeMode: 'stretch',
+  },
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 192,
+    minHeight: 210,
     paddingHorizontal: 28,
   },
+  headerElements: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    minHeight: 75,
+    bottom: 40,
+  },
+  bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
+  bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
-    marginTop: 0,
-    position: 'relative',
-    zIndex: 10,
-    paddingTop: 50,
+    // position: 'relative',
+    // zIndex: 10,
     justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 28,
   },
-
   signInButton: {
+    width: 338,
+    borderRadius: 5,
     marginHorizontal: 28,
     backgroundColor: '#6F99EB',
-    color: 'white',
+    fontFamily: 'Verdana',
   },
   signUpButton: {
     marginVertical: 0,
     marginHorizontal: 16,
+    borderRadius: 5,
+    fontFamily: 'Verdana',
   },
   forgotPasswordContainer: {
     flexDirection: 'row',

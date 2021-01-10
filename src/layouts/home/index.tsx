@@ -1,19 +1,19 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
   Layout,
   Button,
   Icon,
   Text,
-  Radio,
-  RadioGroup,
   LayoutElement,
 } from '@ui-kitten/components';
+// import * as Progress from 'react-native-progress';
 
 import i18n from '../../translations';
 import ToggleButton, {
   IToggleButton,
 } from '../../components/toggle-button.component';
+import { ImageOverlay } from '../../components';
 
 const SignoutIcon = (props: any) => <Icon {...props} name="log-out-outline" />;
 
@@ -33,53 +33,44 @@ export const Home = ({
   handleLocaleChange,
   selectedIndex,
   languages,
+  ...rest
 }: IHome & IToggleButton & LayoutElement) => {
+  const hanldeBackPress = () => {
+    // rest.goBack();
+  };
+
   return (
     <Layout style={styles.container}>
-      <ToggleButton
-        title={i18n.t('home.theme')}
-        activeTheme={
-          activeTheme === 'light' ? i18n.t('home.light') : i18n.t('home.dark')
-        }
-        onToggle={onThemeToggle}
-        checked={checked}
-        label={
-          activeTheme === 'light'
-            ? i18n.t('home.enableDarkMode')
-            : i18n.t('home.disableDarkMode')
-        }
-      />
-      <Layout style={styles.layout} level="4">
-        <Text>{i18n.t('home.selectedLanguage')}</Text>
-        <Text>{languages[selectedIndex]?.name}</Text>
-      </Layout>
-
-      <Layout style={styles.layout}>
-        <Text category="h6">{i18n.t('home.selectLanguage')}</Text>
-        <RadioGroup selectedIndex={selectedIndex} onChange={handleLocaleChange}>
-          {languages.map((language) => (
-            <Radio
-              key={language}
-              status={language.isActive ? 'success' : 'info'}
-            >
-              {language.name}
-            </Radio>
-          ))}
-        </RadioGroup>
-      </Layout>
-
-      <Layout style={styles.layout} level="3" />
-
-      <Layout style={styles.layout} level="1">
-        <Button
-          style={styles.button}
-          appearance="outline"
-          onPress={onSignOutPress}
-          accessoryLeft={SignoutIcon}
-        >
-          {i18n.t('home.signOut')}
-        </Button>
-        <Text>{i18n.t('home.hello')}</Text>
+      <ImageOverlay
+        style={styles.headerContainer}
+        source={require('../../assets/images/vector.png')}
+      >
+        <View style={styles.headerElements}>
+          <TouchableOpacity onPress={hanldeBackPress}>
+            <Image source={require('../../assets/images/backarrow.png')} />
+          </TouchableOpacity>
+          <Layout style={{ backgroundColor: 'none', top: 20, left: 15 }}>
+            <Text category="h5" status="control">
+              Child
+            </Text>
+            <Text category="h1" status="control">
+              Dashboard
+            </Text>
+          </Layout>
+        </View>
+      </ImageOverlay>
+      <Layout style={styles.progressWrap}>
+        <Layout style={styles.layout} level="1">
+          <Button
+            style={styles.button}
+            appearance="outline"
+            onPress={onSignOutPress}
+            accessoryLeft={SignoutIcon}
+          >
+            {i18n.t('home.signOut')}
+          </Button>
+          <Text>{i18n.t('home.hello')}</Text>
+        </Layout>
       </Layout>
     </Layout>
   );
@@ -88,26 +79,78 @@ export const Home = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    backgroundColor: 'red',
   },
-  layout: {
+  progressWrap: {
     flex: 1,
+    backgroundColor: 'green',
+    display: 'flex',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressCard: {
+    top: 40,
+    backgroundColor: 'yellow',
+    height: 314,
+    width: 359,
+    borderRadius: 10,
+  },
+  stretch: {
+    height: 200,
+    top: -80,
+    alignSelf: 'center',
+    resizeMode: 'stretch',
+  },
+  headerContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    minHeight: 210,
+    paddingHorizontal: 28,
+    backgroundColor: 'blue',
+  },
+  headerElements: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    minHeight: 75,
+    bottom: 40,
+  },
+  bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
+  bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
+  formContainer: {
+    flex: 1,
+    // position: 'relative',
+    // zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 28,
   },
-  innerLayout: {
-    flex: 1,
+  signInButton: {
+    width: 338,
+    borderRadius: 5,
+    marginHorizontal: 28,
+    backgroundColor: '#6F99EB',
+    fontFamily: 'Verdana',
+  },
+  signUpButton: {
+    marginVertical: 0,
+    marginHorizontal: 16,
+    borderRadius: 5,
+    fontFamily: 'Verdana',
+  },
+  forgotPasswordContainer: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  passwordInput: {
+    marginTop: 16,
+  },
+  forgotPasswordButton: {
+    paddingHorizontal: 0,
+  },
+  indicator: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  toggle: {
-    margin: 10,
-  },
-  text: {
-    margin: 15,
-  },
-  button: {
-    margin: 2,
   },
 });

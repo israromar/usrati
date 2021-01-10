@@ -29,7 +29,7 @@ const Header = () => (
     <Layout>
       <Avatar
         size="giant"
-        source={require('../../../assets/images/drawer/user.png')}
+        source={require('../../assets/images/drawer/user.png')}
       />
       <Layout style={styles.nameWrap}>
         <Layout>
