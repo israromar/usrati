@@ -1,12 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { shallowEqual, useSelector } from 'react-redux';
 
 import {
   Layout,
@@ -36,7 +35,9 @@ export const LoadingIndicator = (props: any) => (
 
 interface ISignUp {
   signUp(obj: IPropsSignUp): void;
-  currentState: { auth: { isLoading: boolean } };
+  currentState: {
+    auth: { isLoading: boolean; isSignUpFailed: boolean; error: string };
+  };
 }
 
 export const SignUp = ({
@@ -44,18 +45,24 @@ export const SignUp = ({
   currentState: { auth },
 }: ISignUp): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
-  console.log('auth', auth);
 
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [userNameError, setUserNameError] = useState<boolean>(false);
-  const [userNameErrorMsg, setUserNameErrorMsg] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<boolean>(false);
+  const [userNameErrorMsg, setUsernameErrorMsg] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [emailErrorMsg, setEmailErrorMsg] = useState<string>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (auth?.isSignUpFailed) {
+      setUsernameError(true);
+      setUsernameErrorMsg(auth.error);
+    }
+  }, [auth, auth.isSignUpFailed]);
 
   const onSignInButtonPress = (): void => {
     navigate(AppRoute.SIGN_IN);
@@ -66,7 +73,7 @@ export const SignUp = ({
     inputFieldError: (v: boolean) => void,
     value: React.SetStateAction<string>,
   ) => {
-    inputField(value);
+    inputField(value.trim());
     inputFieldError(false);
   };
 
@@ -80,22 +87,22 @@ export const SignUp = ({
       validationResult?.email &&
       validationResult?.password
     ) {
-      setUserNameError(true);
-      setUserNameErrorMsg(validationResult?.username[0]);
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
       setEmailError(true);
       setEmailErrorMsg(validationResult?.email[0]);
       setPasswordError(true);
       setPasswordErrorMsg(validationResult?.password[0]);
     } else if (validationResult?.username) {
-      setUserNameError(true);
-      setUserNameErrorMsg(validationResult?.username[0]);
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
     } else if (validationResult?.email) {
       setEmailError(true);
       setEmailErrorMsg(validationResult?.email[0]);
     } else if (validationResult?.password) {
       setPasswordError(true);
       setPasswordErrorMsg(validationResult?.password[0]);
-    } else {
+    } else if (!usernameError && !emailError && !passwordError) {
       signUp({ username, email, password });
     }
   };
@@ -113,8 +120,6 @@ export const SignUp = ({
       <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
     </TouchableWithoutFeedback>
   );
-
-  console.log('currentState', auth);
 
   return (
     <KeyboardAvoidingView style={{ backgroundColor: 'white' }}>
@@ -138,12 +143,12 @@ export const SignUp = ({
           <Input
             style={styles.input}
             value={username.trim()}
-            caption={userNameError ? userNameErrorMsg : ''}
-            status={userNameError ? 'danger' : 'basic'}
+            caption={usernameError ? userNameErrorMsg : ''}
+            status={usernameError ? 'danger' : 'basic'}
             placeholder="username"
             accessoryRight={PersonIcon}
             onChangeText={(nextValue) =>
-              handleInput(setUsername, setUserNameError, nextValue)
+              handleInput(setUsername, setUsernameError, nextValue)
             }
           />
           <Input
@@ -200,9 +205,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: { marginTop: 10 },
-  socialAuthContainer: {
-    // marginTop: 24,
-  },
   stretch: {
     height: 200,
     top: -80,
@@ -236,22 +238,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 28,
     backgroundColor: '#6F99EB',
     fontFamily: 'Verdana',
-  },
-  signUpButton: {
-    marginVertical: 0,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    fontFamily: 'Verdana',
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
   },
   indicator: {
     justifyContent: 'center',

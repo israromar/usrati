@@ -13,26 +13,34 @@ export const signUp = ({ username, email, password }) => (
   console.log('getState', getState());
   // Initial action dispatched
   dispatch({ type: authConstants.SIGNUP_REQUEST });
-  return;
-  createUser({ username, password, userType: 'parent' })
-    .then((user) => {
-      console.log('res: ', user);
-      dispatch({
-        type: authConstants.SIGNUP_SUCCESS,
-        payload: user.token,
+  setTimeout(() => {
+    createUser({ username, password, userType: 'parent' })
+      .then((user) => {
+        console.log(
+          '🚀 ~ file: auth.actions.js ~ line 19 ~ .then ~ user',
+          user,
+        );
+        dispatch({
+          type: authConstants.SIGNUP_SUCCESS,
+          payload: user.token,
+        });
+        dispatch({
+          type: userConstants.UPDATE_USER,
+          payload: user,
+        });
+      })
+      .catch(({ error }) => {
+        console.log(
+          '🚀 ~ file: auth.actions.js ~ line 30 ~ setTimeout ~ err',
+          error,
+        );
+        dispatch({
+          type: authConstants.SIGNUP_FAIL,
+          payload: error,
+        });
       });
-      dispatch({
-        type: userConstants.UPDATE_USER,
-        payload: user,
-      });
-    })
-    .catch((err) => {
-      console.log('errordasda: ', err);
-      dispatch({
-        type: authConstants.SIGNUP_FAIL,
-        payload: err.error,
-      });
-    });
+  }, 3000);
+
   return Promise.resolve();
 };
 
@@ -49,16 +57,14 @@ export const signIn = ({ username, password }) => (dispatch) => {
         );
         AsyncStorage.setItem('userToken', user.token);
 
-        setTimeout(() => {
-          dispatch({
-            type: authConstants.SIGNIN_SUCCESS,
-            payload: user.token,
-          });
-          dispatch({
-            type: userConstants.UPDATE_USER,
-            payload: user.data,
-          });
-        }, 5000);
+        dispatch({
+          type: authConstants.SIGNIN_SUCCESS,
+          payload: user.token,
+        });
+        dispatch({
+          type: userConstants.UPDATE_USER,
+          payload: user.data,
+        });
       } else {
         dispatch({
           type: authConstants.SIGNIN_FAIL,

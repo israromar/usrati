@@ -15,8 +15,6 @@ import { ImageOverlay } from '../../../components';
 import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
-// import { InputField } from '../../../components/inputs/input.component';
-// import { Loading } from '../../loading';
 import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LoadingIndicator } from '../sign-up';
@@ -33,8 +31,6 @@ export const SignIn = ({
   signIn,
   currentState: { auth },
 }: ISignIn): React.ReactElement => {
-  console.log('authauthauthauth', auth);
-
   const { navigate, ...rest } = useNavigation();
   const [username, setUsername] = useState<string>('');
   const [usernameError, setUsernameError] = useState<boolean>(false);
@@ -45,8 +41,6 @@ export const SignIn = ({
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log('authasdasdasd', auth);
-
     if (auth?.isSignInFailed) {
       setUsernameError(true);
       setPasswordError(true);
@@ -61,7 +55,7 @@ export const SignIn = ({
     if (inputField === 'username') {
       setUsernameError(false);
       setUsernameErrorMsg('');
-      setUsername(value.replace(/\s/g, ''));
+      setUsername(value.trim());
       if (auth.isSignInFailed) {
         setPasswordError(false);
         setPasswordErrorMsg('');
@@ -99,10 +93,6 @@ export const SignIn = ({
   const onSignUpButtonPress = (): void => {
     navigate(AppRoute.SIGN_UP);
   };
-
-  // const onForgotPasswordButtonPress = (): void => {
-  //   navigate(AppRoute.RESET_PASSWORD);
-  // };
 
   const hanldeBackPress = () => {
     rest.goBack();
@@ -185,9 +175,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  socialAuthContainer: {
-    // marginTop: 24,
-  },
   stretch: {
     height: 200,
     top: -80,
@@ -211,8 +198,6 @@ const styles = StyleSheet.create({
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
-    // position: 'relative',
-    // zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
@@ -223,22 +208,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 28,
     backgroundColor: '#6F99EB',
     fontFamily: 'Verdana',
-  },
-  signUpButton: {
-    marginVertical: 0,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    fontFamily: 'Verdana',
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
   },
   indicator: {
     justifyContent: 'center',
