@@ -14,7 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 // import { validate } from 'validate.js';
 import { useDispatch } from 'react-redux';
 
-// import { AppRoute } from '../../../navigation/app-routes';
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -29,41 +28,59 @@ import { logout } from '../../../store/actions/auth.actions';
 // }
 import StepIndicator from '../../../components/step-indicator';
 
-export const FamilySetup = (): React.ReactElement => {
-  const { navigate, ...rest } = useNavigation();
+export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
+  // const { navigate } = useNavigation();
   const dispatch = useDispatch();
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [email, setEmail] = useState<string>('');
-  const [familyNameError, setfamilyNameError] = useState<boolean>(false);
-  const [familyNameErrorMsg, setfamilyNameErrorMsg] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [familyIdError, setfamilyIdError] = useState<boolean>(false);
-  const [familyIdErrorMsg, setfamilyIdErrorMsg] = useState<string>('');
+  // const [email, setEmail] = useState<string>('');
+  // const [password, setPassword] = useState<string>('');
+
+  const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
+  const [familyName, setFamilyName] = useState<string>('');
+  const [familyNameError, setFamilyNameError] = useState<boolean>(false);
+  const [familyNameErrorMsg, setFamilyNameErrorMsg] = useState<string>('');
+
+  const [familyId, setFamilyId] = useState<string>('Id-112');
+  const [familyIdError, setFamilyIdError] = useState<boolean>(false);
+  const [familyIdErrorMsg, setFamilyIdErrorMsg] = useState<string>('');
+
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date('Jan 01, 2010 00:20:18'));
   const [dateSelected, setDateSelected] = useState(false);
   const [filePath, setFilePath] = useState(null);
-  const [familyImage, setFamilyImage] = useState(null);
   const [guardianImage, setGuardianImage] = useState(null);
   const [childImage, setChildImage] = useState(null);
 
-  const handleInput = (
-    inputField: string,
+  const handleFamilySettingInput = (
+    inputField: (v: React.SetStateAction<string>) => void,
+    inputFieldError: (v: boolean) => void,
     value: React.SetStateAction<string>,
   ) => {
-    if (inputField === 'email') {
-      setfamilyNameError(false);
-      setEmail(value.replace(/\s/g, ''));
-    } else {
-      setfamilyIdError(false);
-      setPassword(value);
-    }
+    inputField(value.trim());
+    inputFieldError(false);
   };
 
-  const onAddFamilySetup = (position) => {
-    setCurrentPosition(position);
+  const handleAddFamilySetup = async (position: number): void => {
+    if (familyId && familyName) {
+      console.log('qweqweqwe', familyId, 'qweqweqwe', familyName);
+
+      // setCurrentPosition(position);
+      const a = await onAddFamilySettings({
+        familyId,
+        familyName,
+        familyPhoto,
+      });
+      console.log(
+        '🚀 ~ file: index.tsx ~ line 88 ~ handleAddFamilySetup ~ a',
+        a,
+      );
+    } else if (familyName === '') {
+      console.log('errorrr', familyId, 'errorrr', familyName);
+      setFamilyNameError(true);
+      setFamilyNameErrorMsg('Cannot be empty!');
+    }
     // navigate(AppRoute.ADD_CHILD);
   };
 
@@ -84,7 +101,7 @@ export const FamilySetup = (): React.ReactElement => {
     console.log('submit');
   };
 
-  const chooseFile = (type: string, imageSetter: () => {}) => {
+  const chooseFile = (type: string, imageSetter: () => any) => {
     let options = {
       mediaType: type,
       maxWidth: 300,
@@ -123,8 +140,8 @@ export const FamilySetup = (): React.ReactElement => {
 
   const renderFileUri = (val) => {
     if (val === 'family') {
-      if (familyImage) {
-        return <Avatar source={{ uri: familyImage }} style={styles.avatar} />;
+      if (familyPhoto) {
+        return <Avatar source={{ uri: familyPhoto }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -216,31 +233,35 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Family Setting
           </Text>
-          <TouchableOpacity onPress={() => chooseFile('photo', setFamilyImage)}>
+          <TouchableOpacity onPress={() => chooseFile('photo', setFamilyPhoto)}>
             {renderFileUri('family')}
           </TouchableOpacity>
           <Input
             style={{ marginTop: 10 }}
-            value={email.trim()}
+            value={familyName.trim()}
             caption={familyNameError ? familyNameErrorMsg : ''}
             status={familyNameError ? 'danger' : 'basic'}
             placeholder="Family name"
-            onChangeText={(nextValue) => handleInput('familyName', nextValue)}
+            onChangeText={(nextValue) =>
+              handleFamilySettingInput(
+                setFamilyName,
+                setFamilyNameError,
+                nextValue,
+              )
+            }
           />
           <Input
             style={{ marginTop: 10 }}
-            value={password.trim()}
+            value={familyId.trim()}
             caption={familyIdError ? familyIdErrorMsg : ''}
             status={familyIdError ? 'danger' : 'basic'}
             placeholder="Family id"
-            onChangeText={(nextValue) => handleInput('familyId', nextValue)}
+            onChangeText={(nextValue) =>
+              handleFamilySettingInput(setFamilyId, setFamilyIdError, nextValue)
+            }
           />
-          {/* <TouchableOpacity
-              style={{ backgroundColor: 'red', top: 20 }}
-              onPress={onSignOutPress}
-            > */}
           <Button
-            onPress={() => onAddFamilySetup(1)}
+            onPress={() => handleAddFamilySetup(1)}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
@@ -248,7 +269,6 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Add
           </Button>
-          {/* </TouchableOpacity> */}
         </Layout>
       )}
 
@@ -268,11 +288,13 @@ export const FamilySetup = (): React.ReactElement => {
           </TouchableOpacity>
           <Input
             style={{ marginTop: 10 }}
-            value={email.trim()}
-            caption={familyNameError ? familyNameErrorMsg : ''}
-            status={familyNameError ? 'danger' : 'basic'}
+            value={guardianUsername.trim()}
+            caption={guardianUsernameError ? guardianUsernameErrorMsg : ''}
+            status={guardianUsernameError ? 'danger' : 'basic'}
             placeholder="User name"
-            onChangeText={(nextValue) => handleInput('familyName', nextValue)}
+            onChangeText={(nextValue) =>
+              handleFamilySettingInput(setGuardianUsername, nextValue)
+            }
           />
           <Input
             style={{ marginTop: 10 }}
@@ -280,10 +302,12 @@ export const FamilySetup = (): React.ReactElement => {
             caption={familyIdError ? familyIdErrorMsg : ''}
             status={familyIdError ? 'danger' : 'basic'}
             placeholder="Password"
-            onChangeText={(nextValue) => handleInput('familyId', nextValue)}
+            onChangeText={(nextValue) =>
+              handleFamilySettingInput('familyId', nextValue)
+            }
           />
           <Button
-            onPress={() => onAddFamilySetup(2)}
+            onPress={() => handleAddFamilySetup(2)}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
@@ -303,13 +327,6 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Child
           </Text>
-          {/* <TouchableOpacity>
-            <Avatar
-              style={styles.avatar}
-              size="giant"
-              source={require('./assets/child-avatar.png')}
-            />
-          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => chooseFile('photo', setChildImage)}>
             {renderFileUri('child')}
           </TouchableOpacity>
@@ -317,11 +334,13 @@ export const FamilySetup = (): React.ReactElement => {
             <>
               <Input
                 style={{ marginTop: 10 }}
-                value={email.trim()}
+                value={name.trim()}
                 // caption={emailError ? emailErrorMsg : ''}
                 // status={emailError ? 'danger' : 'basic'}
                 placeholder="Name"
-                onChangeText={(nextValue) => handleInput('email', nextValue)}
+                onChangeText={(nextValue) =>
+                  handleFamilySettingInput('email', nextValue)
+                }
               />
               <Modal
                 visible={visible}
@@ -358,12 +377,14 @@ export const FamilySetup = (): React.ReactElement => {
               </TouchableOpacity>
               <Input
                 style={{ marginTop: 10 }}
-                value={password.trim()}
+                value={shoolName.trim()}
                 // caption={passwordError ? passwordErrorMsg : ''}
                 // status={passwordError ? 'danger' : 'basic'}
                 placeholder="School name"
                 secureTextEntry={secureTextEntry}
-                onChangeText={(nextValue) => handleInput('password', nextValue)}
+                onChangeText={(nextValue) =>
+                  handleFamilySettingInput('password', nextValue)
+                }
               />
             </>
           )}
@@ -371,21 +392,25 @@ export const FamilySetup = (): React.ReactElement => {
             <>
               <Input
                 style={{ marginTop: 10 }}
-                value={password.trim()}
+                value={interest.trim()}
                 // caption={passwordError ? passwordErrorMsg : ''}
                 // status={passwordError ? 'danger' : 'basic'}
                 placeholder="Interest"
                 secureTextEntry={secureTextEntry}
-                onChangeText={(nextValue) => handleInput('password', nextValue)}
+                onChangeText={(nextValue) =>
+                  handleFamilySettingInput('password', nextValue)
+                }
               />
               <Input
                 style={{ marginTop: 10 }}
-                value={password.trim()}
+                value={username.trim()}
                 // caption={passwordError ? passwordErrorMsg : ''}
                 // status={passwordError ? 'danger' : 'basic'}
                 placeholder="Username"
                 secureTextEntry={secureTextEntry}
-                onChangeText={(nextValue) => handleInput('password', nextValue)}
+                onChangeText={(nextValue) =>
+                  handleFamilySettingInput('password', nextValue)
+                }
               />
               <Input
                 style={{ marginTop: 10 }}
@@ -394,7 +419,9 @@ export const FamilySetup = (): React.ReactElement => {
                 // status={passwordError ? 'danger' : 'basic'}
                 placeholder="Password"
                 secureTextEntry={secureTextEntry}
-                onChangeText={(nextValue) => handleInput('password', nextValue)}
+                onChangeText={(nextValue) =>
+                  handleFamilySettingInput('password', nextValue)
+                }
               />
             </>
           )}

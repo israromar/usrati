@@ -10,36 +10,28 @@ export const signUp = ({ username, email, password }) => (
   dispatch,
   getState,
 ) => {
-  console.log('getState', getState());
   // Initial action dispatched
   dispatch({ type: authConstants.SIGNUP_REQUEST });
-  setTimeout(() => {
-    createUser({ username, password, userType: 'parent' })
-      .then((user) => {
-        console.log(
-          '🚀 ~ file: auth.actions.js ~ line 19 ~ .then ~ user',
-          user,
-        );
-        dispatch({
-          type: authConstants.SIGNUP_SUCCESS,
-          payload: user.token,
-        });
-        dispatch({
-          type: userConstants.UPDATE_USER,
-          payload: user,
-        });
-      })
-      .catch(({ error }) => {
-        console.log(
-          '🚀 ~ file: auth.actions.js ~ line 30 ~ setTimeout ~ err',
-          error,
-        );
-        dispatch({
-          type: authConstants.SIGNUP_FAIL,
-          payload: error,
-        });
+
+  createUser({ username, password, userType: 'parent' })
+    .then((user) => {
+      AsyncStorage.setItem('userToken', user.token);
+
+      dispatch({
+        type: authConstants.SIGNUP_SUCCESS,
+        payload: user.token,
       });
-  }, 3000);
+      dispatch({
+        type: userConstants.UPDATE_USER,
+        payload: user,
+      });
+    })
+    .catch(({ error }) => {
+      dispatch({
+        type: authConstants.SIGNUP_FAIL,
+        payload: error,
+      });
+    });
 
   return Promise.resolve();
 };
@@ -49,12 +41,7 @@ export const signIn = ({ username, password }) => (dispatch) => {
 
   login({ username, password })
     .then((user) => {
-      console.log('login success: ', user);
       if (user.token) {
-        console.log(
-          '🚀 ~ file: auth.actions.js ~ line 46 ~ .then ~ user',
-          user,
-        );
         AsyncStorage.setItem('userToken', user.token);
 
         dispatch({
@@ -73,7 +60,6 @@ export const signIn = ({ username, password }) => (dispatch) => {
       }
     })
     .catch((err) => {
-      console.log('errordasda: ', err);
       dispatch({
         type: authConstants.SIGNIN_FAIL,
         payload: err.error,

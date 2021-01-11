@@ -23,20 +23,28 @@ const usrati = axios.create({
   },
 });
 
-// usrati.interceptors.request.use(
-//   (config) => {
-//     return getUser().then((user) => {
-//       user = JSON.parse(user);
-//       if (user && user.token) {
-//         config.headers.Authorization = `Bearer ${user.token}`;
-//       }
-//       console.log(config);
-//       return Promise.resolve(config);
-//     });
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   },
-// );
+usrati.interceptors.request.use(
+  (config) => {
+    return getUser().then((token) => {
+      console.log(
+        '🚀 ~ file: usrati.js ~ line 29 ~ returngetUser ~ user',
+        token,
+      );
+      // user = JSON.parse(token);
+      console.log(
+        '🚀 ~ file: usrati.js ~ line 34 ~ returngetUser ~ user',
+        token,
+      );
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      console.log(config);
+      return Promise.resolve(config);
+    });
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 export default usrati;

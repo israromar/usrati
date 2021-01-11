@@ -27,6 +27,23 @@ export function createUser(payload) {
     });
 }
 
+export function addFamily(payload) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 31 ~ addFamilySetting ~ payload',
+    payload,
+  );
+  return http
+    .post('family', payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 18 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 23 ~ createUser ~ error', error);
+      throw error.response.data;
+    });
+}
+
 export function createEmployer(employer) {
   return http
     .post('employers', employer)

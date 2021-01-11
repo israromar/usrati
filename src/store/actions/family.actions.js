@@ -1,33 +1,24 @@
-import {
-  authConstants,
-  familySettingsConstants,
-  userConstants,
-} from '../../constants';
+import { familySettingsConstants } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addFamily } from '../../services/api';
 
-export const updateUser = (user) => ({
-  type: userConstants.UPDATE_USER,
-  payload: user,
-});
-
-// export const getUser = (user) => ({
-//   type: userConstants,
-//   payload: user,
-// });
-
-export const addFamilySettings = ({ familyName, familyId, familyPhoto }) => (
+export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
   dispatch,
 ) => {
+  console.log('here-------------', familyId, familyName, familyPhoto);
   // AsyncStorage.removeItem('userToken');
   dispatch({
     type: familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST,
   });
-  addFamily({ familyName, familyId, familyPhoto })
+  addFamily({ name: familyName, photo: familyPhoto })
     .then((res) => {
+      console.log(
+        '🚀 ~ file: family.actions.js ~ line 15 ~ .then ~ res',
+        res.SUCCESS,
+      );
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_SUCCESS,
-        payload: res,
+        payload: res.SUCCESS,
       });
     })
     .catch((error) => {
