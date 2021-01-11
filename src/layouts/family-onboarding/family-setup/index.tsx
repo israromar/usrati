@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import {
   Avatar,
   Layout,
@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 // import { AppRoute } from '../../../navigation/app-routes';
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-// import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -44,6 +44,10 @@ export const FamilySetup = (): React.ReactElement => {
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date('Jan 01, 2010 00:20:18'));
   const [dateSelected, setDateSelected] = useState(false);
+  const [filePath, setFilePath] = useState(null);
+  const [familyImage, setFamilyImage] = useState(null);
+  const [guardianImage, setGuardianImage] = useState(null);
+  const [childImage, setChildImage] = useState(null);
 
   const handleInput = (
     inputField: string,
@@ -78,6 +82,90 @@ export const FamilySetup = (): React.ReactElement => {
 
   const handleSubmit = () => {
     console.log('submit');
+  };
+
+  const chooseFile = (type: string, imageSetter: () => {}) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response: any) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        Alert.alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        Alert.alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        Alert.alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        Alert.alert(response.errorMessage);
+        return;
+      }
+      console.log('base64 -> ', response.base64);
+      console.log('uri -> ', response.uri);
+      console.log('width -> ', response.width);
+      console.log('height -> ', response.height);
+      console.log('fileSize -> ', response.fileSize);
+      console.log('type -> ', response.type);
+      console.log('fileName -> ', response.fileName);
+      setFilePath(response);
+      imageSetter(response.uri);
+    });
+  };
+
+  console.log('sdasdasd', filePath);
+
+  const renderFileUri = (val) => {
+    if (val === 'family') {
+      if (familyImage) {
+        return <Avatar source={{ uri: familyImage }} style={styles.avatar} />;
+      } else {
+        return (
+          <Avatar
+            source={require('./assets/guardian-avatar.png')}
+            style={styles.avatar}
+          />
+        );
+      }
+    } else if (val === 'guardian') {
+      if (guardianImage) {
+        return <Avatar source={{ uri: guardianImage }} style={styles.avatar} />;
+      } else {
+        return (
+          <Avatar
+            source={require('./assets/guardian-avatar.png')}
+            style={styles.avatar}
+          />
+        );
+      }
+    } else if (val === 'child') {
+      if (childImage) {
+        return <Avatar source={{ uri: childImage }} style={styles.avatar} />;
+      } else {
+        return (
+          <Avatar
+            source={require('./assets/child-avatar.png')}
+            style={styles.avatar}
+          />
+        );
+      }
+    }
+    // if (filePath?.uri) {
+    //   return <Avatar source={{ uri: filePath?.uri }} style={styles.avatar} />;
+    // } else {
+    //   return (
+    //     <Avatar
+    //       source={require('./assets/guardian-avatar.png')}
+    //       style={styles.avatar}
+    //     />
+    //   );
+    // }
   };
 
   return (
@@ -128,12 +216,8 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Family Setting
           </Text>
-          <TouchableOpacity>
-            <Avatar
-              style={styles.avatar}
-              size="giant"
-              source={require('./assets/guardian-avatar.png')}
-            />
+          <TouchableOpacity onPress={() => chooseFile('photo', setFamilyImage)}>
+            {renderFileUri('family')}
           </TouchableOpacity>
           <Input
             style={{ marginTop: 10 }}
@@ -177,12 +261,10 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Guardian
           </Text>
-          <TouchableOpacity>
-            <Avatar
-              style={styles.avatar}
-              size="giant"
-              source={require('./assets/guardian-avatar.png')}
-            />
+          <TouchableOpacity
+            onPress={() => chooseFile('photo', setGuardianImage)}
+          >
+            {renderFileUri('guardian')}
           </TouchableOpacity>
           <Input
             style={{ marginTop: 10 }}
@@ -221,12 +303,15 @@ export const FamilySetup = (): React.ReactElement => {
           >
             Child
           </Text>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Avatar
               style={styles.avatar}
               size="giant"
               source={require('./assets/child-avatar.png')}
             />
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => chooseFile('photo', setChildImage)}>
+            {renderFileUri('child')}
           </TouchableOpacity>
           {!isNext && (
             <>
@@ -347,13 +432,15 @@ export const FamilySetup = (): React.ReactElement => {
           </Button>
         </Layout>
       )}
-      <Layout style={styles.bottomContainer}>
-        <TouchableOpacity onPress={onSignOutPress}>
-          <Button style={styles.singOutButton} appearance="outline">
-            {i18n.t('home.signOut')}
-          </Button>
-        </TouchableOpacity>
-      </Layout>
+      {currentPosition !== 3 && (
+        <Layout style={styles.bottomContainer}>
+          <TouchableOpacity onPress={onSignOutPress}>
+            <Button style={styles.singOutButton} appearance="outline">
+              {i18n.t('home.signOut')}
+            </Button>
+          </TouchableOpacity>
+        </Layout>
+      )}
     </KeyboardAvoidingView>
   );
 };
