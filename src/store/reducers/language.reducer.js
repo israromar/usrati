@@ -1,4 +1,4 @@
-import { languageConstants } from '../../constants/lanugage.constants';
+import { languageConstants } from '../../constants/language.constants';
 
 let initialState = {
   activeLanguage: 'en',

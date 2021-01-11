@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -19,14 +19,22 @@ import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
 // import { Loading } from '../../loading';
 import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { LoadingIndicator } from '../sign-up';
 import { Swiper } from '../common/swiper';
 
 interface ISignIn {
   signIn(obj: IPropsSignIn): void;
+  currentState: {
+    auth: { isLoading: boolean; isSignInFailed: boolean; error: string };
+  };
 }
 
-export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
+export const SignIn = ({
+  signIn,
+  currentState: { auth },
+}: ISignIn): React.ReactElement => {
+  console.log('authauthauthauth', auth);
+
   const { navigate, ...rest } = useNavigation();
   const [username, setUsername] = useState<string>('');
   const [usernameError, setUsernameError] = useState<boolean>(false);
@@ -36,44 +44,65 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
+  useEffect(() => {
+    console.log('authasdasdasd', auth);
+
+    if (auth?.isSignInFailed) {
+      setUsernameError(true);
+      setPasswordError(true);
+      setPasswordErrorMsg(auth.error);
+    }
+  }, [auth, auth.isSignInFailed]);
+
   const handleInput = (
     inputField: string,
     value: React.SetStateAction<string>,
   ) => {
     if (inputField === 'username') {
       setUsernameError(false);
+      setUsernameErrorMsg('');
       setUsername(value.replace(/\s/g, ''));
+      if (auth.isSignInFailed) {
+        setPasswordError(false);
+        setPasswordErrorMsg('');
+      }
     } else {
+      // setUsernameError(false);
+      // setUsernameErrorMsg('');
       setPasswordError(false);
+      setPasswordErrorMsg('');
       setPassword(value);
     }
   };
 
-  const onSignInButtonPress = (): void => {
-    // const validationResult = validate({ username, password }, constraints);
-    // if (validationResult?.username && validationResult?.password) {
-    //   setUsernameError(true);
-    //   setUsernameErrorMsg(validationResult?.username[0]);
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else if (validationResult?.username) {
-    //   setUsernameError(true);
-    //   setUsernameErrorMsg(validationResult?.username[0]);
-    // } else if (validationResult?.password) {
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else {
-    signIn({ username, password });
-    // }
+  const onSignInButtonPress = async () => {
+    const validationResult = await validate(
+      { username, password },
+      constraints,
+    );
+    if (validationResult?.username && validationResult?.password) {
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else if (validationResult?.username) {
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
+    } else if (validationResult?.password) {
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else {
+      signIn({ username, password });
+    }
   };
 
   const onSignUpButtonPress = (): void => {
     navigate(AppRoute.SIGN_UP);
   };
 
-  const onForgotPasswordButtonPress = (): void => {
-    navigate(AppRoute.RESET_PASSWORD);
-  };
+  // const onForgotPasswordButtonPress = (): void => {
+  //   navigate(AppRoute.RESET_PASSWORD);
+  // };
 
   const hanldeBackPress = () => {
     rest.goBack();
@@ -134,8 +163,9 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
               status="control"
               size="giant"
               appearance="ghost"
+              accessoryLeft={auth.isLoading && LoadingIndicator}
             >
-              Sign In
+              {auth.isLoading ? '' : 'Sign In'}
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>

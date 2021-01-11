@@ -6,7 +6,16 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Layout, Icon, Button, Input, Text } from '@ui-kitten/components';
+import { shallowEqual, useSelector } from 'react-redux';
+
+import {
+  Layout,
+  Icon,
+  Button,
+  Input,
+  Text,
+  Spinner,
+} from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js';
 
@@ -19,12 +28,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Swiper } from '../common/swiper';
 import { constraints } from '../../../utils/constraints';
 
-interface ISignIn {
+export const LoadingIndicator = (props: any) => (
+  <View style={[props.style, styles.indicator]}>
+    <Spinner size="small" />
+  </View>
+);
+
+interface ISignUp {
   signUp(obj: IPropsSignUp): void;
+  currentState: { auth: { isLoading: boolean } };
 }
 
-export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
+export const SignUp = ({
+  signUp,
+  currentState: { auth },
+}: ISignUp): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
+  console.log('auth', auth);
+
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -54,10 +75,6 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
       { username, email, password },
       constraints,
     );
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 61 ~ onSignInButtonPress ~ validationResult',
-      validationResult,
-    );
     if (
       validationResult?.username &&
       validationResult?.email &&
@@ -79,13 +96,8 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
       setPasswordError(true);
       setPasswordErrorMsg(validationResult?.password[0]);
     } else {
-      // signIn({ email, password });
       signUp({ username, email, password });
     }
-  };
-
-  const onForgotPasswordButtonPress = (): void => {
-    navigate(AppRoute.RESET_PASSWORD);
   };
 
   const hanldeBackPress = () => {
@@ -102,7 +114,7 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
     </TouchableWithoutFeedback>
   );
 
-  console.log('nameeeee:', username, email, password);
+  console.log('currentState', auth);
 
   return (
     <KeyboardAvoidingView style={{ backgroundColor: 'white' }}>
@@ -165,8 +177,9 @@ export const SignUp = ({ signUp }: ISignIn): React.ReactElement => {
               status="control"
               size="giant"
               appearance="ghost"
+              accessoryLeft={auth?.isLoading && LoadingIndicator}
             >
-              Sign Up
+              {auth.isLoading ? '' : 'Sign Up'}
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>

@@ -8,8 +8,9 @@ export function login(payload) {
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 11 ~ login ~ error', error);
+      // console.log('🚀 ~ file: api.js ~ line 11 ~ login ~ error', error);
       console.error(error);
+      return error;
     });
 }
 
