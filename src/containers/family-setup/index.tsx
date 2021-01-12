@@ -3,7 +3,7 @@ import React from 'react';
 // import { signIn } from '../../store/actions/auth.actions';
 import { addFamilySettings } from '../../store/actions/family.actions';
 import { FamilySetupScreen } from '../../layouts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 export interface IFamilySetup {
   familyId: string;
   familyName: string;
@@ -11,6 +11,7 @@ export interface IFamilySetup {
 }
 export const FamilySetupContainer = () => {
   const dispatch = useDispatch();
+  const currentState = useSelector((state) => state);
 
   const handleAddFamilySettings = ({
     familyId,
@@ -20,5 +21,10 @@ export const FamilySetupContainer = () => {
     dispatch(addFamilySettings({ familyId, familyName, familyPhoto }));
   };
 
-  return <FamilySetupScreen onAddFamilySettings={handleAddFamilySettings} />;
+  return (
+    <FamilySetupScreen
+      onAddFamilySettings={handleAddFamilySettings}
+      currentState={currentState}
+    />
+  );
 };

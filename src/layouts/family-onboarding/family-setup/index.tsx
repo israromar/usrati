@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import {
   Avatar,
@@ -10,7 +10,6 @@ import {
   Modal,
   Calendar,
 } from '@ui-kitten/components';
-import { useNavigation } from '@react-navigation/native';
 // import { validate } from 'validate.js';
 import { useDispatch } from 'react-redux';
 
@@ -22,79 +21,195 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import i18n from '../../../translations';
 import { logout } from '../../../store/actions/auth.actions';
-
-// interface ISi-gnIn {
-//   FamilySetup(obj: IPropsSignIn): void;
-// }
 import StepIndicator from '../../../components/step-indicator';
 
-export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
+interface IFamilySetup {
+  onAddFamilySettings(obj: {
+    familyId: string;
+    familyName: string;
+    familyPhoto: string;
+  }): void;
+  currentState: {
+    family: {
+      isAddFamilyFail: boolean;
+      isAddFamilySuccess: boolean;
+      addFamilyError: string;
+    };
+  };
+}
+
+export const FamilySetup = ({
+  onAddFamilySettings,
+  currentState: {
+    family: { isAddFamilyFail },
+  },
+}: IFamilySetup): React.ReactElement => {
   // const { navigate } = useNavigation();
   const dispatch = useDispatch();
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(2);
   // const [email, setEmail] = useState<string>('');
   // const [password, setPassword] = useState<string>('');
 
-  const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
+  // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
+  const [familyPhoto, setFamilyPhoto] = useState('');
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
   const [familyNameErrorMsg, setFamilyNameErrorMsg] = useState<string>('');
+
+  const [guardianUsername, setGuardianUsername] = useState('');
+  const [guardianUsernameError, setGuardianUsernameError] = useState<boolean>(
+    false,
+  );
+  const [guardianUsernameErrorMsg, setGuardianUsernameErrorMsg] = useState<
+    string
+  >('');
+
+  const [guardianPassword, setGuardianPassword] = useState('');
+  const [guardianPasswordError, setGuardianPasswordError] = useState<boolean>(
+    false,
+  );
+  const [guardianPasswordErrorMsg, setGuardianPasswordErrorMsg] = useState<
+    string
+  >('');
 
   const [familyId, setFamilyId] = useState<string>('Id-112');
   const [familyIdError, setFamilyIdError] = useState<boolean>(false);
   const [familyIdErrorMsg, setFamilyIdErrorMsg] = useState<string>('');
 
-  const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+  // const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [filePath, setFilePath] = useState(null);
+  const [guardianPhoto, setGuardianPhoto] = useState(null);
+
+  const [childPhoto, setChildPhoto] = useState(null);
+  const [childName, setChildName] = useState<string>('');
+  const [childNameError, setChildNameError] = useState<boolean>(false);
+  const [childNameErrorMsg, setChildNameErrorMsg] = useState<string>('');
   const [date, setDate] = useState(new Date('Jan 01, 2010 00:20:18'));
   const [dateSelected, setDateSelected] = useState(false);
-  const [filePath, setFilePath] = useState(null);
-  const [guardianImage, setGuardianImage] = useState(null);
-  const [childImage, setChildImage] = useState(null);
+
+  const [schoolName, setSchoolName] = useState<string>('');
+  const [schoolNameError, setSchoolNameError] = useState<boolean>(false);
+  const [schoolNameErrorMsg, setSchoolNameErrorMsg] = useState<string>('');
+
+  const [childInterest, setChildInterest] = useState<string>('');
+  const [childInterestError, setChildInterestError] = useState<boolean>(false);
+  const [childInterestErrorMsg, setChildInterestErrorMsg] = useState<string>(
+    '',
+  );
+
+  const [childUsername, setChildUsername] = useState<string>('');
+  const [childUsernameError, setChildUsernameError] = useState<boolean>(false);
+  const [childUsernameErrorMsg, setChildUsernameErrorMsg] = useState<string>(
+    '',
+  );
+
+  const [childPassword, setChildPassword] = useState<string>('');
+  const [childPasswordError, setChildPasswordError] = useState<boolean>(false);
+  const [childPasswordErrorMsg, setChildPasswordErrorMsg] = useState<string>(
+    '',
+  );
+
+  // useEffect(() => {
+  //   if (isAddFamilyFail) {
+  //     console.log('currentState', isAddFamilyFail);
+
+  //     Alert.alert('Adding Family Settings Fail');
+  //     // setAddFa(true);
+  //     // setUsernameErrorMsg(auth.error);
+  //   } else {
+  //     Alert.alert('Adding Family Settings Success');
+  //     setCurrentPosition(1);
+  //   }
+  // }, [isAddFamilyFail]);
 
   const handleFamilySettingInput = (
     inputField: (v: React.SetStateAction<string>) => void,
     inputFieldError: (v: boolean) => void,
     value: React.SetStateAction<string>,
   ) => {
-    inputField(value.trim());
+    inputField(value);
     inputFieldError(false);
   };
 
-  const handleAddFamilySetup = async (position: number): void => {
-    if (familyId && familyName) {
-      console.log('qweqweqwe', familyId, 'qweqweqwe', familyName);
+  const handleAddFamilySetup = async (position: number): Promise<void> => {
+    console.log('family name: ', guardianUsername, !guardianUsername);
 
-      // setCurrentPosition(position);
-      const a = await onAddFamilySettings({
-        familyId,
-        familyName,
-        familyPhoto,
-      });
-      console.log(
-        '🚀 ~ file: index.tsx ~ line 88 ~ handleAddFamilySetup ~ a',
-        a,
-      );
-    } else if (familyName === '') {
-      console.log('errorrr', familyId, 'errorrr', familyName);
-      setFamilyNameError(true);
-      setFamilyNameErrorMsg('Cannot be empty!');
+    if (position === 1) {
+      if (familyId && familyName) {
+        // setCurrentPosition(position);
+        onAddFamilySettings({
+          familyId,
+          familyName,
+          familyPhoto,
+        });
+      } else if (familyName === '') {
+        setFamilyNameError(true);
+        setFamilyNameErrorMsg('Family name cannot be empty');
+      }
+    } else if (position === 2) {
+      if (guardianUsername && guardianPassword) {
+        // setCurrentPosition(position);
+        onAddFamilySettings({
+          familyId,
+          familyName,
+          familyPhoto,
+        });
+      } else if (guardianUsername === '' && guardianPassword === '') {
+        setGuardianUsernameError(!guardianUsername);
+        setGuardianPasswordError(!guardianPassword);
+        setGuardianUsernameErrorMsg('Username cannot be empty');
+        setGuardianPasswordErrorMsg('Password cannot be empty');
+      } else if (guardianUsername === '') {
+        setGuardianUsernameError(!guardianUsername);
+        setGuardianUsernameErrorMsg('Username cannot be empty');
+      } else if (guardianPassword === '') {
+        setGuardianPasswordError(!guardianPassword);
+        setGuardianPasswordErrorMsg('Password cannot be empty');
+      }
     }
-    // navigate(AppRoute.ADD_CHILD);
   };
 
   const onSignOutPress = () => {
     dispatch(logout());
   };
 
-  const handleAddChild = (flag) => {
-    if (flag === 'Next') {
-      setIsNext(true);
-    } else {
-      // setIsNext(false);
-      setCurrentPosition(3);
+  useEffect(() => {
+    if (!childName) {
+      setChildNameErrorMsg('Name cannot be empty');
     }
+    if (!schoolName) {
+      setSchoolNameErrorMsg('School name cannot be empty');
+    }
+    if (childInterestError) {
+      setChildInterestErrorMsg('Interests cannot be empty');
+    }
+    if (!childUsername) {
+      setChildUsernameErrorMsg('Username cannot be empty');
+    }
+    if (!childPassword) {
+      setChildPasswordErrorMsg('Password cannot be empty');
+    }
+  }, [
+    isNext,
+    childInterest,
+    childInterestError,
+    childName,
+    childNameError,
+    childPassword,
+    childUsername,
+    schoolName,
+    schoolNameError,
+  ]);
+
+  const handleAddChild = () => {
+    setChildNameError(!childName);
+    setSchoolNameError(!schoolName);
+    setChildInterestError(!childInterest);
+    setChildUsernameError(!childUsername);
+    setChildPasswordError(!childPassword);
+    setIsNext(!!childName && !!schoolName);
   };
 
   const handleSubmit = () => {
@@ -136,8 +251,6 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
     });
   };
 
-  console.log('sdasdasd', filePath);
-
   const renderFileUri = (val) => {
     if (val === 'family') {
       if (familyPhoto) {
@@ -151,8 +264,8 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
         );
       }
     } else if (val === 'guardian') {
-      if (guardianImage) {
-        return <Avatar source={{ uri: guardianImage }} style={styles.avatar} />;
+      if (guardianPhoto) {
+        return <Avatar source={{ uri: guardianPhoto }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -162,8 +275,8 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
         );
       }
     } else if (val === 'child') {
-      if (childImage) {
-        return <Avatar source={{ uri: childImage }} style={styles.avatar} />;
+      if (childPhoto) {
+        return <Avatar source={{ uri: childPhoto }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -173,16 +286,28 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
         );
       }
     }
-    // if (filePath?.uri) {
-    //   return <Avatar source={{ uri: filePath?.uri }} style={styles.avatar} />;
-    // } else {
-    //   return (
-    //     <Avatar
-    //       source={require('./assets/guardian-avatar.png')}
-    //       style={styles.avatar}
-    //     />
-    //   );
-    // }
+  };
+
+  const renderSkipForNow = () => {
+    return (
+      <TouchableOpacity
+        style={{
+          height: 20,
+          right: 5,
+        }}
+      >
+        <Text
+          style={{
+            textDecorationLine: 'underline',
+            alignSelf: 'flex-end',
+          }}
+          category="h6"
+          status="info"
+        >
+          Skip for now
+        </Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -217,7 +342,9 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
               <StepIndicator
                 currentPosition={currentPosition}
                 direction={'horizontal'}
-                onStepPress={() => { }}
+                onStepPress={(position: React.SetStateAction<number>) =>
+                  setCurrentPosition(position)
+                }
               />
             </Layout>
           )}
@@ -282,7 +409,7 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
             Guardian
           </Text>
           <TouchableOpacity
-            onPress={() => chooseFile('photo', setGuardianImage)}
+            onPress={() => chooseFile('photo', setGuardianPhoto)}
           >
             {renderFileUri('guardian')}
           </TouchableOpacity>
@@ -291,19 +418,27 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
             value={guardianUsername.trim()}
             caption={guardianUsernameError ? guardianUsernameErrorMsg : ''}
             status={guardianUsernameError ? 'danger' : 'basic'}
-            placeholder="User name"
+            placeholder="Username"
             onChangeText={(nextValue) =>
-              handleFamilySettingInput(setGuardianUsername, nextValue)
+              handleFamilySettingInput(
+                setGuardianUsername,
+                setGuardianUsernameError,
+                nextValue,
+              )
             }
           />
           <Input
             style={{ marginTop: 10 }}
-            value={password.trim()}
-            caption={familyIdError ? familyIdErrorMsg : ''}
-            status={familyIdError ? 'danger' : 'basic'}
+            value={guardianPassword.trim()}
+            caption={guardianPasswordError ? guardianPasswordErrorMsg : ''}
+            status={guardianPasswordError ? 'danger' : 'basic'}
             placeholder="Password"
             onChangeText={(nextValue) =>
-              handleFamilySettingInput('familyId', nextValue)
+              handleFamilySettingInput(
+                setGuardianPassword,
+                setGuardianPasswordError,
+                nextValue,
+              )
             }
           />
           <Button
@@ -315,6 +450,15 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
           >
             Add
           </Button>
+          <Layout
+            style={{
+              marginLeft: 'auto',
+              backgroundColor: 'transparent',
+              top: 35,
+            }}
+          >
+            {renderSkipForNow()}
+          </Layout>
         </Layout>
       )}
 
@@ -327,19 +471,23 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
           >
             Child
           </Text>
-          <TouchableOpacity onPress={() => chooseFile('photo', setChildImage)}>
+          <TouchableOpacity onPress={() => chooseFile('photo', setChildPhoto)}>
             {renderFileUri('child')}
           </TouchableOpacity>
           {!isNext && (
             <>
               <Input
                 style={{ marginTop: 10 }}
-                value={name.trim()}
-                // caption={emailError ? emailErrorMsg : ''}
-                // status={emailError ? 'danger' : 'basic'}
+                value={childName.trim()}
+                caption={childNameError ? childNameErrorMsg : ''}
+                status={childNameError ? 'danger' : 'basic'}
                 placeholder="Name"
                 onChangeText={(nextValue) =>
-                  handleFamilySettingInput('email', nextValue)
+                  handleFamilySettingInput(
+                    setChildName,
+                    setChildNameError,
+                    nextValue,
+                  )
                 }
               />
               <Modal
@@ -377,58 +525,89 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
               </TouchableOpacity>
               <Input
                 style={{ marginTop: 10 }}
-                value={shoolName.trim()}
-                // caption={passwordError ? passwordErrorMsg : ''}
-                // status={passwordError ? 'danger' : 'basic'}
+                value={schoolName.trim()}
+                caption={schoolNameError ? schoolNameErrorMsg : ''}
+                status={schoolNameError ? 'danger' : 'basic'}
                 placeholder="School name"
-                secureTextEntry={secureTextEntry}
+                // //secureTextEntry={secureTextEntry}
                 onChangeText={(nextValue) =>
-                  handleFamilySettingInput('password', nextValue)
+                  handleFamilySettingInput(
+                    setSchoolName,
+                    setSchoolNameError,
+                    nextValue,
+                  )
                 }
               />
+              <Layout
+                style={{
+                  marginLeft: 'auto',
+                  backgroundColor: 'transparent',
+                  marginVertical: 15,
+                }}
+              >
+                {renderSkipForNow()}
+              </Layout>
             </>
           )}
           {isNext && (
             <>
               <Input
                 style={{ marginTop: 10 }}
-                value={interest.trim()}
-                // caption={passwordError ? passwordErrorMsg : ''}
-                // status={passwordError ? 'danger' : 'basic'}
+                value={childInterest.trim()}
+                caption={childInterestError ? childInterestErrorMsg : ''}
+                status={childInterestError ? 'danger' : 'basic'}
                 placeholder="Interest"
-                secureTextEntry={secureTextEntry}
                 onChangeText={(nextValue) =>
-                  handleFamilySettingInput('password', nextValue)
+                  handleFamilySettingInput(
+                    setChildInterest,
+                    setChildInterestError,
+                    nextValue,
+                  )
                 }
               />
               <Input
                 style={{ marginTop: 10 }}
-                value={username.trim()}
-                // caption={passwordError ? passwordErrorMsg : ''}
-                // status={passwordError ? 'danger' : 'basic'}
+                value={childUsername.trim()}
+                caption={childUsernameError ? childUsernameErrorMsg : ''}
+                status={childUsernameError ? 'danger' : 'basic'}
                 placeholder="Username"
-                secureTextEntry={secureTextEntry}
                 onChangeText={(nextValue) =>
-                  handleFamilySettingInput('password', nextValue)
+                  handleFamilySettingInput(
+                    setChildUsername,
+                    setChildUsernameError,
+                    nextValue,
+                  )
                 }
               />
               <Input
                 style={{ marginTop: 10 }}
-                value={password.trim()}
-                // caption={passwordError ? passwordErrorMsg : ''}
-                // status={passwordError ? 'danger' : 'basic'}
+                value={childPassword.trim()}
+                caption={childPasswordError ? childPasswordErrorMsg : ''}
+                status={childPasswordError ? 'danger' : 'basic'}
                 placeholder="Password"
-                secureTextEntry={secureTextEntry}
+                //secureTextEntry={secureTextEntry}
                 onChangeText={(nextValue) =>
-                  handleFamilySettingInput('password', nextValue)
+                  handleFamilySettingInput(
+                    setChildPassword,
+                    setChildPasswordError,
+                    nextValue,
+                  )
                 }
               />
+              <Button
+                onPress={() => setIsNext(false)}
+                style={{
+                  marginLeft: 'auto',
+                  marginTop: 0,
+                }}
+                appearance="outline"
+              >
+                Back
+              </Button>
             </>
           )}
           <Button
-            onPress={() => {
-              handleAddChild(!isNext ? 'Next' : 'Add');
-            }}
+            onPress={handleAddChild}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
@@ -438,28 +617,7 @@ export const FamilySetup = ({ onAddFamilySettings }): React.ReactElement => {
           </Button>
         </Layout>
       )}
-
-      {currentPosition === 3 && (
-        <Layout style={styles.stepperContainer}>
-          <StepIndicator
-            currentPosition={currentPosition}
-            direction={'vertical'}
-            onStepPress={(position: React.SetStateAction<number>) =>
-              setCurrentPosition(position)
-            }
-          />
-          <Button
-            onPress={handleSubmit}
-            style={styles.primarySubmitButton}
-            status="control"
-            size="giant"
-            appearance="ghost"
-          >
-            Submit
-          </Button>
-        </Layout>
-      )}
-      {currentPosition !== 3 && (
+      {currentPosition !== 2 && (
         <Layout style={styles.bottomContainer}>
           <TouchableOpacity onPress={onSignOutPress}>
             <Button style={styles.singOutButton} appearance="outline">
