@@ -31,10 +31,6 @@ usrati.interceptors.request.use(
         token,
       );
       // user = JSON.parse(token);
-      console.log(
-        '🚀 ~ file: usrati.js ~ line 34 ~ returngetUser ~ user',
-        token,
-      );
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

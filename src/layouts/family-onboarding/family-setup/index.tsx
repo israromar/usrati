@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert, PermissionsAndroid, StyleSheet } from 'react-native';
 import {
   Avatar,
   Layout,
@@ -19,16 +19,14 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { IFamilySetup, IGuardian } from '../../../containers/family-setup';
 import i18n from '../../../translations';
 import { logout } from '../../../store/actions/auth.actions';
 import StepIndicator from '../../../components/step-indicator';
 
-interface IFamilySetup {
-  onAddFamilySettings(obj: {
-    familyId: string;
-    familyName: string;
-    familyPhoto: string;
-  }): void;
+interface IAddFamilySetup {
+  onAddFamilySettings(obj: IFamilySetup): void;
+  onAddGuardian(obj: IGuardian): void;
   currentState: {
     family: {
       isAddFamilyFail: boolean;
@@ -40,16 +38,14 @@ interface IFamilySetup {
 
 export const FamilySetup = ({
   onAddFamilySettings,
+  onAddGuardian,
   currentState: {
     family: { isAddFamilyFail },
   },
-}: IFamilySetup): React.ReactElement => {
+}: IAddFamilySetup): React.ReactElement => {
   // const { navigate } = useNavigation();
   const dispatch = useDispatch();
-  const [currentPosition, setCurrentPosition] = useState(2);
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-
+  const [currentPosition, setCurrentPosition] = useState(0);
   // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
   const [familyPhoto, setFamilyPhoto] = useState('');
   const [familyName, setFamilyName] = useState<string>('');
@@ -133,48 +129,108 @@ export const FamilySetup = ({
     inputFieldError(false);
   };
 
-  const handleAddFamilySetup = async (position: number): Promise<void> => {
-    console.log('family name: ', guardianUsername, !guardianUsername);
+  // const handleAddFamilySetup1 = async (position: number): Promise<void> => {
+  //   if (position === 1) {
+  //     if (familyId && familyName) {
+  //       onAddFamilySettings({
+  //         familyId,
+  //         familyName,
+  //         familyPhoto,
+  //       });
+  //     } else if (familyName === '' && familyId === '') {
+  //       setFamilyNameError(true);
+  //       setFamilyNameErrorMsg('Family name cannot be empty');
+  //       setFamilyIdError(true);
+  //       setFamilyIdErrorMsg('Family Id cannot be empty');
+  //     } else if (familyName === '') {
+  //       setFamilyNameError(true);
+  //       setFamilyNameErrorMsg('Family name cannot be empty');
+  //     } else if (familyId === '') {
+  //       setFamilyIdError(true);
+  //       setFamilyIdErrorMsg('Family Id cannot be empty');
+  //     }
+  //   } else if (position === 2) {
+  //     if (guardianUsername && guardianPassword) {
+  //       onAddGuardian({
+  //         email: 'test@test.com',
+  //         username: guardianUsername,
+  //         password: guardianPassword,
+  //       });
+  //     } else if (guardianUsername === '' && guardianPassword === '') {
+  //       setGuardianUsernameError(!guardianUsername);
+  //       setGuardianPasswordError(!guardianPassword);
+  //       setGuardianUsernameErrorMsg('Username cannot be empty');
+  //       setGuardianPasswordErrorMsg('Password cannot be empty');
+  //     } else if (guardianUsername === '') {
+  //       setGuardianUsernameError(!guardianUsername);
+  //       setGuardianUsernameErrorMsg('Username cannot be empty');
+  //     } else if (guardianPassword === '') {
+  //       setGuardianPasswordError(!guardianPassword);
+  //       setGuardianPasswordErrorMsg('Password cannot be empty');
+  //     }
+  //   }
+  // };
 
+  // useEffect(() => {
+  //   if (!familyId) {
+  //     setFamilyIdErrorMsg('Family Id cannot be empty');
+  //   }
+  //   if (!familyName) {
+  //     setFamilyNameErrorMsg('Name cannot be empty');
+  //   }
+  //   if (!guardianUsername) {
+  //     setGuardianUsernameErrorMsg('Username cannot be empty');
+  //   }
+  //   if (!guardianPassword) {
+  //     setGuardianPasswordErrorMsg('Password cannot be empty');
+  //   }
+  // }, [familyId, familyName, guardianPassword, guardianUsername]);
+
+  const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
       if (familyId && familyName) {
-        // setCurrentPosition(position);
         onAddFamilySettings({
           familyId,
           familyName,
           familyPhoto,
         });
-      } else if (familyName === '') {
-        setFamilyNameError(true);
-        setFamilyNameErrorMsg('Family name cannot be empty');
       }
-    } else if (position === 2) {
+      setFamilyNameError(!familyName);
+      setFamilyIdError(!familyId);
+    } else {
       if (guardianUsername && guardianPassword) {
-        // setCurrentPosition(position);
-        onAddFamilySettings({
-          familyId,
-          familyName,
-          familyPhoto,
+        onAddGuardian({
+          email: 'test@test.com',
+          username: guardianUsername,
+          password: guardianPassword,
         });
-      } else if (guardianUsername === '' && guardianPassword === '') {
-        setGuardianUsernameError(!guardianUsername);
-        setGuardianPasswordError(!guardianPassword);
-        setGuardianUsernameErrorMsg('Username cannot be empty');
-        setGuardianPasswordErrorMsg('Password cannot be empty');
-      } else if (guardianUsername === '') {
-        setGuardianUsernameError(!guardianUsername);
-        setGuardianUsernameErrorMsg('Username cannot be empty');
-      } else if (guardianPassword === '') {
-        setGuardianPasswordError(!guardianPassword);
-        setGuardianPasswordErrorMsg('Password cannot be empty');
       }
+      setGuardianUsernameError(!guardianUsername);
+      setGuardianPasswordError(!guardianPassword);
     }
   };
 
-  const onSignOutPress = () => {
-    dispatch(logout());
-  };
+  // family setting form effect
+  useEffect(() => {
+    if (!familyId) {
+      setFamilyIdErrorMsg('Family Id cannot be empty');
+    }
+    if (!familyName) {
+      setFamilyNameErrorMsg('Name cannot be empty');
+    }
+  }, [familyId, familyName]);
 
+  // guardian form effect
+  useEffect(() => {
+    if (!guardianUsername) {
+      setGuardianUsernameErrorMsg('Username cannot be empty');
+    }
+    if (!guardianPassword) {
+      setGuardianPasswordErrorMsg('Password cannot be empty');
+    }
+  }, [guardianUsername, guardianPassword]);
+
+  // child form effect
   useEffect(() => {
     if (!childName) {
       setChildNameErrorMsg('Name cannot be empty');
@@ -182,7 +238,10 @@ export const FamilySetup = ({
     if (!schoolName) {
       setSchoolNameErrorMsg('School name cannot be empty');
     }
-    if (childInterestError) {
+  }, [childName, schoolName]);
+
+  useEffect(() => {
+    if (!childInterest) {
       setChildInterestErrorMsg('Interests cannot be empty');
     }
     if (!childUsername) {
@@ -191,39 +250,75 @@ export const FamilySetup = ({
     if (!childPassword) {
       setChildPasswordErrorMsg('Password cannot be empty');
     }
-  }, [
-    isNext,
-    childInterest,
-    childInterestError,
-    childName,
-    childNameError,
-    childPassword,
-    childUsername,
-    schoolName,
-    schoolNameError,
-  ]);
+  }, [childInterest, childUsername, childPassword]);
 
-  const handleAddChild = () => {
-    setChildNameError(!childName);
-    setSchoolNameError(!schoolName);
-    setChildInterestError(!childInterest);
-    setChildUsernameError(!childUsername);
-    setChildPasswordError(!childPassword);
+  const handleAddChild = (flag: string) => {
+    if (
+      childName &&
+      schoolName &&
+      childUsername &&
+      childInterest &&
+      childPassword
+    ) {
+      console.log('Go.....');
+    }
+    if (flag === 'Next') {
+      setChildNameError(!childName);
+      setSchoolNameError(!schoolName);
+    } else {
+      setChildInterestError(!childInterest);
+      setChildUsernameError(!childUsername);
+      setChildPasswordError(!childPassword);
+    }
     setIsNext(!!childName && !!schoolName);
+  };
+
+  const onSignOutPress = () => {
+    dispatch(logout());
   };
 
   const handleSubmit = () => {
     console.log('submit');
   };
 
-  const chooseFile = (type: string, imageSetter: () => any) => {
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Cool Photo App Camera Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const chooseFile = async (type: string, imageSetter: () => any) => {
     let options = {
       mediaType: type,
       maxWidth: 300,
       maxHeight: 550,
       quality: 1,
     };
-    launchImageLibrary(options, (response: any) => {
+    const granted = await requestCameraPermission();
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 316 ~ chooseFile ~ granted',
+      granted,
+    );
+
+    launchCamera(options, (response: any) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
@@ -236,6 +331,8 @@ export const FamilySetup = ({
         Alert.alert('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
+        console.log('response.errorMessage', response.errorMessage);
+
         Alert.alert(response.errorMessage);
         return;
       }
@@ -251,7 +348,7 @@ export const FamilySetup = ({
     });
   };
 
-  const renderFileUri = (val) => {
+  const renderFileUri = (val: string) => {
     if (val === 'family') {
       if (familyPhoto) {
         return <Avatar source={{ uri: familyPhoto }} style={styles.avatar} />;
@@ -301,7 +398,7 @@ export const FamilySetup = ({
             textDecorationLine: 'underline',
             alignSelf: 'flex-end',
           }}
-          category="h6"
+          category="h7"
           status="info"
         >
           Skip for now
@@ -553,7 +650,7 @@ export const FamilySetup = ({
             <>
               <Input
                 style={{ marginTop: 10 }}
-                value={childInterest.trim()}
+                value={childInterest}
                 caption={childInterestError ? childInterestErrorMsg : ''}
                 status={childInterestError ? 'danger' : 'basic'}
                 placeholder="Interest"
@@ -607,7 +704,7 @@ export const FamilySetup = ({
             </>
           )}
           <Button
-            onPress={handleAddChild}
+            onPress={() => handleAddChild(!isNext ? 'Next' : 'Add')}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
