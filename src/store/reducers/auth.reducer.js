@@ -1,4 +1,4 @@
-import { authConstants, userConstants } from '../../constants';
+import { authConstants } from '../../constants';
 
 const initialState = {
   isLoading: false,
@@ -6,7 +6,7 @@ const initialState = {
   isSignUpFailed: false,
   isSignInFailed: false,
   userToken: null,
-  user: null,
+  user: {},
   error: null,
 };
 
@@ -54,7 +54,8 @@ export default function (state = initialState, action) {
     case authConstants.SIGNIN_SUCCESS: {
       return {
         ...state,
-        userToken: payload,
+        userToken: payload.token,
+        user: payload.data,
         isLoading: false,
         isLoggedIn: true,
         isSignInFailed: false,

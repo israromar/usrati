@@ -1,6 +1,16 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { Alert, PermissionsAndroid, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Alert,
+  PermissionsAndroid,
+  StyleSheet,
+  Animated,
+  Dimensions,
+  Modal as RNModal,
+  PanResponder,
+  View,
+} from 'react-native';
 import {
   Avatar,
   Layout,
@@ -11,13 +21,14 @@ import {
   Calendar,
 } from '@ui-kitten/components';
 // import { validate } from 'validate.js';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
 // import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+// import Modal from 'react-native-modal';
 
 import { IFamilySetup, IGuardian } from '../../../containers/family-setup';
 import i18n from '../../../translations';
@@ -44,7 +55,7 @@ export const FamilySetup = ({
   },
 }: IAddFamilySetup): React.ReactElement => {
   // const { navigate } = useNavigation();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [currentPosition, setCurrentPosition] = useState(0);
   // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
   const [familyPhoto, setFamilyPhoto] = useState('');
@@ -75,6 +86,9 @@ export const FamilySetup = ({
   // const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [mediaSelectorModalVisible, setMediaSelectorModalVisible] = useState(
+    false,
+  );
   const [filePath, setFilePath] = useState(null);
   const [guardianPhoto, setGuardianPhoto] = useState(null);
 
@@ -107,6 +121,56 @@ export const FamilySetup = ({
     '',
   );
 
+  // const [onDismiss, setOnDismiss] = useState(false);
+
+  const screenHeight = Dimensions.get('screen').height;
+  const panY = useRef(new Animated.Value(screenHeight)).current;
+
+  const resetPositionAnim = Animated.timing(panY, {
+    toValue: 0,
+    duration: 300,
+    useNativeDriver: true,
+  });
+
+  const closeAnim = Animated.timing(panY, {
+    toValue: screenHeight / 2,
+    duration: 100,
+    useNativeDriver: true,
+  });
+
+  const translateY = panY.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [0, 0, 1],
+  });
+
+  const handleMediaSelectorModal = () => {
+    setMediaSelectorModalVisible(false);
+  };
+
+  const handleDismiss = () => {
+    closeAnim.start(handleMediaSelectorModal);
+  };
+
+  useEffect(() => {
+    resetPositionAnim.start();
+  }, [resetPositionAnim]);
+
+  const panResponders = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => false,
+      onPanResponderMove: Animated.event([null, { dy: panY }], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (_, gs) => {
+        if (gs.dy > 0 && gs.vy > 2) {
+          return handleDismiss();
+        }
+        return resetPositionAnim.start();
+      },
+    }),
+  ).current;
+
   // useEffect(() => {
   //   if (isAddFamilyFail) {
   //     console.log('currentState', isAddFamilyFail);
@@ -128,63 +192,6 @@ export const FamilySetup = ({
     inputField(value);
     inputFieldError(false);
   };
-
-  // const handleAddFamilySetup1 = async (position: number): Promise<void> => {
-  //   if (position === 1) {
-  //     if (familyId && familyName) {
-  //       onAddFamilySettings({
-  //         familyId,
-  //         familyName,
-  //         familyPhoto,
-  //       });
-  //     } else if (familyName === '' && familyId === '') {
-  //       setFamilyNameError(true);
-  //       setFamilyNameErrorMsg('Family name cannot be empty');
-  //       setFamilyIdError(true);
-  //       setFamilyIdErrorMsg('Family Id cannot be empty');
-  //     } else if (familyName === '') {
-  //       setFamilyNameError(true);
-  //       setFamilyNameErrorMsg('Family name cannot be empty');
-  //     } else if (familyId === '') {
-  //       setFamilyIdError(true);
-  //       setFamilyIdErrorMsg('Family Id cannot be empty');
-  //     }
-  //   } else if (position === 2) {
-  //     if (guardianUsername && guardianPassword) {
-  //       onAddGuardian({
-  //         email: 'test@test.com',
-  //         username: guardianUsername,
-  //         password: guardianPassword,
-  //       });
-  //     } else if (guardianUsername === '' && guardianPassword === '') {
-  //       setGuardianUsernameError(!guardianUsername);
-  //       setGuardianPasswordError(!guardianPassword);
-  //       setGuardianUsernameErrorMsg('Username cannot be empty');
-  //       setGuardianPasswordErrorMsg('Password cannot be empty');
-  //     } else if (guardianUsername === '') {
-  //       setGuardianUsernameError(!guardianUsername);
-  //       setGuardianUsernameErrorMsg('Username cannot be empty');
-  //     } else if (guardianPassword === '') {
-  //       setGuardianPasswordError(!guardianPassword);
-  //       setGuardianPasswordErrorMsg('Password cannot be empty');
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (!familyId) {
-  //     setFamilyIdErrorMsg('Family Id cannot be empty');
-  //   }
-  //   if (!familyName) {
-  //     setFamilyNameErrorMsg('Name cannot be empty');
-  //   }
-  //   if (!guardianUsername) {
-  //     setGuardianUsernameErrorMsg('Username cannot be empty');
-  //   }
-  //   if (!guardianPassword) {
-  //     setGuardianPasswordErrorMsg('Password cannot be empty');
-  //   }
-  // }, [familyId, familyName, guardianPassword, guardianUsername]);
 
   const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
@@ -273,83 +280,65 @@ export const FamilySetup = ({
     setIsNext(!!childName && !!schoolName);
   };
 
-  const onSignOutPress = () => {
-    dispatch(logout());
-  };
+  // const handleSubmit = () => {
+  //   console.log('submit');
+  // };
 
-  const handleSubmit = () => {
-    console.log('submit');
-  };
-
-  const requestCameraPermission = async () => {
+  const requestCameraPermission = async (permissionFor: string) => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-      } else {
-        console.log('Camera permission denied');
-      }
+      const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS[permissionFor]);
+      return permission;
     } catch (err) {
       console.warn(err);
     }
   };
 
-  const chooseFile = async (type: string, imageSetter: () => any) => {
+  const chooseFile = async (mediaType: string, permissionFor: string, mediaTypeInvoker: any) => {
     let options = {
-      mediaType: type,
+      mediaType,
       maxWidth: 300,
       maxHeight: 550,
       quality: 1,
     };
-    const granted = await requestCameraPermission();
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 316 ~ chooseFile ~ granted',
-      granted,
-    );
+    const permission = await requestCameraPermission(permissionFor);
+    if (permission === 'never_ask_again') {
+      Alert.alert(`Go to your app info and enable permission for ${permissionFor}.`);
+    }
+    if (permission === 'granted') {
+      mediaTypeInvoker(options, (response: any) => {
+        console.log('Response = ', response);
 
-    launchCamera(options, (response: any) => {
-      console.log('Response = ', response);
+        if (response.didCancel) {
+          Alert.alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          Alert.alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          Alert.alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          console.log('response.errorMessage', response.errorMessage);
 
-      if (response.didCancel) {
-        Alert.alert('User cancelled camera picker');
-        return;
-      } else if (response.errorCode == 'camera_unavailable') {
-        Alert.alert('Camera not available on device');
-        return;
-      } else if (response.errorCode == 'permission') {
-        Alert.alert('Permission not satisfied');
-        return;
-      } else if (response.errorCode == 'others') {
-        console.log('response.errorMessage', response.errorMessage);
+          Alert.alert(response.errorMessage);
+          return;
+        }
+        console.log('base64 -> ', response.base64);
+        console.log('uri -> ', response.uri);
+        console.log('width -> ', response.width);
+        console.log('height -> ', response.height);
+        console.log('fileSize -> ', response.fileSize);
+        console.log('type -> ', response.type);
+        console.log('fileName -> ', response.fileName);
+        setFilePath(response);
 
-        Alert.alert(response.errorMessage);
-        return;
-      }
-      console.log('base64 -> ', response.base64);
-      console.log('uri -> ', response.uri);
-      console.log('width -> ', response.width);
-      console.log('height -> ', response.height);
-      console.log('fileSize -> ', response.fileSize);
-      console.log('type -> ', response.type);
-      console.log('fileName -> ', response.fileName);
-      setFilePath(response);
-      imageSetter(response.uri);
-    });
+        [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response.uri);
+      });
+    }
   };
 
   const renderFileUri = (val: string) => {
-    if (val === 'family') {
+    if (currentPosition === 0) {
       if (familyPhoto) {
         return <Avatar source={{ uri: familyPhoto }} style={styles.avatar} />;
       } else {
@@ -360,7 +349,7 @@ export const FamilySetup = ({
           />
         );
       }
-    } else if (val === 'guardian') {
+    } else if (currentPosition === 1) {
       if (guardianPhoto) {
         return <Avatar source={{ uri: guardianPhoto }} style={styles.avatar} />;
       } else {
@@ -409,6 +398,63 @@ export const FamilySetup = ({
 
   return (
     <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
+      <RNModal
+        animated
+        animationType="fade"
+        visible={mediaSelectorModalVisible}
+        transparent
+        onRequestClose={handleDismiss}
+      >
+        <View style={styles.overlay}>
+          <Animated.View
+            style={{
+              ...styles.Modalcontainer,
+              transform: [{ translateY: translateY }],
+            }}
+            {...panResponders.panHandlers}
+          >
+            <View style={styles.sliderIndicatorRow}>
+              <View style={styles.sliderIndicator} />
+            </View>
+            <Button
+              onPress={() => {
+                chooseFile('photo', 'READ_EXTERNAL_STORAGE', READ_EXTERNAL_STORAGE);
+                handleMediaSelectorModal();
+              }}
+              style={styles.primarySubmitButton}
+              status="control"
+              size="giant"
+              appearance="ghost"
+            >
+              Choose from library
+            </Button>
+            <Button
+              onPress={() => {
+                chooseFile('photo', 'CAMERA', CAMERA);
+                handleMediaSelectorModal();
+              }}
+              style={styles.primarySubmitButton}
+              status="control"
+              size="giant"
+              appearance="ghost"
+            >
+              Take Photo
+            </Button>
+            <Button
+              onPress={handleDismiss}
+              style={[
+                styles.primarySubmitButton,
+                { backgroundColor: 'transparent', top: 25 },
+              ]}
+              size="giant"
+              appearance="outline"
+            >
+              Cancel
+            </Button>
+          </Animated.View>
+        </View>
+      </RNModal>
+
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../../assets/images/vector.png')}
@@ -457,7 +503,11 @@ export const FamilySetup = ({
           >
             Family Setting
           </Text>
-          <TouchableOpacity onPress={() => chooseFile('photo', setFamilyPhoto)}>
+          <TouchableOpacity
+            onPress={() => {
+              setMediaSelectorModalVisible(true);
+            }}
+          >
             {renderFileUri('family')}
           </TouchableOpacity>
           <Input
@@ -505,9 +555,7 @@ export const FamilySetup = ({
           >
             Guardian
           </Text>
-          <TouchableOpacity
-            onPress={() => chooseFile('photo', setGuardianPhoto)}
-          >
+          <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
             {renderFileUri('guardian')}
           </TouchableOpacity>
           <Input
@@ -568,7 +616,7 @@ export const FamilySetup = ({
           >
             Child
           </Text>
-          <TouchableOpacity onPress={() => chooseFile('photo', setChildPhoto)}>
+          <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
             {renderFileUri('child')}
           </TouchableOpacity>
           {!isNext && (
@@ -714,20 +762,37 @@ export const FamilySetup = ({
           </Button>
         </Layout>
       )}
-      {currentPosition !== 2 && (
-        <Layout style={styles.bottomContainer}>
-          <TouchableOpacity onPress={onSignOutPress}>
-            <Button style={styles.singOutButton} appearance="outline">
-              {i18n.t('home.signOut')}
-            </Button>
-          </TouchableOpacity>
-        </Layout>
-      )}
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  Modalcontainer: {
+    backgroundColor: 'white',
+    paddingTop: 12,
+    paddingHorizontal: 12,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
+    minHeight: 230,
+  },
+  sliderIndicatorRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sliderIndicator: {
+    backgroundColor: '#CECECE',
+    height: 4,
+    width: 45,
+    borderRadius: 5,
+  },
+
   container: {
     flex: 1,
   },

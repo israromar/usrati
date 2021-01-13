@@ -38,3 +38,7 @@ export const BulbIcon = (props: any): React.ReactElement<ImageProps> => (
 export const QrIcon = (props: any): React.ReactElement<ImageProps> => (
   <Icon {...props} name="grid-outline" />
 );
+
+export const SignOutIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="log-out-outline" />
+);

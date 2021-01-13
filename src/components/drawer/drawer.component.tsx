@@ -9,6 +9,7 @@ import {
   DrawerItem,
   Button,
 } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import i18n from '../../translations';
 import {
@@ -22,7 +23,9 @@ import {
   ChevronUpIcon,
   BulbIcon,
   QrIcon,
+  SignOutIcon,
 } from './icons';
+import { logout } from '../../store/actions/auth.actions';
 
 const Header = () => (
   <Layout style={styles.headerWrap}>
@@ -57,19 +60,32 @@ const Header = () => (
   </Layout>
 );
 
-const Footer = () => (
-  <>
-    <Divider />
-    <Layout
-      accessoryLeft={MomentsIcon}
-      accessoryRight={ForwardIcon}
-      style={styles.footerWrap}
-    >
-      <Button appearance="ghost" status="primary" accessoryLeft={BulbIcon} />
-      <Button appearance="ghost" status="primary" accessoryLeft={QrIcon} />
-    </Layout>
-  </>
-);
+const Footer = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  return (
+    <>
+      <Divider />
+      <Layout
+        accessoryLeft={MomentsIcon}
+        accessoryRight={ForwardIcon}
+        style={styles.footerWrap}
+      >
+        <Button appearance="ghost" status="primary" accessoryLeft={BulbIcon} />
+        <Button
+          appearance="ghost"
+          status="primary"
+          accessoryLeft={SignOutIcon}
+          onPress={handleLogout}
+        />
+      </Layout>
+    </>
+  );
+};
 
 const DrawerContent = ({ navigation, state }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(null);

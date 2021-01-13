@@ -46,7 +46,7 @@ export const signIn = ({ username, password }) => (dispatch) => {
 
         dispatch({
           type: authConstants.SIGNIN_SUCCESS,
-          payload: user.token,
+          payload: user,
         });
         dispatch({
           type: userConstants.UPDATE_USER,

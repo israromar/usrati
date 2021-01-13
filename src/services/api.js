@@ -4,6 +4,7 @@ export function login(payload) {
   return http
     .post('user/auth/login', payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 7 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
