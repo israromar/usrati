@@ -1,6 +1,7 @@
 export enum AppRoute {
   AUTH = 'Auth',
   AUTH_WELCOME = 'Welcome',
+  DASHBOARD = 'Dashboard',
   FAMILY_SETUP = 'Family Setup',
   ADD_PARENT = 'Add Parent',
   ADD_CHILD = 'Add Child',

@@ -19,6 +19,7 @@ import {
   Text,
   Modal,
   Calendar,
+  Spinner,
 } from '@ui-kitten/components';
 // import { validate } from 'validate.js';
 // import { useDispatch } from 'react-redux';
@@ -31,13 +32,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Modal from 'react-native-modal';
 
 import { IFamilySetup, IGuardian } from '../../../containers/family-setup';
-import i18n from '../../../translations';
-import { logout } from '../../../store/actions/auth.actions';
+// import i18n from '../../../translations';
 import StepIndicator from '../../../components/step-indicator';
+import { AppRoute } from '../../../navigation/app-routes';
 
 interface IAddFamilySetup {
   onAddFamilySettings(obj: IFamilySetup): void;
   onAddGuardian(obj: IGuardian): void;
+  onSkipNow: (v: string) => void,
   currentState: {
     family: {
       isAddFamilyFail: boolean;
@@ -47,15 +49,24 @@ interface IAddFamilySetup {
   };
 }
 
+export const LoadingIndicator = (props: any) => (
+  <View style={[props.style, styles.indicator]}>
+    <Spinner size="small" />
+  </View>
+);
+
 export const FamilySetup = ({
   onAddFamilySettings,
   onAddGuardian,
+  onSkipNow,
   currentState: {
-    family: { isAddFamilyFail },
+    family,
   },
 }: IAddFamilySetup): React.ReactElement => {
   // const { navigate } = useNavigation();
   // const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [currentPosition, setCurrentPosition] = useState(0);
   // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
   const [familyPhoto, setFamilyPhoto] = useState('');
@@ -171,18 +182,21 @@ export const FamilySetup = ({
     }),
   ).current;
 
-  // useEffect(() => {
-  //   if (isAddFamilyFail) {
-  //     console.log('currentState', isAddFamilyFail);
-
-  //     Alert.alert('Adding Family Settings Fail');
-  //     // setAddFa(true);
-  //     // setUsernameErrorMsg(auth.error);
-  //   } else {
-  //     Alert.alert('Adding Family Settings Success');
-  //     setCurrentPosition(1);
-  //   }
-  // }, [isAddFamilyFail]);
+  useEffect(() => {
+    if (family?.family?.isAddFamilySuccess) {
+      isLoading && Alert.alert('Family successfully added.');
+      setIsLoading(false);
+      setCurrentPosition(1);
+      setFamilyName('');
+      // setAddFa(true);
+      // setUsernameErrorMsg(auth.error);
+    }
+    if (family?.family?.isAddFamilyFail) {
+      isLoading && Alert.alert('Something went wrong.');
+      setIsLoading(false);
+      setCurrentPosition(0);
+    }
+  }, [family]);
 
   const handleFamilySettingInput = (
     inputField: (v: React.SetStateAction<string>) => void,
@@ -195,12 +209,15 @@ export const FamilySetup = ({
 
   const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
+      setIsLoading(true);
       if (familyId && familyName) {
-        onAddFamilySettings({
-          familyId,
-          familyName,
-          familyPhoto,
-        });
+        setTimeout(() => {
+          onAddFamilySettings({
+            familyId,
+            familyName,
+            familyPhoto,
+          });
+        }, 5000);
       }
       setFamilyNameError(!familyName);
       setFamilyIdError(!familyId);
@@ -305,7 +322,7 @@ export const FamilySetup = ({
       Alert.alert(`Go to your app info and enable permission for ${permissionFor}.`);
     }
     if (permission === 'granted') {
-      mediaTypeInvoker(options, (response: any) => {
+      mediaTypeInvoker(options, async (response: any) => {
         console.log('Response = ', response);
 
         if (response.didCancel) {
@@ -331,6 +348,35 @@ export const FamilySetup = ({
         console.log('type -> ', response.type);
         console.log('fileName -> ', response.fileName);
         setFilePath(response);
+
+
+        var photo = {
+          uri: response.uri,
+          type: 'image/jpeg',
+          name: response.fileName,
+        };
+
+        var form = new FormData();
+        form.append('photo', photo);
+        form.append('email', 'testemail5@gmail.com');
+        try {
+
+          let res = await fetch(
+            'http://157.230.254.77/parent',
+            {
+              body: form,
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlzcyI6IlVzcmF0aSBBUEkiLCJpYXQiOjE2MTA1NzUwODYsImV4cCI6MTYxMDY2MTQ4Nn0.41RQXM5_LxyyaTKfWDeeOYFW95TUKgNtXhlK-VEtPx4',
+              },
+            }
+          );
+          console.log('resresresresres', res);
+
+        } catch (error) {
+          console.log('eroor = ', error);
+        }
 
         [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response.uri);
       });
@@ -381,6 +427,7 @@ export const FamilySetup = ({
           height: 20,
           right: 5,
         }}
+        onPress={() => onSkipNow(AppRoute.DASHBOARD)}
       >
         <Text
           style={{
@@ -540,8 +587,10 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
+            accessoryLeft={isLoading && LoadingIndicator}
+
           >
-            Add
+            {isLoading ? '' : 'Add'}
           </Button>
         </Layout>
       )}
