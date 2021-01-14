@@ -3,18 +3,21 @@ import { familySettingsConstants } from '../../constants';
 const initialState = {
   family: {
     families: [],
+    isAddingFamily: false,
     isAddFamilySuccess: false,
     isAddFamilyFail: false,
     addFamilyError: '',
   },
   guardian: {
     guardians: [],
+    isAddingGuardian: false,
     isAddGuardianSuccess: false,
     isAddGuardianFail: false,
     addGuardianError: '',
   },
   child: {
     children: [],
+    isAddingChild: false,
     isAddChildSuccess: false,
     isAddChildFail: false,
     addChildError: '',
@@ -22,19 +25,14 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-  // console.log('🚀 ~ file: family.reducer.js ~ line 25 ~ state', state, action);
   const { type, payload } = action;
   switch (type) {
     case familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST: {
-      console.log(
-        '🚀 ~ file: family.reducer.js ~ line 25 ~ state',
-        state.family,
-        action,
-      );
       return {
         ...state,
         family: {
           families: [...state.family.families],
+          isAddingFamily: true,
           isAddFamilySuccess: false,
           isAddFamilyFail: false,
           addFamilyError: '',
@@ -46,6 +44,7 @@ export default function (state = initialState, action) {
         ...state,
         family: {
           families: [...state.family.families, payload],
+          isAddingFamily: false,
           isAddFamilySuccess: true,
           isAddFamilyFail: false,
           addFamilyError: '',
@@ -57,6 +56,7 @@ export default function (state = initialState, action) {
         ...state,
         family: {
           families: [...state.family.families],
+          isAddingFamily: false,
           isAddFamilySuccess: false,
           isAddFamilyFail: true,
           addFamilyError: payload,
@@ -68,6 +68,7 @@ export default function (state = initialState, action) {
         ...state,
         guardian: {
           guardians: [...state.guardian.guardians],
+          isAddingGuardian: true,
           isAddGuardianSuccess: false,
           isAddGuardianFail: false,
           addGuardianError: '',
@@ -79,6 +80,7 @@ export default function (state = initialState, action) {
         ...state,
         guardian: {
           guardians: [...state.guardian.guardians, payload],
+          isAddingGuardian: false,
           isAddGuardianSuccess: true,
           isAddGuardianFail: false,
           addGuardianError: '',
@@ -90,6 +92,7 @@ export default function (state = initialState, action) {
         ...state,
         guardian: {
           guardians: [...state.guardian.guardians],
+          isAddingGuardian: false,
           isAddGuardianSuccess: false,
           isAddGuardianFail: true,
           addGuardianError: payload,
@@ -101,6 +104,7 @@ export default function (state = initialState, action) {
         ...state,
         child: {
           children: [...state.child.children],
+          isAddingChild: true,
           isAddChildSuccess: false,
           isAddChildFail: false,
           addChildError: '',
@@ -112,6 +116,7 @@ export default function (state = initialState, action) {
         ...state,
         child: {
           children: [...state.child.children, payload],
+          isAddingChild: false,
           isAddChildSuccess: true,
           isAddChildFail: false,
           addChildError: '',
@@ -123,6 +128,7 @@ export default function (state = initialState, action) {
         ...state,
         child: {
           children: [...state.child.children],
+          isAddingChild: false,
           isAddChildSuccess: false,
           isAddChildFail: true,
           addChildError: payload,

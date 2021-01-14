@@ -23,8 +23,46 @@ export function createUser(payload) {
       throw error.response.data;
     });
 }
+export function createParent(payload) {
+  return http
+    .post('parent', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: payload.token,
+      },
+      email: payload.email,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
 
 export function addFamily(payload) {
+  return http
+    .post('family', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error;
+    });
+}
+
+// export function addFamily(payload) {
+//   return http
+//     .post('family', payload)
+//     .then((response) => {
+//       return response.data;
+//     })
+//     .catch((error) => {
+//       throw error.response.data;
+//     });
+// }
+
+export function addUserPhoto(payload) {
   return http
     .post('family', payload)
     .then((response) => {
@@ -50,6 +88,7 @@ export function addNewChild(payload) {
   return http
     .post('child', payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 91 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {

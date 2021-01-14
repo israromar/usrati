@@ -4,20 +4,36 @@ import React from 'react';
 import {
   addFamilySettings,
   addGuardian,
+  addChild,
 } from '../../store/actions/family.actions';
 import { FamilySetupScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-export interface IFamilySetup {
+export interface IAddFamilySetup {
   familyId: string;
   familyName: string;
   familyPhoto: string;
 }
-export interface IGuardian {
+export interface IAddGuardian {
+  photo: null;
   email: string;
   username: string;
   password: string;
 }
+
+export interface IAddChild {
+  photo: null;
+  name: string;
+  dob: Date;
+  schoolName: string;
+  interest: string;
+  // email: string;
+  username: string;
+  password: string;
+}
+
+// photo: childPhoto, name: childName, dob, schoolName, interest: childInterest, username: childUsername, password: childPassword
+
 export const FamilySetupContainer = () => {
   const { navigate } = useNavigation();
 
@@ -28,15 +44,46 @@ export const FamilySetupContainer = () => {
     familyId,
     familyName,
     familyPhoto,
-  }: IFamilySetup) => {
+  }: IAddFamilySetup) => {
     dispatch(addFamilySettings({ familyId, familyName, familyPhoto }));
   };
 
-  const handleAddGuardian = ({ email, username, password }: IGuardian) => {
-    dispatch(addGuardian({ email, username, password }));
+  const handleAddGuardian = ({
+    photo,
+    email,
+    username,
+    password,
+  }: IAddGuardian) => {
+    dispatch(addGuardian({ photo, email, username, password }));
+  };
+
+  const handleAddChild = ({
+    photo,
+    name,
+    dob,
+    schoolName,
+    interest,
+    username,
+    password,
+  }: IAddChild) => {
+    dispatch(
+      addChild({
+        photo,
+        name,
+        dob,
+        schoolName,
+        interest,
+        username,
+        password,
+      }),
+    );
   };
 
   const handleSkipNow = (navigateTo: string): void => {
+    navigate(navigateTo);
+  };
+
+  const handleSubmit = (navigateTo: string): void => {
     navigate(navigateTo);
   };
 
@@ -44,7 +91,9 @@ export const FamilySetupContainer = () => {
     <FamilySetupScreen
       onAddFamilySettings={handleAddFamilySettings}
       onAddGuardian={handleAddGuardian}
+      onAddChild={handleAddChild}
       onSkipNow={handleSkipNow}
+      onSubmit={handleSubmit}
       currentState={currentState}
     />
   );

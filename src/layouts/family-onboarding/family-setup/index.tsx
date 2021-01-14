@@ -31,20 +31,37 @@ import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } f
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Modal from 'react-native-modal';
 
-import { IFamilySetup, IGuardian } from '../../../containers/family-setup';
+import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '../../../containers/family-setup';
 // import i18n from '../../../translations';
 import StepIndicator from '../../../components/step-indicator';
 import { AppRoute } from '../../../navigation/app-routes';
 
 interface IAddFamilySetup {
-  onAddFamilySettings(obj: IFamilySetup): void;
-  onAddGuardian(obj: IGuardian): void;
+  onAddFamilySettings(obj: IIAddFamilySetup): void;
+  onAddGuardian(obj: IAddGuardian): void;
+  onAddChild(obj: IAddChild): void;
   onSkipNow: (v: string) => void,
+  onSubmit: (v: string) => void,
   currentState: {
     family: {
-      isAddFamilyFail: boolean;
-      isAddFamilySuccess: boolean;
-      addFamilyError: string;
+      family: {
+        isAddingFamily: boolean,
+        isAddFamilyFail: boolean;
+        isAddFamilySuccess: boolean;
+        addFamilyError: string;
+      }
+      guardian: {
+        isAddingGuardian: boolean,
+        isAddGuardianFail: boolean;
+        isAddGuardianSuccess: boolean;
+        addGuardianError: string;
+      }
+      child: {
+        isAddingChild: boolean,
+        isAddChildFail: boolean;
+        isAddChildSuccess: boolean;
+        addChildError: string;
+      }
     };
   };
 }
@@ -58,14 +75,16 @@ export const LoadingIndicator = (props: any) => (
 export const FamilySetup = ({
   onAddFamilySettings,
   onAddGuardian,
+  onAddChild,
   onSkipNow,
+  onSubmit,
   currentState: {
-    family,
+    family: { family, guardian, child },
   },
 }: IAddFamilySetup): React.ReactElement => {
-  // const { navigate } = useNavigation();
-  // const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAddFamily, setIsAddFamily] = useState<boolean>(false);
+  const [isAddGuardian, setIsAddGuardian] = useState<boolean>(false);
+  const [isAddChild, setIsAddChild] = useState<boolean>(false);
 
   const [currentPosition, setCurrentPosition] = useState(0);
   // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
@@ -79,6 +98,14 @@ export const FamilySetup = ({
     false,
   );
   const [guardianUsernameErrorMsg, setGuardianUsernameErrorMsg] = useState<
+    string
+  >('');
+
+  const [guardianEmail, setGuardianEmail] = useState('');
+  const [guardianEmailError, setGuardianEmailError] = useState<boolean>(
+    false,
+  );
+  const [guardianEmailErrorMsg, setGuardianEmailErrorMsg] = useState<
     string
   >('');
 
@@ -183,20 +210,48 @@ export const FamilySetup = ({
   ).current;
 
   useEffect(() => {
-    if (family?.family?.isAddFamilySuccess) {
-      isLoading && Alert.alert('Family successfully added.');
-      setIsLoading(false);
+    if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
+      Alert.alert('Family successfully added.');
       setCurrentPosition(1);
       setFamilyName('');
-      // setAddFa(true);
-      // setUsernameErrorMsg(auth.error);
+      setIsAddFamily(false);
     }
-    if (family?.family?.isAddFamilyFail) {
-      isLoading && Alert.alert('Something went wrong.');
-      setIsLoading(false);
+    if (isAddFamily && !family?.isAddingFamily && !family?.isAddFamilySuccess && family?.isAddFamilyFail) {
+      Alert.alert(family.addFamilyError);
+      setIsAddFamily(false);
       setCurrentPosition(0);
     }
-  }, [family]);
+    if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
+      Alert.alert('Guardian successfully added.');
+      setCurrentPosition(2);
+      // setGuardianPhoto(null);
+      setGuardianUsername('');
+      setGuardianEmail('');
+      setGuardianPassword('');
+      setIsAddGuardian(false);
+    }
+    if (isAddGuardian && !guardian?.isAddingGuardian && !guardian?.isAddGuardianSuccess && guardian?.isAddGuardianFail) {
+      Alert.alert(guardian.addGuardianError);
+      setIsAddGuardian(false);
+      setCurrentPosition(1);
+    }
+    if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
+      Alert.alert('Child successfully added.');
+      setCurrentPosition(3);
+      setChildName('');
+      setDate(new Date());
+      setSchoolName('');
+      setChildInterest('');
+      setChildUsername('');
+      setChildPassword('');
+      setIsAddChild(false);
+    }
+    if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
+      Alert.alert(child?.addChildError);
+      setIsAddChild(false);
+      setCurrentPosition(2);
+    }
+  }, [child, family, guardian, isAddChild, isAddFamily, isAddGuardian]);
 
   const handleFamilySettingInput = (
     inputField: (v: React.SetStateAction<string>) => void,
@@ -209,29 +264,53 @@ export const FamilySetup = ({
 
   const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
-      setIsLoading(true);
       if (familyId && familyName) {
-        setTimeout(() => {
-          onAddFamilySettings({
-            familyId,
-            familyName,
-            familyPhoto,
-          });
-        }, 5000);
+        setIsAddFamily(true);
+        onAddFamilySettings({
+          familyId,
+          familyName,
+          familyPhoto,
+        });
       }
       setFamilyNameError(!familyName);
       setFamilyIdError(!familyId);
     } else {
-      if (guardianUsername && guardianPassword) {
+      if (guardianUsername && guardianEmail && guardianPassword) {
+        setIsAddGuardian(true);
         onAddGuardian({
-          email: 'test@test.com',
+          photo: guardianPhoto,
+          email: guardianEmail,
           username: guardianUsername,
           password: guardianPassword,
         });
       }
       setGuardianUsernameError(!guardianUsername);
+      setGuardianEmailError(!guardianEmail);
       setGuardianPasswordError(!guardianPassword);
     }
+  };
+
+  const handleAddChild = (flag: string) => {
+    if (
+      flag === 'Add' &&
+      childName &&
+      schoolName &&
+      childUsername &&
+      childInterest &&
+      childPassword
+    ) {
+      setIsAddChild(true);
+      onAddChild({ photo: childPhoto, name: childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+    }
+    if (flag === 'Next') {
+      setChildNameError(!childName);
+      setSchoolNameError(!schoolName);
+    } else {
+      setChildInterestError(!childInterest);
+      setChildUsernameError(!childUsername);
+      setChildPasswordError(!childPassword);
+    }
+    setIsNext(!!childName && !!schoolName);
   };
 
   // family setting form effect
@@ -249,10 +328,13 @@ export const FamilySetup = ({
     if (!guardianUsername) {
       setGuardianUsernameErrorMsg('Username cannot be empty');
     }
+    if (!guardianEmail) {
+      setGuardianEmailErrorMsg('Email cannot be empty');
+    }
     if (!guardianPassword) {
       setGuardianPasswordErrorMsg('Password cannot be empty');
     }
-  }, [guardianUsername, guardianPassword]);
+  }, [guardianUsername, guardianEmail, guardianPassword]);
 
   // child form effect
   useEffect(() => {
@@ -276,30 +358,9 @@ export const FamilySetup = ({
     }
   }, [childInterest, childUsername, childPassword]);
 
-  const handleAddChild = (flag: string) => {
-    if (
-      childName &&
-      schoolName &&
-      childUsername &&
-      childInterest &&
-      childPassword
-    ) {
-      console.log('Go.....');
-    }
-    if (flag === 'Next') {
-      setChildNameError(!childName);
-      setSchoolNameError(!schoolName);
-    } else {
-      setChildInterestError(!childInterest);
-      setChildUsernameError(!childUsername);
-      setChildPasswordError(!childPassword);
-    }
-    setIsNext(!!childName && !!schoolName);
+  const handleSubmit = () => {
+    onSubmit(AppRoute.DASHBOARD);
   };
-
-  // const handleSubmit = () => {
-  //   console.log('submit');
-  // };
 
   const requestCameraPermission = async (permissionFor: string) => {
     try {
@@ -324,61 +385,23 @@ export const FamilySetup = ({
     if (permission === 'granted') {
       mediaTypeInvoker(options, async (response: any) => {
         console.log('Response = ', response);
-
-        if (response.didCancel) {
-          Alert.alert('User cancelled camera picker');
-          return;
-        } else if (response.errorCode == 'camera_unavailable') {
-          Alert.alert('Camera not available on device');
-          return;
-        } else if (response.errorCode == 'permission') {
-          Alert.alert('Permission not satisfied');
-          return;
-        } else if (response.errorCode == 'others') {
-          console.log('response.errorMessage', response.errorMessage);
-
-          Alert.alert(response.errorMessage);
-          return;
-        }
-        console.log('base64 -> ', response.base64);
-        console.log('uri -> ', response.uri);
-        console.log('width -> ', response.width);
-        console.log('height -> ', response.height);
-        console.log('fileSize -> ', response.fileSize);
-        console.log('type -> ', response.type);
-        console.log('fileName -> ', response.fileName);
+        // if (response.didCancel) {
+        //   Alert.alert('User cancelled camera picker');
+        //   return;
+        // } else if (response.errorCode == 'camera_unavailable') {
+        //   Alert.alert('Camera not available on device');
+        //   return;
+        // } else if (response.errorCode == 'permission') {
+        //   Alert.alert('Permission not satisfied');
+        //   return;
+        // } else if (response.errorCode == 'others') {
+        //   console.log('response.errorMessage', response.errorMessage);
+        //   Alert.alert(response.errorMessage);
+        //   return;
+        // }
+        console.log('response -> ', response);
         setFilePath(response);
-
-
-        var photo = {
-          uri: response.uri,
-          type: 'image/jpeg',
-          name: response.fileName,
-        };
-
-        var form = new FormData();
-        form.append('photo', photo);
-        form.append('email', 'testemail5@gmail.com');
-        try {
-
-          let res = await fetch(
-            'http://157.230.254.77/parent',
-            {
-              body: form,
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlzcyI6IlVzcmF0aSBBUEkiLCJpYXQiOjE2MTA1NzUwODYsImV4cCI6MTYxMDY2MTQ4Nn0.41RQXM5_LxyyaTKfWDeeOYFW95TUKgNtXhlK-VEtPx4',
-              },
-            }
-          );
-          console.log('resresresresres', res);
-
-        } catch (error) {
-          console.log('eroor = ', error);
-        }
-
-        [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response.uri);
+        [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
       });
     }
   };
@@ -386,7 +409,7 @@ export const FamilySetup = ({
   const renderFileUri = (val: string) => {
     if (currentPosition === 0) {
       if (familyPhoto) {
-        return <Avatar source={{ uri: familyPhoto }} style={styles.avatar} />;
+        return <Avatar source={{ uri: familyPhoto?.uri }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -397,7 +420,7 @@ export const FamilySetup = ({
       }
     } else if (currentPosition === 1) {
       if (guardianPhoto) {
-        return <Avatar source={{ uri: guardianPhoto }} style={styles.avatar} />;
+        return <Avatar source={{ uri: guardianPhoto?.uri }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -408,7 +431,7 @@ export const FamilySetup = ({
       }
     } else if (val === 'child') {
       if (childPhoto) {
-        return <Avatar source={{ uri: childPhoto }} style={styles.avatar} />;
+        return <Avatar source={{ uri: childPhoto?.uri }} style={styles.avatar} />;
       } else {
         return (
           <Avatar
@@ -421,25 +444,29 @@ export const FamilySetup = ({
   };
 
   const renderSkipForNow = () => {
+
+    const handleOnSkip = () => {
+      currentPosition === 1 ? setCurrentPosition(2) : onSkipNow(AppRoute.DASHBOARD);
+    };
+
     return (
       <TouchableOpacity
-        style={{
-          height: 20,
-          right: 5,
-        }}
-        onPress={() => onSkipNow(AppRoute.DASHBOARD)}
+        style={styles.skipForNow}
+        onPress={handleOnSkip}
       >
         <Text
           style={{
             textDecorationLine: 'underline',
             alignSelf: 'flex-end',
+            fontSize: 15,
           }}
-          category="h7"
+          appearance="default"
+          category="h6"
           status="info"
         >
           Skip for now
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity >
     );
   };
 
@@ -473,7 +500,7 @@ export const FamilySetup = ({
               size="giant"
               appearance="ghost"
             >
-              Choose from library
+              Choose from gallery
             </Button>
             <Button
               onPress={() => {
@@ -587,10 +614,9 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={isLoading && LoadingIndicator}
-
+            accessoryLeft={family?.isAddingFamily && LoadingIndicator}
           >
-            {isLoading ? '' : 'Add'}
+            {family?.isAddingFamily ? '' : 'Add'}
           </Button>
         </Layout>
       )}
@@ -623,6 +649,20 @@ export const FamilySetup = ({
           />
           <Input
             style={{ marginTop: 10 }}
+            value={guardianEmail.trim()}
+            caption={guardianEmailError ? guardianEmailErrorMsg : ''}
+            status={guardianEmailError ? 'danger' : 'basic'}
+            placeholder="Email"
+            onChangeText={(nextValue) =>
+              handleFamilySettingInput(
+                setGuardianEmail,
+                setGuardianEmailError,
+                nextValue,
+              )
+            }
+          />
+          <Input
+            style={{ marginTop: 10 }}
             value={guardianPassword.trim()}
             caption={guardianPasswordError ? guardianPasswordErrorMsg : ''}
             status={guardianPasswordError ? 'danger' : 'basic'}
@@ -641,16 +681,11 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
+            accessoryLeft={guardian?.isAddingGuardian && LoadingIndicator}
           >
-            Add
+            {guardian.isAddingGuardian ? '' : 'Add'}
           </Button>
-          <Layout
-            style={{
-              marginLeft: 'auto',
-              backgroundColor: 'transparent',
-              top: 35,
-            }}
-          >
+          <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}
           </Layout>
         </Layout>
@@ -732,15 +767,6 @@ export const FamilySetup = ({
                   )
                 }
               />
-              <Layout
-                style={{
-                  marginLeft: 'auto',
-                  backgroundColor: 'transparent',
-                  marginVertical: 15,
-                }}
-              >
-                {renderSkipForNow()}
-              </Layout>
             </>
           )}
           {isNext && (
@@ -801,13 +827,37 @@ export const FamilySetup = ({
             </>
           )}
           <Button
-            onPress={() => handleAddChild(!isNext ? 'Next' : 'Add')}
+            onPress={() => handleAddChild(isNext ? 'Add' : 'Next')}
+            style={styles.primarySubmitButton}
+            status="control"
+            size="giant"
+            appearance="ghost"
+            accessoryLeft={child?.isAddingChild && LoadingIndicator}
+          >
+            {child.isAddingChild ? '' : !isNext ? 'Next' : 'Add'}
+          </Button>
+          <Layout style={styles.skipForNowWrap}>
+            {renderSkipForNow()}
+          </Layout>
+        </Layout>
+      )}
+      {currentPosition === 3 && (
+        <Layout style={styles.stepperContainer}>
+          <StepIndicator
+            currentPosition={currentPosition}
+            direction={'vertical'}
+            onStepPress={(position: React.SetStateAction<number>) =>
+              setCurrentPosition(position)
+            }
+          />
+          <Button
+            onPress={handleSubmit}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
             appearance="ghost"
           >
-            {!isNext ? 'Next' : 'Add'}
+            Submit
           </Button>
         </Layout>
       )}
@@ -853,6 +903,15 @@ const styles = StyleSheet.create({
   },
   socialAuthContainer: {
     // marginTop: 24,
+  },
+  skipForNowWrap: {
+    marginLeft: 'auto',
+    backgroundColor: 'transparent',
+    marginVertical: 35,
+  },
+  skipForNow: {
+    height: 20,
+    right: 5,
   },
   stepperContainer: {
     alignSelf: 'center',
@@ -910,22 +969,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#6F99EB',
     fontFamily: 'Verdana',
     alignSelf: 'center',
-  },
-  signUpButton: {
-    // marginVertical: 0,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    fontFamily: 'Verdana',
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
   },
   indicator: {
     justifyContent: 'center',
