@@ -18,6 +18,11 @@ import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
 import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LoadingIndicator } from '../sign-up';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
+
 import { Swiper } from '../common/swiper';
 
 interface ISignIn {
@@ -123,7 +128,7 @@ export const SignIn = ({
           </Text>
         </View>
       </ImageOverlay>
-      <Layout>
+      <Layout style={styles.mainContainer}>
         <Image style={styles.stretch} source={require('./assets/group.png')} />
         <Layout style={styles.formContainer}>
           <Input
@@ -164,7 +169,7 @@ export const SignIn = ({
               <Text style={{ color: '#6F99EB' }}>Sign Up</Text>
             </TouchableOpacity>
           </Layout>
-          <Swiper style={{ top: 25 }} position={2} />
+          <Swiper style={{ marginBottom: 10 }} position={2} />
         </Layout>
       </Layout>
     </KeyboardAvoidingView>
@@ -184,30 +189,38 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 210,
+    // minHeight: 210,
     paddingHorizontal: 28,
+    width: wp2dp('100%'),
+    height: hp2dp('30%'),
   },
   headerElements: {
-    display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     minHeight: 75,
-    bottom: 40,
+    marginBottom: 100,
   },
-  bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
+  mainContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: wp2dp('100%'),
+    height: hp2dp('70%'),
+  },
+  bottomContainer: { flex: 1, marginTop: 10, alignSelf: 'center', backgroundColor: 'transparent' },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
+    backgroundColor: 'transparent'
   },
   signInButton: {
-    width: 338,
+    // marginTop: 'auto',
+    width: wp2dp('85%'),
     borderRadius: 5,
-    marginHorizontal: 28,
     backgroundColor: '#6F99EB',
-    fontFamily: 'Verdana',
+    alignSelf: 'center'
   },
   indicator: {
     justifyContent: 'center',

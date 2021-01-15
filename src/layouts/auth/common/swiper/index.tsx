@@ -20,7 +20,7 @@ export const Swiper = ({ style, position }: any) => {
 };
 const styles = StyleSheet.create({
     swiper: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'space-evenly',

@@ -3,6 +3,10 @@ import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
 
 import { ImageOverlay } from '../../../components';
 import { AppRoute } from '../../../navigation/app-routes';
@@ -14,12 +18,12 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
   };
 
   return (
-    <>
+    <Layout style={styles.container}>
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../../assets/images/vector.png')}
       >
-        <View style={styles.headerElements}>
+        <Layout style={styles.headerElements}>
           <Text style={styles.title} category="h1" status="control">
             Are You
           </Text>
@@ -45,38 +49,39 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
               </Text>
             </TouchableOpacity>
           </Layout>
-        </View>
+        </Layout>
       </ImageOverlay>
       <Layout>
         <Image style={styles.stretch} source={require('./assets/group.png')} />
       </Layout>
-    </>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  container:{display:'flex', width: wp2dp('100%'), height: hp2dp('100%')},
   stretch: {
-    top: -115,
+    marginTop: wp2dp('-30%'),
     alignSelf: 'center',
   },
   title: {
     fontFamily: fonts.primaryBold,
     fontStyle: 'normal',
-    // fontWeight: 'bold',
     fontSize: 64,
     lineHeight: 78,
-    // color: '#FFFFFF',
   },
   innerText: { alignSelf: 'center', fontWeight: 'bold', top: 5 },
   headerContainer: {
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 650,
-    backgroundColor: '#fff',
+    width: wp2dp('100%'),
+    height: hp2dp('80%')
   },
   headerElements: {
-    top: -100,
+    marginTop: wp2dp('-50%'),
     alignSelf: 'center',
     alignItems: 'center',
+    backgroundColor:'transparent'
   },
 });

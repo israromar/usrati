@@ -17,6 +17,10 @@ import {
 } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
 
 import { ImageOverlay } from '../../../components';
 import { AppRoute } from '../../../navigation/app-routes';
@@ -122,7 +126,7 @@ export const SignUp = ({
   );
 
   return (
-    <KeyboardAvoidingView style={{ backgroundColor: 'white' }}>
+    <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../../assets/images/vector.png')}
@@ -136,7 +140,7 @@ export const SignUp = ({
           </Text>
         </View>
       </ImageOverlay>
-      <Layout>
+      <Layout style={styles.mainContainer}>
         {/* <Header headerText={'Sign In'} onBackPress={hanldeBackPress} /> */}
         <Image style={styles.stretch} source={require('./assets/group.png')} />
         <Layout style={styles.formContainer}>
@@ -178,7 +182,7 @@ export const SignUp = ({
         <Layout style={styles.bottomContainer}>
           <TouchableOpacity onPress={onSignUpButtonPress}>
             <Button
-              style={styles.signInButton}
+              style={styles.signUpButton}
               status="control"
               size="giant"
               appearance="ghost"
@@ -193,7 +197,7 @@ export const SignUp = ({
               <Text style={{ color: '#6F99EB' }}>Sign In</Text>
             </TouchableOpacity>
           </Layout>
-          <Swiper style={{ top: 25 }} position={3} />
+          <Swiper style={{ marginBottom: 10 }} position={3} />
         </Layout>
       </Layout>
     </KeyboardAvoidingView>
@@ -224,7 +228,15 @@ const styles = StyleSheet.create({
     minHeight: 75,
     bottom: 40,
   },
-  bottomContainer: { flex: 1, top: 43, alignSelf: 'center' },
+  mainContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: wp2dp('100%'),
+    height: hp2dp('70%'),
+  },
+  // bottomContainer: { flex: 1, top: 43, alignSelf: 'center' },
+  bottomContainer: { flex: 1, marginTop: 40, alignSelf: 'center', backgroundColor: 'transparent' },
+
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
@@ -232,12 +244,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 28,
   },
-  signInButton: {
-    width: 338,
+  signUpButton: {
+    marginTop: 5,
+    width: wp2dp('85%'),
     borderRadius: 5,
-    marginHorizontal: 28,
     backgroundColor: '#6F99EB',
-    fontFamily: 'Verdana',
+    alignSelf: 'center'
+  },
+  forgotPasswordContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  passwordInput: {
+    marginTop: 16,
+  },
+  forgotPasswordButton: {
+    paddingHorizontal: 0,
   },
   indicator: {
     justifyContent: 'center',
