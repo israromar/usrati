@@ -23,6 +23,10 @@ import {
 } from '@ui-kitten/components';
 // import { validate } from 'validate.js';
 // import { useDispatch } from 'react-redux';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
@@ -368,6 +372,7 @@ export const FamilySetup = ({
       return permission;
     } catch (err) {
       console.warn(err);
+      return err
     }
   };
 
@@ -378,31 +383,35 @@ export const FamilySetup = ({
       maxHeight: 550,
       quality: 1,
     };
-    const permission = await requestCameraPermission(permissionFor);
-    if (permission === 'never_ask_again') {
-      Alert.alert(`Go to your app info and enable permission for ${permissionFor}.`);
-    }
-    if (permission === 'granted') {
-      mediaTypeInvoker(options, async (response: any) => {
-        console.log('Response = ', response);
-        // if (response.didCancel) {
-        //   Alert.alert('User cancelled camera picker');
-        //   return;
-        // } else if (response.errorCode == 'camera_unavailable') {
-        //   Alert.alert('Camera not available on device');
-        //   return;
-        // } else if (response.errorCode == 'permission') {
-        //   Alert.alert('Permission not satisfied');
-        //   return;
-        // } else if (response.errorCode == 'others') {
-        //   console.log('response.errorMessage', response.errorMessage);
-        //   Alert.alert(response.errorMessage);
-        //   return;
-        // }
-        console.log('response -> ', response);
-        setFilePath(response);
-        [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
-      });
+    try {
+      const permission = await requestCameraPermission(permissionFor);
+      if (permission === 'never_ask_again') {
+        Alert.alert(`Go to your app info and enable permission for ${permissionFor}.`);
+      }
+      if (permission === 'granted') {
+        mediaTypeInvoker(options, async (response: any) => {
+          // if (response.didCancel) {
+          //   Alert.alert('User cancelled camera picker');
+          //   return;
+          // } else if (response.errorCode == 'camera_unavailable') {
+          //   Alert.alert('Camera not available on device');
+          //   return;
+          // } else if (response.errorCode == 'permission') {
+          //   Alert.alert('Permission not satisfied');
+          //   return;
+          // } else if (response.errorCode == 'others') {
+          //   console.log('response.errorMessage', response.errorMessage);
+          //   Alert.alert(response.errorMessage);
+          //   return;
+          // }
+          setFilePath(response);
+          if (!response?.didCancel) {
+            [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
+          }
+        });
+      }
+    } catch (e) {
+      console.log("error oc", e);
     }
   };
 
@@ -585,7 +594,7 @@ export const FamilySetup = ({
             {renderFileUri('family')}
           </TouchableOpacity>
           <Input
-            style={{ marginTop: 10 }}
+            style={styles.inputField}
             value={familyName.trim()}
             caption={familyNameError ? familyNameErrorMsg : ''}
             status={familyNameError ? 'danger' : 'basic'}
@@ -599,7 +608,7 @@ export const FamilySetup = ({
             }
           />
           <Input
-            style={{ marginTop: 10 }}
+            style={styles.inputField}
             value={familyId.trim()}
             caption={familyIdError ? familyIdErrorMsg : ''}
             status={familyIdError ? 'danger' : 'basic'}
@@ -634,7 +643,7 @@ export const FamilySetup = ({
             {renderFileUri('guardian')}
           </TouchableOpacity>
           <Input
-            style={{ marginTop: 10 }}
+            style={styles.inputField}
             value={guardianUsername.trim()}
             caption={guardianUsernameError ? guardianUsernameErrorMsg : ''}
             status={guardianUsernameError ? 'danger' : 'basic'}
@@ -648,7 +657,7 @@ export const FamilySetup = ({
             }
           />
           <Input
-            style={{ marginTop: 10 }}
+            style={styles.inputField}
             value={guardianEmail.trim()}
             caption={guardianEmailError ? guardianEmailErrorMsg : ''}
             status={guardianEmailError ? 'danger' : 'basic'}
@@ -662,7 +671,7 @@ export const FamilySetup = ({
             }
           />
           <Input
-            style={{ marginTop: 10 }}
+            style={styles.inputField}
             value={guardianPassword.trim()}
             caption={guardianPasswordError ? guardianPasswordErrorMsg : ''}
             status={guardianPasswordError ? 'danger' : 'basic'}
@@ -706,7 +715,7 @@ export const FamilySetup = ({
           {!isNext && (
             <>
               <Input
-                style={{ marginTop: 10 }}
+                style={styles.inputField}
                 value={childName.trim()}
                 caption={childNameError ? childNameErrorMsg : ''}
                 status={childNameError ? 'danger' : 'basic'}
@@ -753,7 +762,7 @@ export const FamilySetup = ({
                 </Text>
               </TouchableOpacity>
               <Input
-                style={{ marginTop: 10 }}
+                style={styles.inputField}
                 value={schoolName.trim()}
                 caption={schoolNameError ? schoolNameErrorMsg : ''}
                 status={schoolNameError ? 'danger' : 'basic'}
@@ -772,7 +781,7 @@ export const FamilySetup = ({
           {isNext && (
             <>
               <Input
-                style={{ marginTop: 10 }}
+                style={styles.inputField}
                 value={childInterest}
                 caption={childInterestError ? childInterestErrorMsg : ''}
                 status={childInterestError ? 'danger' : 'basic'}
@@ -786,7 +795,7 @@ export const FamilySetup = ({
                 }
               />
               <Input
-                style={{ marginTop: 10 }}
+                style={styles.inputField}
                 value={childUsername.trim()}
                 caption={childUsernameError ? childUsernameErrorMsg : ''}
                 status={childUsernameError ? 'danger' : 'basic'}
@@ -800,7 +809,7 @@ export const FamilySetup = ({
                 }
               />
               <Input
-                style={{ marginTop: 10 }}
+                style={styles.inputField}
                 value={childPassword.trim()}
                 caption={childPasswordError ? childPasswordErrorMsg : ''}
                 status={childPasswordError ? 'danger' : 'basic'}
@@ -917,21 +926,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     minHeight: 500,
-    // backgroundColor: 'yellow',
   },
+  inputField: { marginTop: 10, width: wp2dp('85%') },
   dob: {
     backgroundColor: '#F7F9FC',
     borderColor: '#E4E9F2',
     borderRadius: 5,
     borderWidth: 1,
-    minWidth: 337,
+    width: wp2dp('85%'),
     minHeight: 40,
     marginTop: 10,
     marginBottom: 5,
     justifyContent: 'center',
-    // alignItems: 'flex-start',
     paddingHorizontal: 8,
-    // paddingVertical: 7,
   },
   stretch: {
     height: 200,
@@ -940,30 +947,30 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   headerContainer: {
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 210,
-    paddingHorizontal: 28,
-    // marginBottom: 'auto',
+    width: wp2dp('100%'),
+    height: hp2dp('32%'),
   },
   headerElements: {
     alignSelf: 'center',
     backgroundColor: 'transparent',
-    minWidth: 350,
+    width: wp2dp('85%'),
+    marginBottom: 50
   },
   bottomContainer: { bottom: 50, alignSelf: 'center' },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
-    top: 20,
+    // marginTop: 20,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 28,
-    // backgroundColor: 'red',
-    minHeight: 450,
+    // minHeight: 450,
+    height: hp2dp('30%'),
   },
   primarySubmitButton: {
-    width: 338,
+    width: wp2dp('85%'),
     top: 20,
     borderRadius: 5,
     backgroundColor: '#6F99EB',

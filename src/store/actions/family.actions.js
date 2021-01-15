@@ -26,9 +26,10 @@ export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
 
   addFamily(formData)
     .then((res) => {
+      console.log("🚀 ~ file: family.actions.js ~ line 29 ~ .then ~ res", res)
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_SUCCESS,
-        payload: res.SUCCESS,
+        payload: res.data,
       });
     })
     .catch((error) => {
@@ -74,6 +75,7 @@ export const addGuardian = ({
       });
     })
     .catch((error) => {
+      console.log("🚀 ~ file: family.actions.js ~ line 78 ~ error", error)
       console.error(error);
       dispatch({
         type: familySettingsConstants.ADD_GUARDIAN_FAIL,

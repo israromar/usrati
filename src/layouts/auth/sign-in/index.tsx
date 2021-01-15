@@ -74,11 +74,8 @@ export const SignIn = ({
     }
   };
 
-  const onSignInButtonPress = async () => {
-    const validationResult = await validate(
-      { username, password },
-      constraints,
-    );
+  const onSignInButtonPress = (): void => {
+    const validationResult = validate({ username, password }, constraints);
     if (validationResult?.username && validationResult?.password) {
       setUsernameError(true);
       setUsernameErrorMsg(validationResult?.username[0]);
@@ -189,10 +186,9 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    // minHeight: 210,
     paddingHorizontal: 28,
     width: wp2dp('100%'),
-    height: hp2dp('30%'),
+    height: hp2dp('32%'),
   },
   headerElements: {
     alignItems: 'flex-start',
