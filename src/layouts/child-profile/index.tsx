@@ -8,56 +8,111 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  Layout,
-  Button,
-  Icon,
-  Text,
-  LayoutElement,
-  Card,
-  Avatar,
-} from '@ui-kitten/components';
+import { Layout, Text, Card, Avatar } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
 
-import i18n from '../../translations';
-import ToggleButton, {
-  IToggleButton,
-} from '../../components/toggle-button.component';
+import {
+  BarChart,
+  Grid,
+  LineChart,
+  ProgressCircle,
+  StackedBarChart,
+} from 'react-native-svg-charts';
+
 import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
 
-const SignoutIcon = (props: any) => <Icon {...props} name="log-out-outline" />;
-
-interface IHome {
-  onThemeToggle: () => void;
-  onSignOutPress: () => void;
-  handleLocaleChange: () => void;
-  selectedIndex: number;
-  languages: [];
+interface IChildProfile {
+  onBackPress: (v: string) => void;
 }
 
-export const ChildProfile = ({ onBackPress }) => {
+const fill = 'rgb(134, 65, 244)';
+const data = [
+  50,
+  10,
+  40,
+  95,
+  -4,
+  -24,
+  null,
+  85,
+  undefined,
+  0,
+  35,
+  53,
+  -53,
+  24,
+  50,
+  -20,
+  -80,
+];
+
+export const ChildProfile = ({ onBackPress }: IChildProfile) => {
   const hanldeBackPress = () => {
     // rest.goBack();
     onBackPress(AppRoute.DASHBOARD);
   };
 
-  const Header = (props: any) => (
-    <>
-      <Avatar
-        shape="square"
-        source={require('./assets/child.png')}
-        style={styles.avatar}
-      />
-      <Text category="s1" style={{ color: 'grey' }}>
-        Natasha
-      </Text>
-    </>
-  );
+  const data1 = [
+    14,
+    -1,
+    100,
+    -95,
+    -94,
+    -24,
+    -8,
+    85,
+    -91,
+    35,
+    -53,
+    53,
+    -78,
+    66,
+    96,
+    33,
+    -26,
+    -32,
+    73,
+    8,
+  ].map((value) => ({ value }));
+  const data2 = [
+    24,
+    28,
+    93,
+    77,
+    -42,
+    -62,
+    52,
+    -87,
+    21,
+    53,
+    -78,
+    -62,
+    -72,
+    -6,
+    89,
+    -70,
+    -94,
+    10,
+    86,
+    84,
+  ].map((value) => ({ value }));
+
+  const barData = [
+    {
+      data: data1,
+      svg: {
+        fill: 'rgb(134, 65, 244)',
+      },
+    },
+    {
+      data: data2,
+    },
+  ];
 
   return (
     <Layout style={styles.container}>
@@ -82,7 +137,7 @@ export const ChildProfile = ({ onBackPress }) => {
             }}
           >
             <Avatar
-              source={require('./assets/child-avatar.png')}
+              source={require('./assets/child.png')}
               style={styles.avatar}
             />
             <Text category="h3" status="control">
@@ -92,10 +147,22 @@ export const ChildProfile = ({ onBackPress }) => {
         </View>
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
-        <Layout style={styles.childs} level="1">
-          <Text category="h3">Chart</Text>
+        <Layout style={styles.childProgressChart} level="1">
+          {/* <Text category="h3">Chart</Text> */}
+          <BarChart
+            style={{ height: 200, width: wp2dp('80%') }}
+            data={barData}
+            yAccessor={({ item }) => item.value}
+            svg={{
+              fill: 'green',
+            }}
+            contentInset={{ top: 30, bottom: 30 }}
+          >
+            <Grid />
+          </BarChart>
         </Layout>
       </Layout>
+
       <Layout style={styles.bottomWrap}>
         <Layout style={styles.bottomData}>
           <Text status={'danger'}>There is some important information</Text>
@@ -112,40 +179,71 @@ export const ChildProfile = ({ onBackPress }) => {
         <Text category="h3" style={{ alignSelf: 'flex-start' }}>
           Kpi's
         </Text>
-        <SafeAreaView>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Layout style={[styles.childsInnerWrap]}>
-              <Card
-                onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                style={styles.card}
-              // header={Header}
-              >
-                <Text>Task 1</Text>
-              </Card>
-              <Card
-                onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                style={styles.card}
-              // header={Header}
-              >
-                <Text>Task 2</Text>
-              </Card>
-              <Card
-                onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                style={styles.card}
-              // header={Header}
-              >
-                <Text>Task 3</Text>
-              </Card>
-              <Card
-                onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                style={styles.card}
-              // header={Header}
-              >
-                <Text>Task 4</Text>
-              </Card>
-            </Layout>
-          </ScrollView>
-        </SafeAreaView>
+        {/* <SafeAreaView> */}
+        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+        <Layout style={[styles.childsInnerWrap]}>
+          <Card
+            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+            style={styles.card}
+          // header={Header}
+          >
+            <Text style={styles.kpiName}>Task 1</Text>
+            <ProgressCircle
+              style={styles.kpiProgress}
+              progress={0.9}
+              progressColor={'rgb(134, 65, 244)'}
+              startAngle={-Math.PI * 0.99}
+              endAngle={Math.PI * 0.9}
+            />
+          </Card>
+          <Card
+            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+            style={styles.card}
+          // header={Header}
+          >
+            <Text style={styles.kpiName}>Task 2</Text>
+
+            <ProgressCircle
+              style={styles.kpiProgress}
+              progress={0.7}
+              progressColor={'rgb(134, 65, 244)'}
+              startAngle={-Math.PI * 0.99}
+              endAngle={Math.PI * 0.9}
+            />
+          </Card>
+          <Card
+            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+            style={styles.card}
+          // header={Header}
+          >
+            <Text style={styles.kpiName}>Task 3</Text>
+
+            <ProgressCircle
+              style={styles.kpiProgress}
+              progress={0.3}
+              progressColor={'rgb(134, 65, 244)'}
+              startAngle={-Math.PI * 0.99}
+              endAngle={Math.PI * 0.9}
+            />
+          </Card>
+          <Card
+            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+            style={styles.card}
+          // header={Header}
+          >
+            <Text style={styles.kpiName}>Task 4</Text>
+
+            <ProgressCircle
+              style={styles.kpiProgress}
+              progress={0.4}
+              progressColor={'rgb(134, 65, 244)'}
+              startAngle={-Math.PI * 1}
+              endAngle={Math.PI * 1}
+            />
+          </Card>
+        </Layout>
+        {/* </ScrollView> */}
+        {/* </SafeAreaView> */}
       </Layout>
     </Layout>
   );
@@ -170,12 +268,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     // flex: 0.3,
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // alignContent: 'center',
-    // padding: 10,
     alignSelf: 'center',
-    // marginVertical: 10,
+  },
+  kpiName: {
+    textAlign: 'left',
+    marginLeft: -15,
+  },
+  kpiProgress: {
+    height: hp2dp('12%'),
   },
   bottomData: {
     backgroundColor: 'transparent',
@@ -195,8 +295,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'transparent',
     borderRadius: 5,
     margin: 2,
-    height: hp2dp('14%'),
-    width: wp2dp('40%'),
+    height: hp2dp('16%'),
+    width: wp2dp('41%'),
     padding: 0,
     // alignItems: 'center',
     justifyContent: 'center',
@@ -224,11 +324,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  childs: {
-    borderColor: 'grey',
-    height: hp2dp('20%'),
-    width: wp2dp('85%'),
+  childProgressChart: {
     flex: 1,
+    // borderColor: 'grey',
+    // height: hp2dp('20%'),
+    width: wp2dp('85%'),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
