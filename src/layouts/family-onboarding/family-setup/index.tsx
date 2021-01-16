@@ -372,7 +372,7 @@ export const FamilySetup = ({
       return permission;
     } catch (err) {
       console.warn(err);
-      return err
+      return err;
     }
   };
 
@@ -411,7 +411,7 @@ export const FamilySetup = ({
         });
       }
     } catch (e) {
-      console.log("error oc", e);
+      console.log('error oc', e);
     }
   };
 
@@ -623,9 +623,9 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={family?.isAddingFamily && LoadingIndicator}
+            accessoryLeft={isAddFamily && LoadingIndicator}
           >
-            {family?.isAddingFamily ? '' : 'Add'}
+            {isAddFamily ? '' : 'Add'}
           </Button>
         </Layout>
       )}
@@ -956,7 +956,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'transparent',
     width: wp2dp('85%'),
-    marginBottom: 50
+    marginBottom: 50,
   },
   bottomContainer: { bottom: 50, alignSelf: 'center' },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },

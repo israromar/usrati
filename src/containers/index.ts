@@ -10,6 +10,7 @@ export {
 export { FamilySetupContainer as FamilySetupScreen } from './family-setup';
 export { HomeContainer as HomeScreen } from './home';
 export { DashboardContainer as DashboardScreen } from './dashboard';
+export { ChildProfileContainer as ChildProfileScreen } from './child-profile';
 export { CalendarContainer as CalendarScreen } from './calender';
 export { GridsContainer as GridsScreen } from './grid';
 export { PagesContainer as PagesScreen } from './page';

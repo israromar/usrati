@@ -10,6 +10,7 @@ import {
   DashboardScreen,
   AddParentScreen,
   AddChildScreen,
+  ChildProfileScreen,
 } from '../containers';
 import { AppRoute } from './app-routes';
 // const { Navigator, Screen } = createBottomTabNavigator();
@@ -42,6 +43,7 @@ const TabNavigator = () => {
       ))} */}
       <Screen name={AppRoute.FAMILY_SETUP} component={FamilySetupScreen} />
       <Screen name={AppRoute.DASHBOARD} component={DashboardScreen} />
+      <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
       <Screen name={AppRoute.ADD_PARENT} component={AddParentScreen} />
       <Screen name={AppRoute.ADD_CHILD} component={AddChildScreen} />

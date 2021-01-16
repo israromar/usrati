@@ -1,5 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   Layout,
   Button,
@@ -7,6 +15,7 @@ import {
   Text,
   LayoutElement,
   Card,
+  Avatar,
 } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
@@ -14,41 +23,28 @@ import {
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
 
-import i18n from '../../translations';
-import ToggleButton, {
-  IToggleButton,
-} from '../../components/toggle-button.component';
 import { ImageOverlay } from '../../components';
-
-const SignoutIcon = (props: any) => <Icon {...props} name="log-out-outline" />;
-
-interface IHome {
-  onThemeToggle: () => void;
-  onSignOutPress: () => void;
-  handleLocaleChange: () => void;
-  selectedIndex: number;
-  languages: [];
+import { AppRoute } from '../../navigation/app-routes';
+interface IDashboard {
+  onChildPress: (v: string) => void;
 }
 
-export const Dashboard = ({
-  activeTheme,
-  onThemeToggle,
-  checked,
-  onSignOutPress,
-  handleLocaleChange,
-  selectedIndex,
-  languages,
-  ...rest
-}: IHome & IToggleButton & LayoutElement) => {
+export const Dashboard = ({ onChildPress }: IDashboard) => {
   const hanldeBackPress = () => {
     // rest.goBack();
   };
 
-  const Header = (props) => (
-    <View {...props}>
-      <Text category='s1'>Maldives</Text>
-      <Text category='s1'>By Wikipedia</Text>
-    </View>
+  const Header = (props: any) => (
+    <>
+      <Avatar
+        shape="square"
+        source={require('./assets/child.png')}
+        style={styles.avatar}
+      />
+      <Text category="s1" style={{ color: 'grey' }}>
+        Natasha
+      </Text>
+    </>
   );
 
   return (
@@ -61,7 +57,9 @@ export const Dashboard = ({
           <TouchableOpacity onPress={hanldeBackPress}>
             <Image source={require('../../assets/images/backarrow.png')} />
           </TouchableOpacity>
-          <Layout style={{ backgroundColor: 'none', top: 20, left: 15 }}>
+          <Layout
+            style={{ backgroundColor: 'none', marginTop: 10, marginLeft: 15 }}
+          >
             <Text category="h5" status="control">
               Parent
             </Text>
@@ -73,49 +71,136 @@ export const Dashboard = ({
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
         <Layout style={styles.childs} level="1">
-          <Layout style={{ backgroundColor: 'transparent', marginLeft: 10, marginTop: 20 }}>
-            <Text category="h6" status="control" style={{ color: 'grey' }}>To see the progress</Text>
-            <Text category="h1" status="control" style={{ color: 'grey' }}>Select Child</Text>
+          <Layout
+            style={{
+              backgroundColor: 'transparent',
+              marginLeft: 10,
+              marginTop: 20,
+            }}
+          >
+            <Text category="h6" status="control" style={{ color: 'grey' }}>
+              To see the progress
+            </Text>
+            <Text category="h1" status="control" style={{ color: 'grey' }}>
+              Select Child
+            </Text>
           </Layout>
 
-          <Layout style={[styles.childsInnerWrap]}>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Card style={styles.card} header={Header}>
-              <Text>With Header</Text>
-            </Card>
-            <Button
-              style={styles.loadMoreButton}
-              status="control"
-              size="medium"
-              appearance="ghost"
-            // accessoryLeft={auth?.isLoading && LoadingIndicator}
-            >
-              Load more
-            </Button>
-          </Layout>
+          <SafeAreaView
+            style={[
+              {
+                flex: 1,
+                alignSelf: 'center',
+              },
+            ]}
+          >
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Layout style={[styles.childsInnerWrap]}>
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+                <Card
+                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                  style={styles.card}
+                  header={Header}
+                />
+              </Layout>
+            </ScrollView>
+            <Layout style={{ backgroundColor: 'transparent' }}>
+              <Button
+                style={styles.loadMoreButton}
+                status="control"
+                size="medium"
+                appearance="ghost"
+              // accessoryLeft={auth?.isLoading && LoadingIndicator}
+              >
+                Load more
+              </Button>
+            </Layout>
+          </SafeAreaView>
+        </Layout>
+      </Layout>
+      <Layout style={styles.bottomWrap}>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
         </Layout>
       </Layout>
     </Layout>
@@ -126,55 +211,84 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  bottomWrap: {
+    height: hp2dp('18%'),
+    width: wp2dp('85%'),
+    display: 'flex',
+    // flex: 0.3,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    padding: 10,
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  bottomData: {
+    backgroundColor: 'transparent',
+    width: wp2dp('85%'),
+    height: 30,
+    borderRadius: 5,
+    borderWidth: 0.4,
+    borderColor: 'grey',
+
+    justifyContent: 'center',
+    padding: 10,
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+  },
   card: {
-    // flex: 1,
+    borderRadius: 5,
     margin: 2,
-    backgroundColor: 'green', height: 100, width: 100
+    height: hp2dp('14%'),
+    width: wp2dp('25.5%'),
+    padding: 0,
+    alignItems: 'center',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  avatar: {
+    height: hp2dp('10.5%'),
+    width: wp2dp('24.5%'),
+    padding: 0,
   },
   childDataWrap: {
-    top: -110,
-    backgroundColor: 'transparent',
-    flex: 1,
     display: 'flex',
-    alignContent: 'center',
+    flex: 1,
+    marginTop: -80,
+    backgroundColor: 'transparent',
+    height: hp2dp('50%'),
+    // alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   childs: {
-    // flex: 1,
-    // backgroundColor: 'red',
     borderColor: 'grey',
-    // borderWidth: 1,
     height: hp2dp('65%'),
     width: wp2dp('85%'),
     borderRadius: 10,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 8,
+      height: 2,
     },
-    shadowOpacity: 0.46,
-    shadowRadius: 11.14,
-
-    elevation: 17,
-
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   childsInnerWrap: {
-    // flex: 1,
     backgroundColor: 'transparent',
-    height: hp2dp('35%'),
+    height: hp2dp('100%'),
     width: wp2dp('80%'),
-    display: 'flex', marginVertical: 20, alignSelf: 'center', justifyContent: 'center', flexDirection: 'row',
-    flexWrap: 'wrap'
-    // borderRadius: 10
-  },
-  progressCard: {
-    top: 40,
-    backgroundColor: 'yellow',
-    height: 314,
-    width: 359,
-    borderRadius: 10,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
   },
   stretch: {
     height: 200,
@@ -185,53 +299,25 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 220,
+    // minHeight: 220,
+    height: hp2dp('25%'),
     paddingHorizontal: 28,
   },
   headerElements: {
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    minHeight: 75,
-    marginBottom: 120,
-  },
-  bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
-  bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
-  formContainer: {
-    flex: 1,
-    // position: 'relative',
-    // zIndex: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 28,
-  },
-  signInButton: {
-    width: 338,
-    borderRadius: 5,
-    marginHorizontal: 28,
-    backgroundColor: '#6F99EB',
-    fontFamily: 'Verdana',
+    height: 75,
+    marginBottom: 90,
   },
   loadMoreButton: {
-    marginTop: 30,
+    marginVertical: 5,
     width: '50%',
     height: '10%',
     borderRadius: 5,
     backgroundColor: '#6F99EB',
-    alignSelf: 'center'
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
-  },
-  indicator: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',
+    // alignContent: 'center',
+    // textAlign: 'center',
   },
 });

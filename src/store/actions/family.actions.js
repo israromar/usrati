@@ -5,8 +5,6 @@ import { addFamily, addNewGuardian, addNewChild } from '../../services/api';
 export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
   dispatch,
 ) => {
-  console.log('asdqweqweqweqweqwe', { familyId, familyName, familyPhoto });
-  // AsyncStorage.removeItem('userToken');
   dispatch({
     type: familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST,
   });
@@ -26,17 +24,24 @@ export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
 
   addFamily(formData)
     .then((res) => {
-      console.log("🚀 ~ file: family.actions.js ~ line 29 ~ .then ~ res", res)
+      console.log('🚀 ~ file: family.actions.js ~ line 29 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error) => {
-      console.error('error in addFamily', JSON.parse(error));
+      console.log(
+        '🚀 ~ file: family.actions.js ~ line 36 ~ error',
+        JSON.stringify(error),
+        error,
+      );
+      console.error('error in addFamily', error);
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_FAIL,
-        payload: error,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
       });
     });
 };
@@ -75,11 +80,13 @@ export const addGuardian = ({
       });
     })
     .catch((error) => {
-      console.log("🚀 ~ file: family.actions.js ~ line 78 ~ error", error)
+      console.log('🚀 ~ file: family.actions.js ~ line 78 ~ error', error);
       console.error(error);
       dispatch({
         type: familySettingsConstants.ADD_GUARDIAN_FAIL,
-        payload: error.ERROR,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
       });
     });
 };
@@ -125,17 +132,17 @@ export const addChild = ({
 
   addNewChild({ username, password, dob })
     .then((res) => {
-      console.log('🚀 ~ file: family.actions.js ~ line 112 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error) => {
-      console.error('error: ', error);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_FAIL,
-        payload: error.ERROR,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
       });
     });
 };

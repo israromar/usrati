@@ -1,18 +1,24 @@
 import http from './usrati';
 
+/**
+ * User login
+ * @returns {Promise<T | never>}
+ */
 export function login(payload) {
   return http
     .post('user/auth/login', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 7 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.error(error);
       return error;
     });
 }
 
+/**
+ * User Signup
+ * @returns {Promise<T | never>}
+ */
 export function createUser(payload) {
   return http
     .post('user', payload)
@@ -23,6 +29,11 @@ export function createUser(payload) {
       throw error.response.data;
     });
 }
+
+/**
+ * Create parent user
+ * @returns {Promise<T | never>}
+ */
 export function createParent(payload) {
   return http
     .post('parent', {
@@ -40,6 +51,10 @@ export function createParent(payload) {
     });
 }
 
+/**
+ * Add family
+ * @returns {Promise<T | never>}
+ */
 export function addFamily(payload) {
   return http
     .post('family', payload)
@@ -51,17 +66,10 @@ export function addFamily(payload) {
     });
 }
 
-// export function addFamily(payload) {
-//   return http
-//     .post('family', payload)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error.response.data;
-//     });
-// }
-
+/**
+ * Add user photo
+ * @returns {Promise<T | never>}
+ */
 export function addUserPhoto(payload) {
   return http
     .post('family', payload)
@@ -73,6 +81,10 @@ export function addUserPhoto(payload) {
     });
 }
 
+/**
+ * Add guardian user
+ * @returns {Promise<T | never>}
+ */
 export function addNewGuardian(payload) {
   return http
     .post('guardian', payload)
@@ -84,73 +96,17 @@ export function addNewGuardian(payload) {
     });
 }
 
+/**
+ * Add child user
+ * @returns {Promise<T | never>}
+ */
 export function addNewChild(payload) {
   return http
     .post('child', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 91 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
       throw error.response.data;
     });
 }
-
-// export function createEmployer(employer) {
-//   return http
-//     .post('employers', employer)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error.response.data;
-//     });
-// }
-
-// export function createCompany(payload) {
-//   return http
-//     .post('companies', payload)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error.response.data;
-//     });
-// }
-
-// export function createApplication(payload) {
-//   return http
-//     .post('applications', payload)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error.response.data;
-//     });
-// }
-
-// /**
-//  * Get all Jobs
-//  * @returns {Promise<T | never>}
-//  */
-// export function getJobs() {
-//   return http
-//     .get('jobs')
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error;
-//     });
-// }
-
-// export function getJobById(id) {
-//   return http
-//     .get(`jobs/${id}`)
-//     .then((response) => {
-//       return response.data;
-//     })
-//     .catch((error) => {
-//       throw error;
-//     });
-// }
