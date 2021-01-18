@@ -1,62 +1,92 @@
-import React from 'react';
-import { userConstants } from '../../constants/user.constants';
+import { authConstants, userConstants } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createUser, login } from '../../services/api';
+import { createUser, createParent, login } from '../../services/api';
+
 export const restoreToken = ({ token }) => (dispatch) => {
-  dispatch({ type: userConstants.RESTORE_TOKEN, payload: token });
+  dispatch({ type: authConstants.RESTORE_TOKEN, payload: token });
 };
 
 export const signUp = ({ username, email, password }) => (
   dispatch,
   getState,
 ) => {
-  console.log('getState', getState());
   // Initial action dispatched
-  dispatch({ type: userConstants.SIGNUP_REQUEST });
+  dispatch({ type: authConstants.SIGNUP_REQUEST });
 
-  createUser({ username, password, userType: 'parent' })
-    .then((res) => {
-      console.log('res: ', res);
-      dispatch({
-        type: userConstants.SIGNUP_SUCCESS,
-        payload: res?.token,
+  try {
+    createUser({ username, password, userType: 'parent' })
+      .then((user) => {
+        AsyncStorage.setItem('userToken', user.token);
+        let { token } = user;
+        createParent({ token, email })
+          .then((res) => {
+            console.log(
+              '🚀 ~ file: auth.actions.js ~ line 23 ~ .then ~ res',
+              res,
+            );
+            dispatch({
+              type: authConstants.SIGNUP_SUCCESS,
+              payload: user.token,
+            });
+            dispatch({
+              type: userConstants.UPDATE_USER,
+              payload: user,
+            });
+          })
+          .catch((error) => {
+            console.log(
+              '🚀 ~ file: auth.actions.js ~ line 37 ~ .then ~ error',
+              error,
+            );
+            dispatch({
+              type: authConstants.SIGNUP_FAIL,
+              payload: error,
+            });
+          });
+      })
+      .catch(({ error }) => {
+        console.log('🚀 ~ file: auth.actions.js ~ line 45 ~ error', error);
+        dispatch({
+          type: authConstants.SIGNUP_FAIL,
+          payload: error,
+        });
       });
-    })
-    .catch((err) => {
-      console.log('errordasda: ', err);
-      dispatch({
-        type: userConstants.SIGNUP_FAIL,
-        payload: err.error,
-      });
-    });
-  return Promise.resolve();
+
+    return Promise.resolve();
+  } catch (e) {
+    console.log('error creation: ', e);
+  }
 };
 
 export const signIn = ({ username, password }) => (dispatch) => {
+  dispatch({ type: authConstants.SIGNIN_REQUEST });
+
   login({ username, password })
-    .then((res) => {
-      console.log('login success: ', res);
-      if (res) {
-        AsyncStorage.setItem('userToken', res.token);
+    .then((user) => {
+      if (user.token) {
+        AsyncStorage.setItem('userToken', user.token);
+
         dispatch({
-          type: userConstants.LOGIN_SUCCESS,
-          payload: res,
+          type: authConstants.SIGNIN_SUCCESS,
+          payload: user,
+        });
+        dispatch({
+          type: userConstants.UPDATE_USER,
+          payload: user.data,
+        });
+      } else {
+        dispatch({
+          type: authConstants.SIGNIN_FAIL,
+          payload: 'Incorrect username or password!',
         });
       }
     })
     .catch((err) => {
-      console.log('errordasda: ', err);
       dispatch({
-        type: userConstants.LOGIN_SUCCESS,
+        type: authConstants.SIGNIN_FAIL,
         payload: err.error,
       });
     });
-
-  dispatch({
-    type: userConstants.LOGIN_SUCCESS,
-    payload: 'dummy-auth-token',
-    // payload: { email, password },
-  });
 
   return Promise.resolve();
 };
@@ -64,6 +94,6 @@ export const signIn = ({ username, password }) => (dispatch) => {
 export const logout = () => (dispatch) => {
   AsyncStorage.removeItem('userToken');
   dispatch({
-    type: userConstants.LOGOUT,
+    type: authConstants.LOGOUT,
   });
 };

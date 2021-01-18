@@ -1,5 +1,4 @@
 /* eslint-disable react-native/no-inline-styles */
-//import liraries
 import React from 'react';
 import StepIndicator from 'react-native-step-indicator';
 import colors from '../../styles/colors';
@@ -15,7 +14,7 @@ const customStyles = {
   currentStepStrokeWidth: 3,
   stepStrokeCurrentColor: '#fe7013',
   // stepStrokeWidth: 3,
-  stepStrokeFinishedColor: "#fe7013",
+  stepStrokeFinishedColor: '#fe7013',
   stepStrokeUnFinishedColor: '#aaaaaa',
   separatorFinishedColor: '#fe7013',
   separatorUnFinishedColor: '#aaaaaa',
@@ -101,8 +100,17 @@ const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
   return iconConfig;
 };
 
+interface IStepIndixator {
+  currentPosition: number;
+  direction: string | undefined;
+  onStepPress: () => {};
+}
 // create a component
-const StepIndicatorComp = ({ currentPosition, direction, onStepPress }) => {
+const StepIndicatorComp = ({
+  currentPosition,
+  direction,
+  onStepPress,
+}: IStepIndixator) => {
   const renderStepIndicator = (params: {
     position: any;
     stepStatus: any;
@@ -116,7 +124,7 @@ const StepIndicatorComp = ({ currentPosition, direction, onStepPress }) => {
       labels={labels}
       stepCount={3}
       direction={direction}
-      onPress={currentPosition === 3 && onStepPress}
+      onPress={onStepPress}
     />
   );
 };

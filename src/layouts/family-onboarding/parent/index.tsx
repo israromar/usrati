@@ -38,7 +38,7 @@ import { logout } from '../../../store/actions/auth.actions';
 //   Parent(obj: IPropsSignIn): void;
 // }
 
-export const Parent = ({}): React.ReactElement => {
+export const Parent = ({ }): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
   const dispatch = useDispatch();
 

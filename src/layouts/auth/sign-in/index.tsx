@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,18 +15,27 @@ import { ImageOverlay } from '../../../components';
 import { AtIcon } from './extra/icons';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
-// import { InputField } from '../../../components/inputs/input.component';
-// import { Loading } from '../../loading';
 import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LoadingIndicator } from '../sign-up';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
 
 import { Swiper } from '../common/swiper';
 
 interface ISignIn {
   signIn(obj: IPropsSignIn): void;
+  currentState: {
+    auth: { isLoading: boolean; isSignInFailed: boolean; error: string };
+  };
 }
 
-export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
+export const SignIn = ({
+  signIn,
+  currentState: { auth },
+}: ISignIn): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
   const [username, setUsername] = useState<string>('');
   const [usernameError, setUsernameError] = useState<boolean>(false);
@@ -36,43 +45,55 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>('');
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
+  useEffect(() => {
+    if (auth?.isSignInFailed) {
+      setUsernameError(true);
+      setPasswordError(true);
+      setPasswordErrorMsg(auth.error);
+    }
+  }, [auth, auth.isSignInFailed]);
+
   const handleInput = (
     inputField: string,
     value: React.SetStateAction<string>,
   ) => {
     if (inputField === 'username') {
       setUsernameError(false);
-      setUsername(value.replace(/\s/g, ''));
+      setUsernameErrorMsg('');
+      setUsername(value.trim());
+      if (auth.isSignInFailed) {
+        setPasswordError(false);
+        setPasswordErrorMsg('');
+      }
     } else {
+      // setUsernameError(false);
+      // setUsernameErrorMsg('');
       setPasswordError(false);
+      setPasswordErrorMsg('');
       setPassword(value);
     }
   };
 
   const onSignInButtonPress = (): void => {
-    // const validationResult = validate({ username, password }, constraints);
-    // if (validationResult?.username && validationResult?.password) {
-    //   setUsernameError(true);
-    //   setUsernameErrorMsg(validationResult?.username[0]);
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else if (validationResult?.username) {
-    //   setUsernameError(true);
-    //   setUsernameErrorMsg(validationResult?.username[0]);
-    // } else if (validationResult?.password) {
-    //   setPasswordError(true);
-    //   setPasswordErrorMsg(validationResult?.password[0]);
-    // } else {
-    signIn({ username, password });
-    // }
+    const validationResult = validate({ username, password }, constraints);
+    if (validationResult?.username && validationResult?.password) {
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else if (validationResult?.username) {
+      setUsernameError(true);
+      setUsernameErrorMsg(validationResult?.username[0]);
+    } else if (validationResult?.password) {
+      setPasswordError(true);
+      setPasswordErrorMsg(validationResult?.password[0]);
+    } else {
+      signIn({ username, password });
+    }
   };
 
   const onSignUpButtonPress = (): void => {
     navigate(AppRoute.SIGN_UP);
-  };
-
-  const onForgotPasswordButtonPress = (): void => {
-    navigate(AppRoute.RESET_PASSWORD);
   };
 
   const hanldeBackPress = () => {
@@ -104,7 +125,7 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
           </Text>
         </View>
       </ImageOverlay>
-      <Layout>
+      <Layout style={styles.mainContainer}>
         <Image style={styles.stretch} source={require('./assets/group.png')} />
         <Layout style={styles.formContainer}>
           <Input
@@ -134,8 +155,9 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
               status="control"
               size="giant"
               appearance="ghost"
+              accessoryLeft={auth.isLoading && LoadingIndicator}
             >
-              Sign In
+              {auth.isLoading ? '' : 'Sign In'}
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>
@@ -144,7 +166,7 @@ export const SignIn = ({ signIn }: ISignIn): React.ReactElement => {
               <Text style={{ color: '#6F99EB' }}>Sign Up</Text>
             </TouchableOpacity>
           </Layout>
-          <Swiper style={{ top: 25 }} position={2} />
+          <Swiper style={{ marginBottom: 10 }} position={2} />
         </Layout>
       </Layout>
     </KeyboardAvoidingView>
@@ -155,9 +177,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  socialAuthContainer: {
-    // marginTop: 24,
-  },
   stretch: {
     height: 200,
     top: -80,
@@ -167,48 +186,37 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 210,
     paddingHorizontal: 28,
+    width: wp2dp('100%'),
+    height: hp2dp('32%'),
   },
   headerElements: {
-    display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     minHeight: 75,
-    bottom: 40,
+    marginBottom: 100,
   },
-  bottomContainer: { flex: 1, top: 102, alignSelf: 'center' },
+  mainContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: wp2dp('100%'),
+    height: hp2dp('70%'),
+  },
+  bottomContainer: { flex: 1, marginTop: 10, alignSelf: 'center', backgroundColor: 'transparent' },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
-    // position: 'relative',
-    // zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
+    backgroundColor: 'transparent'
   },
   signInButton: {
-    width: 338,
+    // marginTop: 'auto',
+    width: wp2dp('85%'),
     borderRadius: 5,
-    marginHorizontal: 28,
     backgroundColor: '#6F99EB',
-    fontFamily: 'Verdana',
-  },
-  signUpButton: {
-    marginVertical: 0,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    fontFamily: 'Verdana',
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
+    alignSelf: 'center'
   },
   indicator: {
     justifyContent: 'center',

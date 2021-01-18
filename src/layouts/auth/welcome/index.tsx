@@ -3,6 +3,10 @@ import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Layout, Button, Text } from '@ui-kitten/components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
@@ -27,16 +31,16 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
         style={styles.headerContainer}
         source={require('../../../assets/images/vector.png')}
       >
-        <View style={styles.headerElements}>
+        <Layout style={styles.headerElements}>
           <Text category="h5" status="control">
             Welcome To
           </Text>
           <Text style={styles.title} category="h1" status="control">
             Usrati
           </Text>
-        </View>
+        </Layout>
       </ImageOverlay>
-      <Layout>
+      <Layout style={styles.mainContainer}>
         <Image style={styles.stretch} source={require('./assets/group.png')} />
         <Layout style={styles.bottomContainer}>
           <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_IN)}>
@@ -63,7 +67,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
 
 const styles = StyleSheet.create({
   swiper: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'space-evenly',
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   stretch: {
-    top: -115,
+    marginTop: -100,
     alignSelf: 'center',
   },
   title: {
@@ -107,45 +111,34 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    minHeight: 360,
+    width: wp2dp('100%'),
+    height: hp2dp('40%'),
+  },
+  mainContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: wp2dp('100%'),
+    height: hp2dp('55%'),
   },
   headerElements: {
     top: -50,
     alignSelf: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent'
   },
-  bottomContainer: { flex: 1, top: 60, alignSelf: 'center' },
-  bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 28,
-  },
+  bottomContainer: { marginTop: 'auto', alignSelf: 'center', backgroundColor: 'transparent' },
   signInButton: {
-    width: 338,
+    marginTop: 'auto',
+    width: wp2dp('85%'),
     borderRadius: 5,
-    marginHorizontal: 28,
     backgroundColor: '#6F99EB',
+    alignSelf: 'center'
   },
   signUpButton: {
-    width: 338,
+    width: wp2dp('85%'),
     borderRadius: 5,
     marginHorizontal: 28,
     color: colors.primaryBlue,
-  },
-  forgotPasswordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  passwordInput: {
-    marginTop: 16,
-  },
-  forgotPasswordButton: {
-    paddingHorizontal: 0,
-  },
-  indicator: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center'
   },
 });
