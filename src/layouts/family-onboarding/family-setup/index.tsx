@@ -17,7 +17,7 @@ import {
   Button,
   Input,
   Text,
-  Modal,
+  // Modal,
   Calendar,
   Spinner,
 } from '@ui-kitten/components';
@@ -26,13 +26,13 @@ import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
+import Modal from 'react-native-modal';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
 // import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import Modal from 'react-native-modal';
 
 import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '../../../containers/family-setup';
 // import i18n from '../../../translations';
@@ -166,7 +166,6 @@ export const FamilySetup = ({
 
   const screenHeight = Dimensions.get('screen').height;
   const windowHeight = Dimensions.get('window').height;
-  console.log("🚀 ~ file: index.tsx ~ line 169 ~ screenHeight", windowHeight * 0.1, screenHeight)
   const panY = useRef(new Animated.Value(screenHeight)).current;
 
   const resetPositionAnim = Animated.timing(panY, {
@@ -214,6 +213,64 @@ export const FamilySetup = ({
     }),
   ).current;
 
+  const afterSuccessAlert = (flag: string, msg: string) => {
+
+    Alert.alert(
+      "Success",
+      msg,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            if (flag === 'guardian') {
+              setCurrentPosition(2);
+              setGuardianPhoto(null);
+              setGuardianUsername('');
+              setGuardianEmail('');
+              setGuardianPassword('');
+              setIsAddGuardian(false);
+            } else {
+              setCurrentPosition(3);
+              setChildPhoto(null);
+              setChildName('');
+              setDate(new Date());
+              setSchoolName('');
+              setChildInterest('');
+              setChildUsername('');
+              setChildPassword('');
+              setIsAddChild(false);
+            }
+          },
+          style: "cancel"
+        },
+        {
+          text: "Add", onPress: () => {
+            if (flag === 'guardian') {
+              setCurrentPosition(1);
+              setGuardianPhoto(null);
+              setGuardianUsername('');
+              setGuardianEmail('');
+              setGuardianPassword('');
+              setIsAddGuardian(false);
+            } else {
+              setCurrentPosition(2);
+              setChildPhoto(null);
+              setChildName('');
+              setDate(new Date());
+              setSchoolName('');
+              setChildInterest('');
+              setChildUsername('');
+              setChildPassword('');
+              setIsAddChild(false);
+              setIsNext(false);
+            }
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  }
+
   useEffect(() => {
     if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
       Alert.alert('Family successfully added.');
@@ -227,13 +284,15 @@ export const FamilySetup = ({
       setCurrentPosition(0);
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
-      Alert.alert('Guardian successfully added.');
-      setCurrentPosition(2);
-      // setGuardianPhoto(null);
-      setGuardianUsername('');
-      setGuardianEmail('');
-      setGuardianPassword('');
-      setIsAddGuardian(false);
+      // Alert.alert('Guardian successfully added.');
+      afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?')
+
+      // setCurrentPosition(2);
+      // // setGuardianPhoto(null);
+      // setGuardianUsername('');
+      // setGuardianEmail('');
+      // setGuardianPassword('');
+      // setIsAddGuardian(false);
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && !guardian?.isAddGuardianSuccess && guardian?.isAddGuardianFail) {
       Alert.alert(guardian.addGuardianError);
@@ -241,15 +300,17 @@ export const FamilySetup = ({
       setCurrentPosition(1);
     }
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
-      Alert.alert('Child successfully added.');
-      setCurrentPosition(3);
-      setChildName('');
-      setDate(new Date());
-      setSchoolName('');
-      setChildInterest('');
-      setChildUsername('');
-      setChildPassword('');
-      setIsAddChild(false);
+      // Alert.alert('Child successfully added.');
+      afterSuccessAlert('child', 'Child successfully added, do you want to add another one?')
+
+      // setCurrentPosition(3);
+      // setChildName('');
+      // setDate(new Date());
+      // setSchoolName('');
+      // setChildInterest('');
+      // setChildUsername('');
+      // setChildPassword('');
+      // setIsAddChild(false);
     }
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
       Alert.alert(child?.addChildError);
@@ -391,20 +452,6 @@ export const FamilySetup = ({
       }
       if (permission === 'granted') {
         mediaTypeInvoker(options, async (response: any) => {
-          // if (response.didCancel) {
-          //   Alert.alert('User cancelled camera picker');
-          //   return;
-          // } else if (response.errorCode == 'camera_unavailable') {
-          //   Alert.alert('Camera not available on device');
-          //   return;
-          // } else if (response.errorCode == 'permission') {
-          //   Alert.alert('Permission not satisfied');
-          //   return;
-          // } else if (response.errorCode == 'others') {
-          //   console.log('response.errorMessage', response.errorMessage);
-          //   Alert.alert(response.errorMessage);
-          //   return;
-          // }
           setFilePath(response);
           if (!response?.didCancel) {
             [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
@@ -727,8 +774,11 @@ export const FamilySetup = ({
                 }
               />
               <Modal
-                visible={visible}
+                isVisible={visible}
                 onBackdropPress={() => setVisible(false)}
+                style={{ alignSelf: 'center' }}
+                animationIn={'slideInUp'}
+                onBackButtonPress={() => setVisible(false)}
               >
                 <Calendar
                   style={{ backgroundColor: '#fff' }}
@@ -872,8 +922,6 @@ export const FamilySetup = ({
   );
 };
 
-const screenHeight = Dimensions.get('screen').height;
-const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   overlay: {
