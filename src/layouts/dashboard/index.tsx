@@ -25,6 +25,7 @@ import {
 
 import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
+import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 interface IDashboard {
   onChildPress: (v: string) => void;
 }
@@ -48,44 +49,38 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
   );
 
   return (
-    <Layout style={styles.container}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../assets/images/vector.png')}
       >
-        <View style={styles.headerElements}>
-          <TouchableOpacity onPress={hanldeBackPress}>
-            <Image source={require('../../assets/images/backarrow.png')} />
-          </TouchableOpacity>
-          <Layout
-            style={{ backgroundColor: 'none', marginTop: 10, marginLeft: 15 }}
-          >
-            <Text category="h5" status="control">
-              Parent
+        <Layout
+          style={{ backgroundColor: 'none' }}
+        >
+          <Text category="h5" status="control">
+            Parent
             </Text>
-            <Text category="h1" status="control">
-              Dashboard
+          <Text category="h1" status="control">
+            Dashboard
             </Text>
-          </Layout>
-        </View>
+        </Layout>
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
         <Layout style={styles.childs} level="1">
           <Layout
             style={{
               backgroundColor: 'transparent',
-              marginLeft: 10,
-              marginTop: 20,
+              margin: 12,
+              // marginVertical: 10,
             }}
           >
             <Text category="h6" status="control" style={{ color: 'grey' }}>
               To see the progress
             </Text>
-            <Text category="h1" status="control" style={{ color: 'grey' }}>
+            <Text category="h4" status="control" style={{ color: 'grey', fontWeight: 'bold' }}>
               Select Child
             </Text>
           </Layout>
-
           <SafeAreaView
             style={[
               {
@@ -94,7 +89,7 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
               },
             ]}
           >
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
               <Layout style={[styles.childsInnerWrap]}>
                 <Card
                   onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
@@ -202,8 +197,41 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
         <Layout style={styles.bottomData}>
           <Text status={'danger'}>There is some important information</Text>
         </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
       </Layout>
-    </Layout>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -212,26 +240,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bottomWrap: {
-    height: hp2dp('18%'),
-    width: wp2dp('85%'),
-    display: 'flex',
-    // flex: 0.3,
+    // height: hp2dp('18%'),
     alignItems: 'center',
     justifyContent: 'space-around',
     padding: 10,
     alignSelf: 'center',
-    marginVertical: 10,
+    marginVertical: 12,
   },
   bottomData: {
     backgroundColor: 'transparent',
     width: wp2dp('85%'),
-    height: 30,
+    height: hp2dp('4%'),
     borderRadius: 5,
     borderWidth: 0.4,
     borderColor: 'grey',
-
     justifyContent: 'center',
-    padding: 10,
+    padding: 15,
+    marginVertical: 2
   },
   scrollView: {
     backgroundColor: 'pink',
@@ -259,14 +284,9 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   childDataWrap: {
-    display: 'flex',
-    flex: 1,
-    marginTop: -80,
+    marginTop: -hp2dp('15%'),
     backgroundColor: 'transparent',
-    height: hp2dp('50%'),
-    // alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   childs: {
     borderColor: 'grey',
@@ -297,18 +317,11 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   headerContainer: {
-    justifyContent: 'center',
     alignItems: 'flex-start',
-    // minHeight: 220,
-    height: hp2dp('25%'),
-    paddingHorizontal: 28,
-  },
-  headerElements: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    height: 75,
-    marginBottom: 90,
+    height: hp2dp('30%'),
+    paddingHorizontal: 45,
+    backgroundColor: 'transparent',
+    padding: 10,
   },
   loadMoreButton: {
     marginVertical: 5,

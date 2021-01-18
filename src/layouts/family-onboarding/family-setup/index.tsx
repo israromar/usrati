@@ -22,7 +22,6 @@ import {
   Spinner,
 } from '@ui-kitten/components';
 // import { validate } from 'validate.js';
-// import { useDispatch } from 'react-redux';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
@@ -166,6 +165,8 @@ export const FamilySetup = ({
   // const [onDismiss, setOnDismiss] = useState(false);
 
   const screenHeight = Dimensions.get('screen').height;
+  const windowHeight = Dimensions.get('window').height;
+  console.log("🚀 ~ file: index.tsx ~ line 169 ~ screenHeight", windowHeight * 0.1, screenHeight)
   const panY = useRef(new Animated.Value(screenHeight)).current;
 
   const resetPositionAnim = Animated.timing(panY, {
@@ -480,7 +481,7 @@ export const FamilySetup = ({
   };
 
   return (
-    <KeyboardAvoidingView style={{ backgroundColor: '#fff' }}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <RNModal
         animated
         animationType="fade"
@@ -547,12 +548,9 @@ export const FamilySetup = ({
             backgroundColor: 'transparent',
             alignSelf: 'flex-start',
             justifyContent: 'center',
-            minHeight: 50,
+            // minHeight: 50,
           }}
         >
-          {/* <TouchableOpacity style={{ bottom: 0 }} onPress={hanldeBackPress}>
-            <Image source={require('../../../assets/images/backarrow.png')} />
-          </TouchableOpacity> */}
         </Layout>
         <Layout
           style={[
@@ -874,6 +872,9 @@ export const FamilySetup = ({
   );
 };
 
+const screenHeight = Dimensions.get('screen').height;
+const windowHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.2)',
@@ -958,16 +959,14 @@ const styles = StyleSheet.create({
     width: wp2dp('85%'),
     marginBottom: 50,
   },
-  bottomContainer: { bottom: 50, alignSelf: 'center' },
-  bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
-    // marginTop: 20,
+    marginTop: 10,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 28,
     // minHeight: 450,
-    height: hp2dp('30%'),
+    // height: hp2dp('70%')
   },
   primarySubmitButton: {
     width: wp2dp('85%'),

@@ -9,7 +9,7 @@ import {
   DrawerItem,
   Button,
 } from '@ui-kitten/components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import i18n from '../../translations';
 import {
@@ -27,38 +27,43 @@ import {
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
 
-const Header = () => (
-  <Layout style={styles.headerWrap}>
-    <Layout>
-      <Avatar
-        size="giant"
-        source={require('../../assets/images/drawer/user.png')}
-      />
-      <Layout style={styles.nameWrap}>
-        <Layout>
-          <Text style={styles.text}>Israr</Text>
-          <Text style={styles.textOne}>@Israr123</Text>
-        </Layout>
-        <Button
-          style={styles.icon}
-          appearance="ghost"
-          status="primary"
-          accessoryLeft={ChevronDownIcon || ChevronUpIcon}
+const Header = () => {
+  const { user: { userInfo } }: any = useSelector((state) => state)
+  console.log('asdasd', userInfo)
+  return (
+    <Layout style={styles.headerWrap} >
+      <Layout>
+        <Avatar
+          size="giant"
+          source={require('../../assets/images/drawer/user.png')}
         />
+        <Layout style={styles.nameWrap}>
+          <Layout>
+            <Text style={styles.text}>Welcome</Text>
+            <Text style={styles.textOne}>@{userInfo?.username}</Text>
+          </Layout>
+          <Button
+            style={styles.icon}
+            appearance="ghost"
+            status="primary"
+            accessoryLeft={ChevronDownIcon || ChevronUpIcon}
+          />
+        </Layout>
       </Layout>
-    </Layout>
-    <Layout style={styles.innerWrap}>
-      <Text style={styles.text}>
-        {'14'}
-        <Text style={styles.textOne}> {i18n.t('drawer.following')}</Text>
-      </Text>
-      <Text style={styles.text}>
-        {'10'}
-        <Text style={styles.textOne}> {i18n.t('drawer.followers')}</Text>
-      </Text>
-    </Layout>
-  </Layout>
-);
+      <Layout style={styles.innerWrap}>
+        <Text style={styles.text}>
+          {'14'}
+          <Text style={styles.textOne}> {i18n.t('drawer.following')}</Text>
+        </Text>
+        <Text style={styles.text}>
+          {'10'}
+          <Text style={styles.textOne}> {i18n.t('drawer.followers')}</Text>
+        </Text>
+      </Layout>
+    </Layout >
+  )
+}
+
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -87,7 +92,7 @@ const Footer = () => {
   );
 };
 
-const DrawerContent = ({ navigation, state }) => {
+const DrawerContent = ({ navigation, state }: any) => {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
 
   return (
@@ -131,7 +136,7 @@ const DrawerContent = ({ navigation, state }) => {
         onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
-    </Drawer>
+    </Drawer >
   );
 };
 
