@@ -1,22 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  Layout,
-  Button,
-  Icon,
-  Text,
-  LayoutElement,
-  Card,
-  Avatar,
-} from '@ui-kitten/components';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { Layout, Button, Text, Card, Avatar } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
   widthPercentageToDP as wp2dp,
@@ -30,23 +15,39 @@ interface IDashboard {
   onChildPress: (v: string) => void;
 }
 
-export const Dashboard = ({ onChildPress }: IDashboard) => {
-  const hanldeBackPress = () => {
-    // rest.goBack();
-  };
+const childs = [
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child.png' },
+  { name: 'Natasha', photoUri: './assets/child.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
+];
 
-  const Header = (props: any) => (
-    <>
-      <Avatar
-        shape="square"
-        source={require('./assets/child.png')}
-        style={styles.avatar}
-      />
-      <Text category="s1" style={{ color: 'grey' }}>
-        Natasha
-      </Text>
-    </>
-  );
+export const Dashboard = ({ onChildPress }: IDashboard) => {
+  const Header = (child: { name: string; photoUri: string }) => {
+    return (
+      <>
+        <Avatar
+          shape="square"
+          source={require('./assets/child.png')}
+          style={styles.avatar}
+        />
+        <Text category="s1" style={{ color: 'grey' }}>
+          {child.name}
+        </Text>
+      </>
+    );
+  };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -54,15 +55,13 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
         style={styles.headerContainer}
         source={require('../../assets/images/vector.png')}
       >
-        <Layout
-          style={{ backgroundColor: 'none' }}
-        >
+        <Layout style={{ backgroundColor: 'none' }}>
           <Text category="h5" status="control">
             Parent
-            </Text>
+          </Text>
           <Text category="h1" status="control">
             Dashboard
-            </Text>
+          </Text>
         </Layout>
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
@@ -77,7 +76,11 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
             <Text category="h6" status="control" style={{ color: 'grey' }}>
               To see the progress
             </Text>
-            <Text category="h4" status="control" style={{ color: 'grey', fontWeight: 'bold' }}>
+            <Text
+              category="h4"
+              status="control"
+              style={{ color: 'grey', fontWeight: 'bold' }}
+            >
               Select Child
             </Text>
           </Layout>
@@ -89,88 +92,20 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
               },
             ]}
           >
-            <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
+            <ScrollView
+              nestedScrollEnabled
+              showsVerticalScrollIndicator={false}
+            >
               <Layout style={[styles.childsInnerWrap]}>
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
-                <Card
-                  onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                  style={styles.card}
-                  header={Header}
-                />
+                {childs.map((child) => {
+                  return (
+                    <Card
+                      onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                      style={styles.card}
+                      header={() => Header(child)}
+                    />
+                  );
+                })}
               </Layout>
             </ScrollView>
             <Layout style={{ backgroundColor: 'transparent' }}>
@@ -179,7 +114,6 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
                 status="control"
                 size="medium"
                 appearance="ghost"
-              // accessoryLeft={auth?.isLoading && LoadingIndicator}
               >
                 Load more
               </Button>
@@ -256,7 +190,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     justifyContent: 'center',
     padding: 15,
-    marginVertical: 2
+    marginVertical: 2,
   },
   scrollView: {
     backgroundColor: 'pink',
@@ -305,7 +239,7 @@ const styles = StyleSheet.create({
   },
   childsInnerWrap: {
     backgroundColor: 'transparent',
-    height: hp2dp('100%'),
+    // height: hp2dp('100%'),
     width: wp2dp('80%'),
     flexWrap: 'wrap',
     flexDirection: 'row',

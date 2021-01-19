@@ -159,8 +159,6 @@ export const FamilySetup = ({
     '',
   );
 
-  // const [onDismiss, setOnDismiss] = useState(false);
-
   const screenHeight = Dimensions.get('screen').height;
   const windowHeight = Dimensions.get('window').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -282,14 +280,7 @@ export const FamilySetup = ({
       setCurrentPosition(0);
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
-      // Alert.alert('Guardian successfully added.');
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
-      // setCurrentPosition(2);
-      // // setGuardianPhoto(null);
-      // setGuardianUsername('');
-      // setGuardianEmail('');
-      // setGuardianPassword('');
-      // setIsAddGuardian(false);
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && !guardian?.isAddGuardianSuccess && guardian?.isAddGuardianFail) {
       Alert.alert(guardian.addGuardianError);
@@ -297,17 +288,7 @@ export const FamilySetup = ({
       setCurrentPosition(1);
     }
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
-      // Alert.alert('Child successfully added.');
       afterSuccessAlert('child', 'Child successfully added, do you want to add another one?');
-
-      // setCurrentPosition(3);
-      // setChildName('');
-      // setDate(new Date());
-      // setSchoolName('');
-      // setChildInterest('');
-      // setChildUsername('');
-      // setChildPassword('');
-      // setIsAddChild(false);
     }
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
       Alert.alert(child?.addChildError);

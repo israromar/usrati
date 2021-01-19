@@ -54,24 +54,12 @@ export const SignIn = ({
   }, [auth, auth.isSignInFailed]);
 
   const handleInput = (
-    inputField: string,
+    inputField: (v: React.SetStateAction<string>) => void,
+    inputFieldError: (v: boolean) => void,
     value: React.SetStateAction<string>,
   ) => {
-    if (inputField === 'username') {
-      setUsernameError(false);
-      setUsernameErrorMsg('');
-      setUsername(value.trim());
-      if (auth.isSignInFailed) {
-        setPasswordError(false);
-        setPasswordErrorMsg('');
-      }
-    } else {
-      // setUsernameError(false);
-      // setUsernameErrorMsg('');
-      setPasswordError(false);
-      setPasswordErrorMsg('');
-      setPassword(value);
-    }
+    inputField(value);
+    inputFieldError(false);
   };
 
   const onSignInButtonPress = (): void => {
@@ -89,6 +77,8 @@ export const SignIn = ({
       setPasswordErrorMsg(validationResult?.password[0]);
     } else {
       signIn({ username, password });
+      setUsernameErrorMsg('');
+      setPasswordErrorMsg('');
     }
   };
 
@@ -135,7 +125,10 @@ export const SignIn = ({
             status={usernameError ? 'danger' : 'basic'}
             placeholder="Username"
             accessoryRight={AtIcon}
-            onChangeText={(nextValue) => handleInput('username', nextValue)}
+            // onChangeText={(nextValue) => handleInput('username', nextValue)}
+            onChangeText={(nextValue) =>
+              handleInput(setUsername, setUsernameError, nextValue)
+            }
           />
           <Input
             style={{ marginTop: 10 }}
@@ -145,7 +138,10 @@ export const SignIn = ({
             placeholder="Password"
             accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
-            onChangeText={(nextValue) => handleInput('password', nextValue)}
+            // onChangeText={(nextValue) => handleInput('password', nextValue)}
+            onChangeText={(nextValue) =>
+              handleInput(setPassword, setPasswordError, nextValue)
+            }
           />
         </Layout>
         <Layout style={styles.bottomContainer}>
