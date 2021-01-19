@@ -10,6 +10,7 @@ import {
   Button,
 } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import i18n from '../../translations';
 import {
@@ -25,6 +26,7 @@ import {
   SignOutIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
+import { AppRoute } from '../../navigation/app-routes';
 
 const Header = () => {
   const {
@@ -92,7 +94,12 @@ const Footer = () => {
 };
 
 const DrawerContent = ({ navigation, state }: any) => {
+  // const { navigate } = useNavigation();
   const [selectedIndex, setSelectedIndex] = React.useState(null);
+  const handlePress = (toScreen: string) => {
+    console.log('123123123123', toScreen);
+    navigation.navigate(toScreen);
+  };
 
   return (
     <Drawer
@@ -109,9 +116,10 @@ const DrawerContent = ({ navigation, state }: any) => {
         accessoryRight={ForwardIcon}
       />
       <DrawerItem
-        title={i18n.t('drawer.lists')}
+        title={'Matric Categories'}
         accessoryLeft={ListsIcon}
         accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
         title={i18n.t('drawer.topics')}

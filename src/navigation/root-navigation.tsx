@@ -11,7 +11,7 @@ export interface IAppRooStack {
   auth: {
     isLoggedIn: boolean;
     userToken: string;
-    user: { username: string; password: string };
+    user: { username: string; password: string; familyID: {} };
   };
   theme: { activeTheme: string };
   language: { activeLanguage: string };
@@ -20,8 +20,11 @@ export interface IAppRooStack {
 const AppRootStack = () => {
   const dispatch = useDispatch();
   const {
-    auth: { isLoggedIn, userToken },
+    auth: { isLoggedIn, userToken, user },
+    // user: { userInfo },
   } = useSelector((state: IAppRooStack) => {
+    console.log('asdasdasdasd', state);
+
     return state;
   });
 
@@ -50,7 +53,11 @@ const AppRootStack = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn && userToken ? <AppStackNavigator /> : <AuthStackNavigator />}
+      {isLoggedIn && userToken ? (
+        <AppStackNavigator familyID={user?.familyID} />
+      ) : (
+          <AuthStackNavigator />
+        )}
     </NavigationContainer>
   );
 };
