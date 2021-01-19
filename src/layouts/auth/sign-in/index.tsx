@@ -202,21 +202,26 @@ const styles = StyleSheet.create({
     width: wp2dp('100%'),
     height: hp2dp('70%'),
   },
-  bottomContainer: { flex: 1, marginTop: 10, alignSelf: 'center', backgroundColor: 'transparent' },
+  bottomContainer: {
+    flex: 1,
+    marginTop: 10,
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   signInButton: {
     // marginTop: 'auto',
     width: wp2dp('85%'),
     borderRadius: 5,
     backgroundColor: '#6F99EB',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   indicator: {
     justifyContent: 'center',

@@ -30,6 +30,7 @@ import Modal from 'react-native-modal';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import { CameraIcon, GalleryIcon } from './extra/icons';
 import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
 // import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -38,6 +39,9 @@ import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '..
 // import i18n from '../../../translations';
 import StepIndicator from '../../../components/step-indicator';
 import { AppRoute } from '../../../navigation/app-routes';
+import { Icon } from 'react-native-vector-icons/Icon';
+import validate from 'validate.js';
+import constraints from '../../../utils/constraints';
 
 interface IAddFamilySetup {
   onAddFamilySettings(obj: IIAddFamilySetup): void;
@@ -216,11 +220,11 @@ export const FamilySetup = ({
   const afterSuccessAlert = (flag: string, msg: string) => {
 
     Alert.alert(
-      "Success",
+      'Success',
       msg,
       [
         {
-          text: "Cancel",
+          text: 'Cancel',
           onPress: () => {
             if (flag === 'guardian') {
               setCurrentPosition(2);
@@ -241,10 +245,10 @@ export const FamilySetup = ({
               setIsAddChild(false);
             }
           },
-          style: "cancel"
+          style: 'cancel',
         },
         {
-          text: "Add", onPress: () => {
+          text: 'Add', onPress: () => {
             if (flag === 'guardian') {
               setCurrentPosition(1);
               setGuardianPhoto(null);
@@ -264,12 +268,12 @@ export const FamilySetup = ({
               setIsAddChild(false);
               setIsNext(false);
             }
-          }
-        }
+          },
+        },
       ],
       { cancelable: false }
     );
-  }
+  };
 
   useEffect(() => {
     if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
@@ -285,7 +289,7 @@ export const FamilySetup = ({
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
       // Alert.alert('Guardian successfully added.');
-      afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?')
+      afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
 
       // setCurrentPosition(2);
       // // setGuardianPhoto(null);
@@ -301,7 +305,7 @@ export const FamilySetup = ({
     }
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
       // Alert.alert('Child successfully added.');
-      afterSuccessAlert('child', 'Child successfully added, do you want to add another one?')
+      afterSuccessAlert('child', 'Child successfully added, do you want to add another one?');
 
       // setCurrentPosition(3);
       // setChildName('');
@@ -341,7 +345,19 @@ export const FamilySetup = ({
       setFamilyNameError(!familyName);
       setFamilyIdError(!familyId);
     } else {
-      if (guardianUsername && guardianEmail && guardianPassword) {
+      const validationResult = validate({ username: guardianUsername, email: guardianEmail, password: guardianPassword }, constraints);
+      if (validationResult?.username) {
+        setGuardianUsernameError(true);
+        setGuardianUsernameErrorMsg(validationResult?.username[0]);
+      }
+      if (validationResult?.email) {
+        setGuardianEmailError(true);
+        setGuardianEmailErrorMsg(validationResult?.email[0]);
+      }
+      if (validationResult?.password) {
+        setGuardianPasswordError(true);
+        setGuardianPasswordErrorMsg(validationResult?.password[0]);
+      } else {
         setIsAddGuardian(true);
         onAddGuardian({
           photo: guardianPhoto,
@@ -350,33 +366,61 @@ export const FamilySetup = ({
           password: guardianPassword,
         });
       }
-      setGuardianUsernameError(!guardianUsername);
-      setGuardianEmailError(!guardianEmail);
-      setGuardianPasswordError(!guardianPassword);
+      // return;
+      // }
+      // setGuardianUsernameError(!guardianUsername);
+      // setGuardianEmailError(!guardianEmail);
+      // setGuardianPasswordError(!guardianPassword);
     }
   };
 
   const handleAddChild = (flag: string) => {
-    if (
-      flag === 'Add' &&
-      childName &&
-      schoolName &&
-      childUsername &&
-      childInterest &&
-      childPassword
-    ) {
-      setIsAddChild(true);
-      onAddChild({ photo: childPhoto, name: childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
-    }
     if (flag === 'Next') {
-      setChildNameError(!childName);
-      setSchoolNameError(!schoolName);
+      const validationResult = validate({ name: childName, schoolName: schoolName }, constraints);
+      if (validationResult?.name) {
+        setChildNameError(true);
+        setChildNameErrorMsg(validationResult?.name[0]);
+      }
+      if (validationResult?.schoolName) {
+        setSchoolNameError(true);
+        setSchoolNameErrorMsg(validationResult?.schoolName[0]);
+      }
+      if (!childNameError && !schoolNameError) {
+        setIsNext(!!childName && !!schoolName);
+      }
+
+      // setChildNameError(!childName);
+      // setSchoolNameError(!schoolName);
     } else {
-      setChildInterestError(!childInterest);
-      setChildUsernameError(!childUsername);
-      setChildPasswordError(!childPassword);
+      console.log({ childInterest, childUsername, childPassword });
+      const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
+      if (validationResult?.interest) {
+        setChildInterestError(true);
+        setChildInterestErrorMsg(validationResult?.interest[0]);
+      }
+      if (validationResult?.username) {
+        setChildUsernameError(true);
+        setChildUsernameErrorMsg(validationResult?.username[0]);
+      }
+      if (validationResult?.password) {
+        setChildPasswordError(true);
+        setChildPasswordErrorMsg(validationResult?.password[0]);
+      } else if (
+        flag === 'Add' &&
+        !childNameError &&
+        !schoolNameError &&
+        !childUsernameError &&
+        !childInterestError &&
+        !childPasswordError
+      ) {
+        setIsAddChild(true);
+        onAddChild({ photo: childPhoto, name: childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+      }
+
+      // setChildInterestError(!childInterest);
+      // setChildUsernameError(!childUsername);
+      // setChildPasswordError(!childPassword);
     }
-    setIsNext(!!childName && !!schoolName);
   };
 
   // family setting form effect
@@ -556,6 +600,7 @@ export const FamilySetup = ({
               status="control"
               size="giant"
               appearance="ghost"
+              accessoryRight={GalleryIcon}
             >
               Choose from gallery
             </Button>
@@ -568,6 +613,7 @@ export const FamilySetup = ({
               status="control"
               size="giant"
               appearance="ghost"
+              accessoryRight={CameraIcon}
             >
               Take Photo
             </Button>
@@ -597,8 +643,7 @@ export const FamilySetup = ({
             justifyContent: 'center',
             // minHeight: 50,
           }}
-        >
-        </Layout>
+        />
         <Layout
           style={[
             styles.headerElements,
@@ -914,7 +959,7 @@ export const FamilySetup = ({
             size="giant"
             appearance="ghost"
           >
-            Submit
+            Go to Dashboard
           </Button>
         </Layout>
       )}
@@ -973,8 +1018,8 @@ const styles = StyleSheet.create({
   },
   stepperContainer: {
     alignSelf: 'center',
-    justifyContent: 'center',
-    minHeight: 500,
+    // justifyContent: 'center',
+    minHeight: hp2dp('50%'),
   },
   inputField: { marginTop: 10, width: wp2dp('85%') },
   dob: {

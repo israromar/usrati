@@ -76,7 +76,7 @@ export const addGuardian = ({
       console.log('🚀 ~ file: family.actions.js ~ line 40 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_GUARDIAN_SUCCESS,
-        payload: res.SUCCESS,
+        payload: res.data,
       });
     })
     .catch((error) => {

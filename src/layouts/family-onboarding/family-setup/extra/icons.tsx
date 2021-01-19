@@ -17,3 +17,11 @@ export const PersonIcon = (style: ImageStyle): IconElement => (
 export const AtIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name="at-outline" />
 );
+
+export const CameraIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="camera-outline" />
+);
+
+export const GalleryIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="image-outline" />
+);
