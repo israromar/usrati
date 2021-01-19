@@ -22,16 +22,16 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   BulbIcon,
-  QrIcon,
   SignOutIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
 
 const Header = () => {
-  const { user: { userInfo } }: any = useSelector((state) => state)
-  console.log('asdasd', userInfo)
+  const {
+    user: { userInfo },
+  }: any = useSelector((state) => state);
   return (
-    <Layout style={styles.headerWrap} >
+    <Layout style={styles.headerWrap}>
       <Layout>
         <Avatar
           size="giant"
@@ -60,10 +60,9 @@ const Header = () => {
           <Text style={styles.textOne}> {i18n.t('drawer.followers')}</Text>
         </Text>
       </Layout>
-    </Layout >
-  )
-}
-
+    </Layout>
+  );
+};
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -136,7 +135,7 @@ const DrawerContent = ({ navigation, state }: any) => {
         onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
-    </Drawer >
+    </Drawer>
   );
 };
 

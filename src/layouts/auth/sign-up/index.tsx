@@ -235,7 +235,12 @@ const styles = StyleSheet.create({
     height: hp2dp('70%'),
   },
   // bottomContainer: { flex: 1, top: 43, alignSelf: 'center' },
-  bottomContainer: { flex: 1, marginTop: 40, alignSelf: 'center', backgroundColor: 'transparent' },
+  bottomContainer: {
+    flex: 1,
+    marginTop: 40,
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
 
   bottomText: { flex: 1, top: 10, flexDirection: 'row', alignSelf: 'center' },
   formContainer: {
@@ -249,7 +254,7 @@ const styles = StyleSheet.create({
     width: wp2dp('85%'),
     borderRadius: 5,
     backgroundColor: '#6F99EB',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   forgotPasswordContainer: {
     flexDirection: 'row',

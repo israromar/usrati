@@ -21,7 +21,7 @@ import {
   Calendar,
   Spinner,
 } from '@ui-kitten/components';
-// import { validate } from 'validate.js';
+import { validate } from 'validate.js';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
@@ -39,8 +39,6 @@ import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '..
 // import i18n from '../../../translations';
 import StepIndicator from '../../../components/step-indicator';
 import { AppRoute } from '../../../navigation/app-routes';
-import { Icon } from 'react-native-vector-icons/Icon';
-import validate from 'validate.js';
 import constraints from '../../../utils/constraints';
 
 interface IAddFamilySetup {
@@ -94,7 +92,6 @@ export const FamilySetup = ({
   const [isAddChild, setIsAddChild] = useState<boolean>(false);
 
   const [currentPosition, setCurrentPosition] = useState(0);
-  // const [familyPhoto, setFamilyPhoto] = useState('8RGj78Td-/image.png');
   const [familyPhoto, setFamilyPhoto] = useState('');
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
@@ -124,9 +121,6 @@ export const FamilySetup = ({
     string
   >('');
 
-  const [familyId, setFamilyId] = useState<string>('Id-112');
-  const [familyIdError, setFamilyIdError] = useState<boolean>(false);
-  const [familyIdErrorMsg, setFamilyIdErrorMsg] = useState<string>('');
 
   // const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
@@ -134,7 +128,6 @@ export const FamilySetup = ({
   const [mediaSelectorModalVisible, setMediaSelectorModalVisible] = useState(
     false,
   );
-  const [filePath, setFilePath] = useState(null);
   const [guardianPhoto, setGuardianPhoto] = useState(null);
 
   const [childPhoto, setChildPhoto] = useState(null);
@@ -280,6 +273,7 @@ export const FamilySetup = ({
       Alert.alert('Family successfully added.');
       setCurrentPosition(1);
       setFamilyName('');
+      setFamilyPhoto('');
       setIsAddFamily(false);
     }
     if (isAddFamily && !family?.isAddingFamily && !family?.isAddFamilySuccess && family?.isAddFamilyFail) {
@@ -290,7 +284,6 @@ export const FamilySetup = ({
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
       // Alert.alert('Guardian successfully added.');
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
-
       // setCurrentPosition(2);
       // // setGuardianPhoto(null);
       // setGuardianUsername('');
@@ -334,16 +327,14 @@ export const FamilySetup = ({
 
   const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
-      if (familyId && familyName) {
+      if (familyName) {
         setIsAddFamily(true);
         onAddFamilySettings({
-          familyId,
           familyName,
           familyPhoto,
         });
       }
       setFamilyNameError(!familyName);
-      setFamilyIdError(!familyId);
     } else {
       const validationResult = validate({ username: guardianUsername, email: guardianEmail, password: guardianPassword }, constraints);
       if (validationResult?.username) {
@@ -366,11 +357,6 @@ export const FamilySetup = ({
           password: guardianPassword,
         });
       }
-      // return;
-      // }
-      // setGuardianUsernameError(!guardianUsername);
-      // setGuardianEmailError(!guardianEmail);
-      // setGuardianPasswordError(!guardianPassword);
     }
   };
 
@@ -388,9 +374,6 @@ export const FamilySetup = ({
       if (!childNameError && !schoolNameError) {
         setIsNext(!!childName && !!schoolName);
       }
-
-      // setChildNameError(!childName);
-      // setSchoolNameError(!schoolName);
     } else {
       console.log({ childInterest, childUsername, childPassword });
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
@@ -425,13 +408,10 @@ export const FamilySetup = ({
 
   // family setting form effect
   useEffect(() => {
-    if (!familyId) {
-      setFamilyIdErrorMsg('Family Id cannot be empty');
-    }
     if (!familyName) {
-      setFamilyNameErrorMsg('Name cannot be empty');
+      setFamilyNameErrorMsg('Family name cannot be empty');
     }
-  }, [familyId, familyName]);
+  }, [familyName]);
 
   // guardian form effect
   useEffect(() => {
@@ -496,7 +476,6 @@ export const FamilySetup = ({
       }
       if (permission === 'granted') {
         mediaTypeInvoker(options, async (response: any) => {
-          setFilePath(response);
           if (!response?.didCancel) {
             [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
           }
@@ -552,15 +531,11 @@ export const FamilySetup = ({
 
     return (
       <TouchableOpacity
-        style={styles.skipForNow}
+        style={styles.skipForNowView}
         onPress={handleOnSkip}
       >
         <Text
-          style={{
-            textDecorationLine: 'underline',
-            alignSelf: 'flex-end',
-            fontSize: 15,
-          }}
+          style={styles.skipForNowText}
           appearance="default"
           category="h6"
           status="info"
@@ -573,6 +548,7 @@ export const FamilySetup = ({
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
+
       <RNModal
         animated
         animationType="fade"
@@ -697,16 +673,7 @@ export const FamilySetup = ({
               )
             }
           />
-          <Input
-            style={styles.inputField}
-            value={familyId.trim()}
-            caption={familyIdError ? familyIdErrorMsg : ''}
-            status={familyIdError ? 'danger' : 'basic'}
-            placeholder="Family id"
-            onChangeText={(nextValue) =>
-              handleFamilySettingInput(setFamilyId, setFamilyIdError, nextValue)
-            }
-          />
+
           <Button
             onPress={() => handleAddFamilySetup(1)}
             style={styles.primarySubmitButton}
@@ -943,6 +910,7 @@ export const FamilySetup = ({
           </Layout>
         </Layout>
       )}
+
       {currentPosition === 3 && (
         <Layout style={styles.stepperContainer}>
           <StepIndicator
@@ -963,6 +931,7 @@ export const FamilySetup = ({
           </Button>
         </Layout>
       )}
+
     </KeyboardAvoidingView>
   );
 };
@@ -1012,9 +981,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     marginVertical: 35,
   },
-  skipForNow: {
+  skipForNowView: {
     height: 20,
     right: 5,
+  },
+  skipForNowText:
+  {
+    textDecorationLine: 'underline',
+    alignSelf: 'flex-end',
+    fontSize: 15,
   },
   stepperContainer: {
     alignSelf: 'center',

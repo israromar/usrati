@@ -11,14 +11,18 @@ const { Navigator, Screen } = createDrawerNavigator();
 export const AppNavigator = (): React.ReactElement => {
   return (
     <Navigator
-      drawerContent={(props) => <DrawerContent {...props} />}
-      initialRouteName={AppRoute.FAMILY_SETUP}
+      drawerContent={(props) => {
+        return <DrawerContent {...props} />;
+      }}
     >
       {StackNavigationData.map((item, idx) => (
         <Screen
           key={`stack_item-${idx + 1}`}
           name={item.name}
           component={item.component}
+          options={{
+            gestureEnabled: item.name === AppRoute.FAMILY_SETUP ? false : true,
+          }}
         />
       ))}
     </Navigator>

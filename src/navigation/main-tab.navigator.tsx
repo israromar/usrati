@@ -34,14 +34,20 @@ const BottomTabBar = ({ navigation: { navigate }, state }: any) => {
 const TabNavigator = () => {
   return (
     <Navigator
-      initialRouteName={AppRoute.FAMILY_SETUP}
+      initialRouteName={AppRoute.DASHBOARD}
       headerMode={'none'}
     // tabBar={(props) => <BottomTabBar {...props} />}
     >
       {/* {tabNavigationData?.map(({ name, component }) => (
         <Screen key={name} name={name} component={component} />
       ))} */}
-      <Screen name={AppRoute.FAMILY_SETUP} component={FamilySetupScreen} />
+      {/* <Screen
+        options={{
+          gestureEnabled: false,
+        }}
+        name={AppRoute.FAMILY_SETUP}
+        component={FamilySetupScreen}
+      /> */}
       <Screen name={AppRoute.DASHBOARD} component={DashboardScreen} />
       <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
