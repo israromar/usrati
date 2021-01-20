@@ -23,8 +23,6 @@ const AppRootStack = () => {
     auth: { isLoggedIn, userToken, user },
     // user: { userInfo },
   } = useSelector((state: IAppRooStack) => {
-    console.log('asdasdasdasd', state);
-
     return state;
   });
 

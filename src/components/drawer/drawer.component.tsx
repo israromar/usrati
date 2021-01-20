@@ -10,7 +10,6 @@ import {
   Button,
 } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 
 import i18n from '../../translations';
 import {
@@ -24,6 +23,7 @@ import {
   ChevronUpIcon,
   BulbIcon,
   SignOutIcon,
+  FamilyIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
 import { AppRoute } from '../../navigation/app-routes';
@@ -94,10 +94,8 @@ const Footer = () => {
 };
 
 const DrawerContent = ({ navigation, state }: any) => {
-  // const { navigate } = useNavigation();
   const [selectedIndex, setSelectedIndex] = React.useState(null);
   const handlePress = (toScreen: string) => {
-    console.log('123123123123', toScreen);
     navigation.navigate(toScreen);
   };
 
@@ -114,6 +112,12 @@ const DrawerContent = ({ navigation, state }: any) => {
         title={i18n.t('drawer.profile')}
         accessoryLeft={PersonIcon}
         accessoryRight={ForwardIcon}
+      />
+      <DrawerItem
+        title={'Family Setup'}
+        accessoryLeft={FamilyIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.FAMILY_SETUP)}
       />
       <DrawerItem
         title={'Matric Categories'}

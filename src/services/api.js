@@ -8,7 +8,6 @@ export function login(payload) {
   return http
     .post('user/auth/login', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 11 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
@@ -104,6 +103,28 @@ export function addNewGuardian(payload) {
 export function addNewChild(payload) {
   return http
     .post('child', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function addMatricCategory(payload) {
+  return http
+    .post('category', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getMatrics({ parentID }) {
+  return http
+    .get(`parent/${parentID}/categories`)
     .then((response) => {
       return response.data;
     })

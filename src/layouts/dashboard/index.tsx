@@ -97,9 +97,10 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
               showsVerticalScrollIndicator={false}
             >
               <Layout style={[styles.childsInnerWrap]}>
-                {childs.map((child) => {
+                {childs.map((child, idx) => {
                   return (
                     <Card
+                      key={idx + 1}
                       onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
                       style={styles.card}
                       header={() => Header(child)}

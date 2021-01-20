@@ -355,7 +355,6 @@ export const FamilySetup = ({
         setIsNext(!!childName && !!schoolName);
       }
     } else {
-      console.log({ childInterest, childUsername, childPassword });
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
         setChildInterestError(true);
