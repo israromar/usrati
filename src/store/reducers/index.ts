@@ -5,6 +5,7 @@ import language from './language.reducer';
 import auth from './auth.reducer';
 import user from './user.reducer';
 import family from './family.reducer';
+import matrics from './matric.reducer';
 
 export default combineReducers({
   theme,
@@ -12,4 +13,5 @@ export default combineReducers({
   auth,
   user,
   family,
+  matrics,
 });

@@ -87,15 +87,6 @@ export const addChild = ({
   username,
   password,
 }) => (dispatch) => {
-  console.log({
-    photo: childPhoto,
-    name,
-    dob,
-    schoolName,
-    interest,
-    username,
-    password,
-  });
   dispatch({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });

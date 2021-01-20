@@ -62,6 +62,39 @@ export const constraints = {
       message: 'can only contain a-z',
     },
   },
+  matricTitle: {
+    presence: {
+      allowEmpty: false,
+      message: '^Please enter title',
+    },
+    // format: {
+    //   pattern: '[a-z]+',
+    //   flags: 'i',
+    //   message: 'can only contain a-z',
+    // },
+  },
+  matricWeightage: {
+    presence: {
+      allowEmpty: false,
+      message: '^Please enter weightage',
+    },
+    // format: {
+    //   pattern: '[a-z]+',
+    //   flags: 'i',
+    //   message: 'can only contain a-z',
+    // },
+  },
+  matricDescription: {
+    presence: {
+      allowEmpty: false,
+      message: '^Please enter description',
+    },
+    // format: {
+    //   pattern: '[a-z0-9]+',
+    //   flags: 'i',
+    //   message: 'can only contain a-z and 0-9',
+    // },
+  },
 };
 
 export default constraints;

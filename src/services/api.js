@@ -110,3 +110,25 @@ export function addNewChild(payload) {
       throw error.response.data;
     });
 }
+
+export function addMatricCategory(payload) {
+  return http
+    .post('category', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getMatrics({ parentID }) {
+  return http
+    .get(`parent/${parentID}/categories`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}

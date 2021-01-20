@@ -16,3 +16,4 @@ export {
   Child as ChildScreen,
   FamilySetup as FamilySetupScreen,
 } from './family-onboarding';
+export { MatricCategory as MatricCategoryScreen } from './matric-category';

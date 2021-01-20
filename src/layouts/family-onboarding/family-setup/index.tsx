@@ -17,7 +17,6 @@ import {
   Button,
   Input,
   Text,
-  // Modal,
   Calendar,
   Spinner,
 } from '@ui-kitten/components';
@@ -356,7 +355,6 @@ export const FamilySetup = ({
         setIsNext(!!childName && !!schoolName);
       }
     } else {
-      console.log({ childInterest, childUsername, childPassword });
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
         setChildInterestError(true);
@@ -386,48 +384,6 @@ export const FamilySetup = ({
       // setChildPasswordError(!childPassword);
     }
   };
-
-  // family setting form effect
-  useEffect(() => {
-    if (!familyName) {
-      setFamilyNameErrorMsg('Family name cannot be empty');
-    }
-  }, [familyName]);
-
-  // guardian form effect
-  useEffect(() => {
-    if (!guardianUsername) {
-      setGuardianUsernameErrorMsg('Username cannot be empty');
-    }
-    if (!guardianEmail) {
-      setGuardianEmailErrorMsg('Email cannot be empty');
-    }
-    if (!guardianPassword) {
-      setGuardianPasswordErrorMsg('Password cannot be empty');
-    }
-  }, [guardianUsername, guardianEmail, guardianPassword]);
-
-  // child form effect
-  useEffect(() => {
-    if (!childName) {
-      setChildNameErrorMsg('Name cannot be empty');
-    }
-    if (!schoolName) {
-      setSchoolNameErrorMsg('School name cannot be empty');
-    }
-  }, [childName, schoolName]);
-
-  useEffect(() => {
-    if (!childInterest) {
-      setChildInterestErrorMsg('Interests cannot be empty');
-    }
-    if (!childUsername) {
-      setChildUsernameErrorMsg('Username cannot be empty');
-    }
-    if (!childPassword) {
-      setChildPasswordErrorMsg('Password cannot be empty');
-    }
-  }, [childInterest, childUsername, childPassword]);
 
   const handleSubmit = () => {
     onSubmit(AppRoute.DASHBOARD);
