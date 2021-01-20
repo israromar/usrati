@@ -1,6 +1,4 @@
 import React from 'react';
-// import { useDispatch } from 'react-redux';
-// import { signIn } from '../../store/actions/auth.actions';
 import {
   addFamilySettings,
   addGuardian,
@@ -10,7 +8,6 @@ import { FamilySetupScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 export interface IAddFamilySetup {
-  familyId: string;
   familyName: string;
   familyPhoto: string;
 }
@@ -27,12 +24,9 @@ export interface IAddChild {
   dob: Date;
   schoolName: string;
   interest: string;
-  // email: string;
   username: string;
   password: string;
 }
-
-// photo: childPhoto, name: childName, dob, schoolName, interest: childInterest, username: childUsername, password: childPassword
 
 export const FamilySetupContainer = () => {
   const { navigate } = useNavigation();
@@ -41,11 +35,10 @@ export const FamilySetupContainer = () => {
   const currentState = useSelector((state) => state);
 
   const handleAddFamilySettings = ({
-    familyId,
     familyName,
     familyPhoto,
   }: IAddFamilySetup) => {
-    dispatch(addFamilySettings({ familyId, familyName, familyPhoto }));
+    dispatch(addFamilySettings({ familyName, familyPhoto }));
   };
 
   const handleAddGuardian = ({

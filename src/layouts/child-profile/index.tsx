@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
+  Dimensions,
   Image,
   SafeAreaView,
   ScrollView,
@@ -25,6 +26,8 @@ import {
 
 import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
+import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
+import { colors } from '../../styles';
 
 interface IChildProfile {
   onBackPress: (v: string) => void;
@@ -115,36 +118,33 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
   ];
 
   return (
-    <Layout style={styles.container}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../assets/images/vector.png')}
       >
-        <View style={styles.headerElements}>
-          <TouchableOpacity onPress={hanldeBackPress}>
-            <Image source={require('../../assets/images/backarrow.png')} />
-          </TouchableOpacity>
-          <Layout
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              alignContent: 'center',
-              backgroundColor: 'transparent',
-              marginTop: 60,
-              marginLeft: 15,
-              width: 300,
-            }}
-          >
-            <Avatar
-              source={require('./assets/child.png')}
-              style={styles.avatar}
-            />
-            <Text category="h3" status="control">
-              Natasha
+        <TouchableOpacity onPress={hanldeBackPress}>
+          <Image source={require('../../assets/images/backarrow.png')} />
+        </TouchableOpacity>
+        <Layout
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            alignSelf: 'center',
+            backgroundColor: 'transparent',
+            marginTop: -20,
+            width: wp2dp('80%'),
+          }}
+        >
+          <Avatar
+            source={require('./assets/child.png')}
+            style={styles.avatar}
+            size="giant"
+          />
+          <Text category="h3" status="control">
+            Natasha
             </Text>
-          </Layout>
-        </View>
+        </Layout>
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
         <Layout style={styles.childProgressChart} level="1">
@@ -162,7 +162,6 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
           </BarChart>
         </Layout>
       </Layout>
-
       <Layout style={styles.bottomWrap}>
         <Layout style={styles.bottomData}>
           <Text status={'danger'}>There is some important information</Text>
@@ -173,8 +172,13 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
         <Layout style={styles.bottomData}>
           <Text status={'danger'}>There is some important information</Text>
         </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
+        <Layout style={styles.bottomData}>
+          <Text status={'danger'}>There is some important information</Text>
+        </Layout>
       </Layout>
-
       <Layout style={styles.kpisWrap}>
         <Text category="h3" style={{ alignSelf: 'flex-start' }}>
           Kpi's
@@ -212,9 +216,7 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
             />
           </Card>
           <Card
-            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
             style={styles.card}
-          // header={Header}
           >
             <Text style={styles.kpiName}>Task 3</Text>
 
@@ -227,9 +229,7 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
             />
           </Card>
           <Card
-            // onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
             style={styles.card}
-          // header={Header}
           >
             <Text style={styles.kpiName}>Task 4</Text>
 
@@ -242,19 +242,28 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
             />
           </Card>
         </Layout>
-        {/* </ScrollView> */}
-        {/* </SafeAreaView> */}
       </Layout>
-    </Layout>
+    </KeyboardAvoidingView>
   );
 };
+
+const { width, height } = Dimensions.get('window');
+
+const guidelineBaseWidth = 350;
+const guidelineBasedHeight = 600;
+
+const scale = size => width / guidelineBaseWidth * size;
+const verticalScale = size => height / guidelineBasedHeight * size;
+const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   bottomWrap: {
-    height: hp2dp('18%'),
+    // height: hp2dp('18%'),
     width: wp2dp('85%'),
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -271,8 +280,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   kpiName: {
-    textAlign: 'left',
     marginLeft: -15,
+    color: colors.lightGray
   },
   kpiProgress: {
     height: hp2dp('12%'),
@@ -281,6 +290,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: wp2dp('85%'),
     height: 30,
+    margin: 3,
     borderRadius: 5,
     borderWidth: 0.4,
     borderColor: 'grey',
@@ -310,19 +320,19 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   avatar: {
-    height: hp2dp('12.5%'),
-    width: wp2dp('24.5%'),
-    padding: 0,
+    // height: hp2dp('15%'),
+    // width: wp2dp('25%') * 0.9,
+    width: moderateScale(100),
+    height: verticalScale(90)
+
   },
   childDataWrap: {
     display: 'flex',
-    // flex: 1,
-    marginTop: -70,
+    flex: 1,
+    marginTop: -50,
     backgroundColor: 'transparent',
     height: hp2dp('20%'),
-    // alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   childProgressChart: {
     flex: 1,
@@ -359,11 +369,11 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   headerContainer: {
-    justifyContent: 'center',
     alignItems: 'flex-start',
-    // minHeight: 220,
     height: hp2dp('30%'),
-    paddingHorizontal: 28,
+    paddingHorizontal: 25,
+    backgroundColor: 'transparent',
+    padding: 10,
   },
   headerElements: {
     display: 'flex',

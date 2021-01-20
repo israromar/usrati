@@ -1,8 +1,7 @@
 import { familySettingsConstants } from '../../constants';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addFamily, addNewGuardian, addNewChild } from '../../services/api';
 
-export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
+export const addFamilySettings = ({ familyName, familyPhoto }) => (
   dispatch,
 ) => {
   dispatch({
@@ -24,19 +23,12 @@ export const addFamilySettings = ({ familyId, familyName, familyPhoto }) => (
 
   addFamily(formData)
     .then((res) => {
-      console.log('🚀 ~ file: family.actions.js ~ line 29 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error) => {
-      console.log(
-        '🚀 ~ file: family.actions.js ~ line 36 ~ error',
-        JSON.stringify(error),
-        error,
-      );
-      console.error('error in addFamily', error);
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_FAIL,
         payload: error?.ERROR
@@ -52,11 +44,9 @@ export const addGuardian = ({
   username,
   password,
 }) => (dispatch) => {
-  // AsyncStorage.removeItem('userToken');
   dispatch({
     type: familySettingsConstants.ADD_GUARDIAN_REQUEST,
   });
-  console.log({ guardianPhoto, email, username, password });
 
   // const { uri, type, fileName: name } = guardianPhoto;
   // var photo = {
@@ -73,15 +63,12 @@ export const addGuardian = ({
 
   addNewGuardian({ email, username, password })
     .then((res) => {
-      console.log('🚀 ~ file: family.actions.js ~ line 40 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_GUARDIAN_SUCCESS,
-        payload: res.SUCCESS,
+        payload: res.data,
       });
     })
     .catch((error) => {
-      console.log('🚀 ~ file: family.actions.js ~ line 78 ~ error', error);
-      console.error(error);
       dispatch({
         type: familySettingsConstants.ADD_GUARDIAN_FAIL,
         payload: error?.ERROR
@@ -100,16 +87,6 @@ export const addChild = ({
   username,
   password,
 }) => (dispatch) => {
-  // AsyncStorage.removeItem('userToken');
-  console.log({
-    photo: childPhoto,
-    name,
-    dob,
-    schoolName,
-    interest,
-    username,
-    password,
-  });
   dispatch({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });

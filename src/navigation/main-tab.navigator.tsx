@@ -6,8 +6,8 @@ import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
 import tabNavigationData from './tab-navigation-data';
 import { SettingsStackNavigator } from './settings-stack.navigator';
 import {
-  FamilySetupScreen,
   DashboardScreen,
+  MatricCategoryScreen,
   AddParentScreen,
   AddChildScreen,
   ChildProfileScreen,
@@ -34,15 +34,25 @@ const BottomTabBar = ({ navigation: { navigate }, state }: any) => {
 const TabNavigator = () => {
   return (
     <Navigator
-      initialRouteName={AppRoute.FAMILY_SETUP}
+      initialRouteName={AppRoute.DASHBOARD}
       headerMode={'none'}
     // tabBar={(props) => <BottomTabBar {...props} />}
     >
       {/* {tabNavigationData?.map(({ name, component }) => (
         <Screen key={name} name={name} component={component} />
       ))} */}
-      <Screen name={AppRoute.FAMILY_SETUP} component={FamilySetupScreen} />
+      {/* <Screen
+        options={{
+          gestureEnabled: false,
+        }}
+        name={AppRoute.FAMILY_SETUP}
+        component={FamilySetupScreen}
+      /> */}
       <Screen name={AppRoute.DASHBOARD} component={DashboardScreen} />
+      <Screen
+        name={AppRoute.MATRIC_CATEGORY}
+        component={MatricCategoryScreen}
+      />
       <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
       <Screen name={AppRoute.ADD_PARENT} component={AddParentScreen} />
