@@ -21,6 +21,7 @@ const initialState = {
     isAddChildSuccess: false,
     isAddChildFail: false,
     addChildError: '',
+    getChildrenError: '',
   },
 };
 
@@ -137,6 +138,31 @@ export default function (state = initialState, action) {
           isAddChildSuccess: false,
           isAddChildFail: true,
           addChildError: payload,
+        },
+      };
+    }
+    case familySettingsConstants.GET_CHILDREN_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case familySettingsConstants.GET_CHILDREN_SUCCESS: {
+      return {
+        ...state,
+        child: {
+          children: [...payload.children],
+        },
+        guardian: {
+          guardians: [...payload.parents],
+        },
+      };
+    }
+    case familySettingsConstants.GET_CHILDREN_FAIL: {
+      return {
+        ...state,
+        child: {
+          children: [...state.child.children],
+          getChildrenError: payload,
         },
       };
     }

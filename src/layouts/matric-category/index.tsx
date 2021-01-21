@@ -124,7 +124,7 @@ export const MatricCategory = ({
   };
 
   const handleAddMatricCategory = () => {
-    if (currentState?.matrics?.matrics.length >= 3) {
+    if (currentState?.matrics?.matrics?.length >= 3) {
       setIsSubscribe(true);
       return;
     }
@@ -151,7 +151,6 @@ export const MatricCategory = ({
       !matricDescriptionError
     ) {
       onAddMatric({
-        parentID: 130,
         matricPhoto,
         matricTitle,
         matricWeightage,
@@ -303,13 +302,21 @@ export const MatricCategory = ({
             <>
               <Layout style={{ backgroundColor: 'transparent' }}>
                 <Text
-                  style={{ fontSize: 80, fontWeight: 'bold' }}
+                  style={{
+                    fontSize: wp2dp('18%'),
+                    fontWeight: 'bold',
+                  }}
                   category="h1"
                   status="control"
                 >
                   Matric
                 </Text>
-                <Text category="h2" status="control">
+                <Text
+                  style={{ fontSize: wp2dp('8%') }}
+                  category="h2"
+                  onPress
+                  status="control"
+                >
                   Category
                 </Text>
               </Layout>
@@ -350,7 +357,12 @@ export const MatricCategory = ({
                         }}
                       >
                         <Avatar
-                          source={require('./assets/guardian-avatar.png')}
+                          // source={{ uri: matric?.photo }}
+                          source={
+                            matric?.photo
+                              ? { uri: matric?.photo }
+                              : require('./assets/guardian-avatar.png')
+                          }
                           style={{
                             height: 60,
                             width: 60,
@@ -379,7 +391,7 @@ export const MatricCategory = ({
                               {matric.title}
                             </Text>
                             <Text category="h5" status="control">
-                              {matric.weightage}
+                              {matric.weightage}%
                             </Text>
                           </Layout>
                           <Layout

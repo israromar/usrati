@@ -6,6 +6,7 @@ const initialState = {
   isAddMatricSuccess: false,
   isAddMatricFail: false,
   addMatricError: '',
+  getMatricsError: '',
 };
 
 export default function (state = initialState, action) {
@@ -51,14 +52,14 @@ export default function (state = initialState, action) {
     case matricsConstants.GET_MATRICS_SUCCESS: {
       return {
         ...state,
-        matrics: [...state.matrics, ...payload],
+        matrics: [...payload],
       };
     }
     case matricsConstants.GET_MATRICS_FAIL: {
       return {
         ...state,
         matrics: [...state.matrics],
-        addMatricError: payload,
+        getMatricsError: payload,
       };
     }
     default:

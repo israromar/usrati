@@ -1,5 +1,10 @@
 import { familySettingsConstants } from '../../constants';
-import { addFamily, addNewGuardian, addNewChild } from '../../services/api';
+import {
+  addFamily,
+  addNewGuardian,
+  addNewChild,
+  getAllChildren,
+} from '../../services/api';
 
 export const addFamilySettings = ({ familyName, familyPhoto }) => (
   dispatch,
@@ -115,8 +120,32 @@ export const addChild = ({
       });
     })
     .catch((error) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 123 ~ error', error);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_FAIL,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
+      });
+    });
+};
+
+export const getChildren = ({ familyID }: any) => (dispatch: any) => {
+  dispatch({
+    type: familySettingsConstants.GET_CHILDREN_REQUEST,
+  });
+
+  getAllChildren({ familyID })
+    .then((res) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 139 ~ .then ~ res', res);
+      dispatch({
+        type: familySettingsConstants.GET_CHILDREN_SUCCESS,
+        payload: res,
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: familySettingsConstants.GET_CHILDREN_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',

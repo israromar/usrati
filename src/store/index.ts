@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CombinedReducers from './reducers';
+import { rootReducer } from './reducers';
 
 // Redux Debugger
 let composeEnhancer = compose;
@@ -19,7 +19,7 @@ const persistConfig = {
   // timeout: 100000,
 };
 const loggerMiddlleware = createLogger();
-const persistedReducer = persistReducer(persistConfig, CombinedReducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = createStore(
   persistedReducer,
   composeEnhancer(applyMiddleware(thunk, loggerMiddlleware)),
