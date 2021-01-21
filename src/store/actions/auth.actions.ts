@@ -2,7 +2,7 @@ import { authConstants, userConstants } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createUser, createParent, login } from '../../services/api';
 
-export const restoreToken = ({ token }) => (dispatch) => {
+export const restoreToken = ({ token }: any) => (dispatch: any) => {
   dispatch({ type: authConstants.RESTORE_TOKEN, payload: token });
 };
 
@@ -24,14 +24,27 @@ export const signUp = ({ username, email, password }) => (
               '🚀 ~ file: auth.actions.js ~ line 23 ~ .then ~ res',
               res,
             );
-            dispatch({
-              type: authConstants.SIGNUP_SUCCESS,
-              payload: user.token,
-            });
-            dispatch({
-              type: userConstants.UPDATE_USER,
-              payload: user,
-            });
+            login({ username, password })
+              .then((userInfo) => {
+                console.log(
+                  '🚀 ~ file: auth.actions.ts ~ line 29 ~ .then ~ userInfo',
+                  userInfo,
+                );
+                dispatch({
+                  type: authConstants.SIGNUP_SUCCESS,
+                  payload: userInfo.token,
+                });
+                dispatch({
+                  type: userConstants.UPDATE_USER,
+                  payload: userInfo,
+                });
+              })
+              .catch((error) => {
+                dispatch({
+                  type: authConstants.SIGNIN_FAIL,
+                  payload: error,
+                });
+              });
           })
           .catch((error) => {
             console.log(
@@ -63,6 +76,7 @@ export const signIn = ({ username, password }) => (dispatch) => {
 
   login({ username, password })
     .then((user) => {
+      console.log('🚀 ~ file: auth.actions.ts ~ line 66 ~ .then ~ user', user);
       if (user.token) {
         AsyncStorage.setItem('userToken', user.token);
 
@@ -93,6 +107,7 @@ export const signIn = ({ username, password }) => (dispatch) => {
 
 export const logout = () => (dispatch) => {
   AsyncStorage.removeItem('userToken');
+  AsyncStorage.clear();
   dispatch({
     type: authConstants.LOGOUT,
   });

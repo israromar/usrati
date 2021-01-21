@@ -35,7 +35,7 @@ export const constraints = {
       message: '^Please enter child name',
     },
     format: {
-      pattern: '[a-z]+',
+      pattern: '[a-z ]+',
       flags: 'i',
       message: 'can only contain a-z',
     },
@@ -46,7 +46,7 @@ export const constraints = {
       message: '^Please enter school name',
     },
     format: {
-      pattern: '[a-z0-9]+',
+      pattern: '[a-z0-9 ]+',
       flags: 'i',
       message: 'can only contain a-z and 0-9',
     },
@@ -57,9 +57,9 @@ export const constraints = {
       message: '^Please enter child insterests',
     },
     format: {
-      pattern: '[a-z]+',
+      pattern: '[a-z0-9 ]+',
       flags: 'i',
-      message: 'can only contain a-z',
+      message: 'can only contain a-z and 0-9',
     },
   },
   matricTitle: {

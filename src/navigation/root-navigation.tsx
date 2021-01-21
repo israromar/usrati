@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,8 +12,8 @@ export interface IAppRooStack {
   auth: {
     isLoggedIn: boolean;
     userToken: string;
-    user: { username: string; password: string; familyID: {} };
   };
+  family: { family: { families: [] } };
   theme: { activeTheme: string };
   language: { activeLanguage: string };
 }
@@ -21,10 +22,20 @@ const AppRootStack = () => {
   const dispatch = useDispatch();
   const {
     auth: { isLoggedIn, userToken, user },
-    // user: { userInfo },
+    family: {
+      family: { families },
+    },
   } = useSelector((state: IAppRooStack) => {
     return state;
   });
+
+  console.log('2123123families', families, user?.familyID?.id);
+
+
+  let isFamilyAdded = false;
+  if (families?.length > 0 || user?.familyID?.id) {
+    isFamilyAdded = true;
+  }
 
   useEffect(() => {
     // AsyncStorage.clear();
@@ -52,7 +63,7 @@ const AppRootStack = () => {
   return (
     <NavigationContainer>
       {isLoggedIn && userToken ? (
-        <AppStackNavigator familyID={user?.familyID} />
+        <AppStackNavigator isFamilyAdded={isFamilyAdded} />
       ) : (
           <AuthStackNavigator />
         )}

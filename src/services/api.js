@@ -111,7 +111,26 @@ export function addNewChild(payload) {
     });
 }
 
+/**
+ * Get all children
+ * @returns {Promise<T | never>}
+ */
+export function getAllChildren({ familyID }) {
+  return http
+    .get(`family/${familyID}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 export function addMatricCategory(payload) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 115 ~ addMatricCategory ~ payload',
+    payload,
+  );
   return http
     .post('category', payload)
     .then((response) => {
