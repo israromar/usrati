@@ -8,11 +8,11 @@ import { DrawerContent } from '../components';
 const { Navigator, Screen } = createDrawerNavigator();
 // const { Navigator, Screen } = createStackNavigator();
 interface IAppNavigator {
-  familyID: object;
+  isFamilyAdded: boolean;
 }
 
 export const AppNavigator = ({
-  familyID,
+  isFamilyAdded,
 }: IAppNavigator): React.ReactElement => {
   return (
     <Navigator
@@ -20,7 +20,7 @@ export const AppNavigator = ({
         return <DrawerContent {...props} />;
       }}
       initialRouteName={
-        !!familyID === true ? AppRoute.DASHBOARD : AppRoute.FAMILY_SETUP
+        isFamilyAdded === true ? AppRoute.DASHBOARD : AppRoute.FAMILY_SETUP
       }
     >
       {StackNavigationData.map((item, idx) => (

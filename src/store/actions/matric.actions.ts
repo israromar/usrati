@@ -8,6 +8,15 @@ export const addMatric = ({
   matricWeightage,
   matricDescription,
 }) => (dispatch) => {
+  console.log(
+    'sdas123123123',
+    parentID,
+    matricPhoto,
+    matricTitle,
+    matricWeightage,
+    matricDescription,
+  );
+
   dispatch({
     type: matricsConstants.ADD_MATRIC_REQUEST,
   });
@@ -36,6 +45,7 @@ export const addMatric = ({
       });
     })
     .catch((error) => {
+      console.log('🚀 ~ file: matric.actions.ts ~ line 39 ~ error', error);
       dispatch({
         type: matricsConstants.ADD_MATRIC_FAIL,
         payload: error?.ERROR

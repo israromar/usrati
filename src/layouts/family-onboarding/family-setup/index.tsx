@@ -208,13 +208,35 @@ export const FamilySetup = ({
   ).current;
 
   const afterSuccessAlert = (flag: string, msg: string) => {
-
     Alert.alert(
       'Success',
       msg,
       [
         {
-          text: 'Cancel',
+          text: 'YES', onPress: () => {
+            if (flag === 'guardian') {
+              setCurrentPosition(1);
+              setGuardianPhoto(null);
+              setGuardianUsername('');
+              setGuardianEmail('');
+              setGuardianPassword('');
+              setIsAddGuardian(false);
+            } else {
+              setCurrentPosition(2);
+              setChildPhoto(null);
+              setChildName('');
+              setDate(new Date());
+              setSchoolName('');
+              setChildInterest('');
+              setChildUsername('');
+              setChildPassword('');
+              setIsAddChild(false);
+              setIsNext(false);
+            }
+          },
+        },
+        {
+          text: 'NO',
           onPress: () => {
             if (flag === 'guardian') {
               setCurrentPosition(2);
@@ -237,29 +259,7 @@ export const FamilySetup = ({
           },
           style: 'cancel',
         },
-        {
-          text: 'Add', onPress: () => {
-            if (flag === 'guardian') {
-              setCurrentPosition(1);
-              setGuardianPhoto(null);
-              setGuardianUsername('');
-              setGuardianEmail('');
-              setGuardianPassword('');
-              setIsAddGuardian(false);
-            } else {
-              setCurrentPosition(2);
-              setChildPhoto(null);
-              setChildName('');
-              setDate(new Date());
-              setSchoolName('');
-              setChildInterest('');
-              setChildUsername('');
-              setChildPassword('');
-              setIsAddChild(false);
-              setIsNext(false);
-            }
-          },
-        },
+
       ],
       { cancelable: false }
     );
@@ -291,6 +291,10 @@ export const FamilySetup = ({
     }
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
       Alert.alert(child?.addChildError);
+      if (child?.addChildError === 'Username already in use') {
+        setChildUsernameError(true);
+        setChildUsernameErrorMsg('Username already in use');
+      }
       setIsAddChild(false);
       setCurrentPosition(2);
     }
@@ -350,10 +354,10 @@ export const FamilySetup = ({
       if (validationResult?.schoolName) {
         setSchoolNameError(true);
         setSchoolNameErrorMsg(validationResult?.schoolName[0]);
-      }
-      if (!childNameError && !schoolNameError) {
-        setIsNext(!!childName && !!schoolName);
-      }
+      } else
+        if (!childNameError && !schoolNameError) {
+          setIsNext(!!childName && !!schoolName);
+        }
     } else {
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
@@ -378,10 +382,6 @@ export const FamilySetup = ({
         setIsAddChild(true);
         onAddChild({ photo: childPhoto, name: childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
       }
-
-      // setChildInterestError(!childInterest);
-      // setChildUsernameError(!childUsername);
-      // setChildPasswordError(!childPassword);
     }
   };
 
@@ -598,7 +598,7 @@ export const FamilySetup = ({
           </TouchableOpacity>
           <Input
             style={styles.inputField}
-            value={familyName.trim()}
+            value={familyName}
             caption={familyNameError ? familyNameErrorMsg : ''}
             status={familyNameError ? 'danger' : 'basic'}
             placeholder="Family name"
@@ -656,12 +656,10 @@ export const FamilySetup = ({
             caption={guardianEmailError ? guardianEmailErrorMsg : ''}
             status={guardianEmailError ? 'danger' : 'basic'}
             placeholder="Email"
-            onChangeText={(nextValue) =>
-              handleFamilySettingInput(
-                setGuardianEmail,
-                setGuardianEmailError,
-                nextValue,
-              )
+            onChangeText={(nextValue) => {
+              setGuardianEmail(nextValue.trim());
+              setGuardianEmailError(false);
+            }
             }
           />
           <Input
@@ -710,7 +708,7 @@ export const FamilySetup = ({
             <>
               <Input
                 style={styles.inputField}
-                value={childName.trim()}
+                value={childName}
                 caption={childNameError ? childNameErrorMsg : ''}
                 status={childNameError ? 'danger' : 'basic'}
                 placeholder="Name"
@@ -760,7 +758,7 @@ export const FamilySetup = ({
               </TouchableOpacity>
               <Input
                 style={styles.inputField}
-                value={schoolName.trim()}
+                value={schoolName}
                 caption={schoolNameError ? schoolNameErrorMsg : ''}
                 status={schoolNameError ? 'danger' : 'basic'}
                 placeholder="School name"

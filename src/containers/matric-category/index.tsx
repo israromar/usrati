@@ -16,6 +16,15 @@ export const MatricCategoryContainer = () => {
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
 
+  console.log('currentStatecurrentState', currentState);
+
+  let parentID: null = null;
+  if (currentState?.user?.userInfo?.data) {
+    parentID = currentState?.user?.userInfo?.data?.parent[0]?.id;
+  } else if (currentState?.user?.userInfo?.parent) {
+    parentID = currentState?.user?.userInfo?.parent[0]?.id;
+  }
+
   const handleAddMatric = ({
     matricPhoto,
     matricTitle,
@@ -24,7 +33,7 @@ export const MatricCategoryContainer = () => {
   }: any) => {
     dispatch(
       addMatric({
-        parentID: currentState?.auth?.user?.parent[0]?.id,
+        parentID: parentID,
         matricPhoto,
         matricTitle,
         matricWeightage,
@@ -38,9 +47,7 @@ export const MatricCategoryContainer = () => {
   };
 
   const handleGetMatrices = () => {
-    dispatch(
-      getAllMatrics({ parentID: currentState?.auth?.user?.parent[0].id }),
-    );
+    dispatch(getAllMatrics({ parentID }));
   };
 
   return (
