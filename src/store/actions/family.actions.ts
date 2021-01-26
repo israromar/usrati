@@ -85,7 +85,7 @@ export const addGuardian = ({
 
 export const addChild = ({
   photo: childPhoto,
-  name,
+  childName,
   dob,
   schoolName,
   interest,
@@ -96,23 +96,23 @@ export const addChild = ({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });
 
-  // const { uri, type, fileName: name } = childPhoto;
-  // var photo = {
-  //   uri,
-  //   type,
-  //   name,
-  // };
+  const { uri, type, fileName: name } = childPhoto;
+  var photo = {
+    uri,
+    type,
+    name,
+  };
 
-  // var formData = new FormData();
-  // formData.append('photo', photo);
-  // formData.append('name', name);
-  // formData.append('dob', dob);
-  // formData.append('schoolName', schoolName);
-  // formData.append('interest', interest);
-  // formData.append('username', username);
-  // formData.append('password', password);
+  var formData = new FormData();
+  formData.append('photo', photo);
+  // formData.append('name', childName);
+  formData.append('dob', dob);
+  formData.append('schoolname', schoolName);
+  formData.append('interest', interest);
+  formData.append('username', username);
+  formData.append('password', password);
 
-  addNewChild({ username, password, dob })
+  addNewChild(formData)
     .then((res) => {
       dispatch({
         type: familySettingsConstants.ADD_CHILD_SUCCESS,
