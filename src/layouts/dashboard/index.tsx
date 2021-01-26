@@ -13,13 +13,13 @@ import { AppRoute } from '../../navigation/app-routes';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 interface IDashboard {
   currentState: {};
-  onChildPress: (v: string) => void;
+  onPress: (v: string) => void;
   getAllChildren: () => void;
 }
 
 export const Dashboard = ({
   currentState,
-  onChildPress,
+  onPress,
   getAllChildren,
 }: IDashboard) => {
   const [allChildren, setAllChildren] = useState([]);
@@ -36,16 +36,16 @@ export const Dashboard = ({
     }
   }, [currentState]);
 
-  const Header = (child: { name: string; photoUri: string }) => {
+  const Header = (child: { username: string; photo: string }) => {
     return (
       <>
         <Avatar
           shape="square"
-          source={require('./assets/child.png')}
+          source={child?.photo ? { uri: child.photo } : require('./assets/child.png')}
           style={styles.avatar}
         />
         <Text category="s1" style={{ color: 'grey' }}>
-          {child.username}
+          {child?.username}
         </Text>
       </>
     );
@@ -106,7 +106,7 @@ export const Dashboard = ({
                     return (
                       <Card
                         key={idx + 1}
-                        onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
+                        onPress={() => onPress(AppRoute.CHILD_PROFILE)}
                         style={styles.card}
                         header={() => Header(child)}
                       />
@@ -134,7 +134,7 @@ export const Dashboard = ({
                         No children data available!
                     </Text>
                       <Button
-                        onPress={() => onChildPress(AppRoute.FAMILY_SETUP)}
+                        onPress={() => onPress(AppRoute.FAMILY_SETUP)}
                         style={styles.loadMoreButton}
                         status="control"
                         size="medium"

@@ -96,24 +96,40 @@ export const addChild = ({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });
 
-  const { uri, type, fileName: name } = childPhoto;
-  var photo = {
-    uri,
-    type,
-    name,
-  };
+  console.log('data child: ', {
+    childPhoto,
+    childName,
+    dob,
+    schoolName,
+    interest,
+    username,
+    password,
+  });
 
+  let bd = dob.toString();
+
+  console.log('-00-120398109238', typeof bd, bd);
   var formData = new FormData();
-  formData.append('photo', photo);
   // formData.append('name', childName);
-  formData.append('dob', dob);
-  formData.append('schoolname', schoolName);
-  formData.append('interest', interest);
   formData.append('username', username);
   formData.append('password', password);
+  formData.append('dob', bd);
+  formData.append('interest', interest);
+  formData.append('schoolname', schoolName);
+
+  if (childPhoto) {
+    const { uri, type, fileName: name } = childPhoto;
+    var photo = {
+      uri,
+      type,
+      name,
+    };
+    formData.append('photo', photo);
+  }
 
   addNewChild(formData)
     .then((res) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 119 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_SUCCESS,
         payload: res.data,

@@ -70,6 +70,7 @@ interface IAddFamilySetup {
       }
     };
   };
+  currentPosition: number
 }
 
 export const LoadingIndicator = (props: any) => (
@@ -87,12 +88,12 @@ export const FamilySetup = ({
   currentState: {
     family: { family, guardian, child },
   },
-}: IAddFamilySetup): React.ReactElement => {
+  currentPosition: pos }: IAddFamilySetup): React.ReactElement => {
   const [isAddFamily, setIsAddFamily] = useState<boolean>(false);
   const [isAddGuardian, setIsAddGuardian] = useState<boolean>(false);
   const [isAddChild, setIsAddChild] = useState<boolean>(false);
 
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(pos);
   const [familyPhoto, setFamilyPhoto] = useState(null);
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
@@ -359,27 +360,34 @@ export const FamilySetup = ({
       if (validationResult?.name) {
         setChildNameError(true);
         setChildNameErrorMsg(validationResult?.name[0]);
+        return;
       }
       if (validationResult?.schoolName) {
         setSchoolNameError(true);
         setSchoolNameErrorMsg(validationResult?.schoolName[0]);
-      } else if (!childNameError && !schoolNameError) {
+        return;
+      } if (!childNameError && !schoolNameError) {
         setIsNext(!!childName && !!schoolName);
+        return;
       }
     } else {
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
         setChildInterestError(true);
         setChildInterestErrorMsg(validationResult?.interest[0]);
+        return;
       }
       if (validationResult?.username) {
         setChildUsernameError(true);
         setChildUsernameErrorMsg(validationResult?.username[0]);
+        return;
       }
       if (validationResult?.password) {
         setChildPasswordError(true);
         setChildPasswordErrorMsg(validationResult?.password[0]);
-      } else if (
+        return;
+      }
+      if (
         flag === 'Add' &&
         !childNameError &&
         !schoolNameError &&
@@ -897,9 +905,9 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={child?.isAddingChild && LoadingIndicator}
+            accessoryLeft={child?.isAddingChild && isAddChild && LoadingIndicator}
           >
-            {child.isAddingChild ? '' : !isNext ? 'Next' : 'Add'}
+            {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : 'Add'}
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}

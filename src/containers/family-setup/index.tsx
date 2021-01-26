@@ -17,7 +17,6 @@ export interface IAddGuardian {
   username: string;
   password: string;
 }
-
 export interface IAddChild {
   photo: null;
   childName: string;
@@ -28,12 +27,19 @@ export interface IAddChild {
   password: string;
 }
 
-export const FamilySetupContainer = () => {
+export const FamilySetupContainer = ({ ...rest }) => {
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 31 ~ FamilySetupContainer ~ props',
+    rest,
+  );
   const { navigate } = useNavigation();
-
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
 
+  let currentPosition = 0;
+  if (rest?.route?.params) {
+    currentPosition = rest?.route?.params?.currentPosition;
+  }
   const handleAddFamilySettings = ({
     familyName,
     familyPhoto,
@@ -88,6 +94,7 @@ export const FamilySetupContainer = () => {
       onSkipNow={handleSkipNow}
       onSubmit={handleSubmit}
       currentState={currentState}
+      currentPosition={currentPosition}
     />
   );
 };
