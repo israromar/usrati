@@ -128,11 +128,8 @@ export function getAllChildren({ familyID }) {
     });
 }
 
-export function addMatricCategory(payload) {
-  console.log(
-    '🚀 ~ file: api.js ~ line 115 ~ addMatricCategory ~ payload',
-    payload,
-  );
+export function addMatric(payload) {
+  console.log('🚀 ~ file: api.js ~ line 115 ~ addMatric ~ payload', payload);
   return http
     .post('category', payload)
     .then((response) => {
@@ -150,6 +147,26 @@ export function getMatrics({ parentID }) {
       return response.data;
     })
     .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function updateMatrics(payload) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 155 ~ updateMatrics ~ payload',
+    payload,
+  );
+  return http
+    .post('category/update', payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 158 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(
+        '🚀 ~ file: api.js ~ line 162 ~ updateMatrics ~ error',
+        error,
+      );
       throw error.response.data;
     });
 }

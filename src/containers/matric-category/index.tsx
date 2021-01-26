@@ -1,7 +1,11 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import { MatricCategoryScreen } from '../../layouts';
-import { getAllMatrics, addMatric } from '../../store/actions/matric.actions';
+import {
+  getAllMatrics,
+  addMatric,
+  updateAllMatrics,
+} from '../../store/actions/matric.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
@@ -50,11 +54,20 @@ export const MatricCategoryContainer = () => {
     dispatch(getAllMatrics({ parentID }));
   };
 
+  const handleupdateMatrics = (matrics: Array<{}>) => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 58 ~ handleupdateMatrics ~ matrics',
+      matrics,
+    );
+    dispatch(updateAllMatrics({ matrics }));
+  };
+
   return (
     <MatricCategoryScreen
       currentState={currentState}
       onAddMatric={handleAddMatric}
       getAllMatrics={handleGetMatrices}
+      updateMatrics={handleupdateMatrics}
       onBackPress={handlePress}
     />
   );

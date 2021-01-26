@@ -8,13 +8,16 @@ const initialState = {
   isGetMatricsLoading: false,
   isGetMatricsSuccess: false,
   isGetMatricsFail: false,
+  isUpdatingMatrics: false,
+  isUpdateMatricsSuccess: false,
+  isUpdateMatricsFail: false,
   addMatricError: '',
   getMatricsError: '',
+  updateMatricsError: '',
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log('initialState', initialState);
 
   switch (type) {
     case matricsConstants.ADD_MATRIC_REQUEST: {
@@ -30,7 +33,7 @@ export default function (state = initialState, action) {
     case matricsConstants.ADD_MATRIC_SUCCESS: {
       return {
         ...state,
-        matrics: [...state.matrics, payload],
+        matrics: [...state.matrics, ...payload],
         isAddingMatric: false,
         isAddMatricSuccess: true,
         isAddMatricFail: false,
@@ -77,6 +80,37 @@ export default function (state = initialState, action) {
         getMatricsError: payload,
       };
     }
+    case matricsConstants.UPDATE_MATRICS_REQUEST: {
+      return {
+        ...state,
+        // matrics: [...state.matrics],
+        isUpdatingMatrics: true,
+        isUpdateMatricsFail: false,
+        isUpdateMatricsSuccess: false,
+        updateMatricsError: '',
+      };
+    }
+    case matricsConstants.UPDATE_MATRICS_SUCCESS: {
+      return {
+        ...state,
+        // matrics: [...payload],
+        isUpdatingMatrics: false,
+        isUpdateMatricsSuccess: true,
+        isUpdateMatricsFail: false,
+        updateMatricsError: '',
+      };
+    }
+    case matricsConstants.UPDATE_MATRICS_FAIL: {
+      return {
+        ...state,
+        matrics: [...state.matrics],
+        isUpdatingMatrics: false,
+        isUpdateMatricsSuccess: false,
+        isUpdateMatricsFail: true,
+        updateMatricsError: '',
+      };
+    }
+
     default:
       return state;
   }
