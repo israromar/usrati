@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 export interface IAddFamilySetup {
   familyName: string;
-  familyPhoto: string;
+  familyPhoto: null;
 }
 export interface IAddGuardian {
   photo: null;
@@ -20,7 +20,7 @@ export interface IAddGuardian {
 
 export interface IAddChild {
   photo: null;
-  name: string;
+  childName: string;
   dob: Date;
   schoolName: string;
   interest: string;
@@ -52,7 +52,7 @@ export const FamilySetupContainer = () => {
 
   const handleAddChild = ({
     photo,
-    name,
+    childName,
     dob,
     schoolName,
     interest,
@@ -62,7 +62,7 @@ export const FamilySetupContainer = () => {
     dispatch(
       addChild({
         photo,
-        name,
+        childName,
         dob,
         schoolName,
         interest,

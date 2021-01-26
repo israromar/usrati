@@ -25,3 +25,11 @@ export const CameraIcon = (style: ImageStyle): IconElement => (
 export const GalleryIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name="image-outline" />
 );
+
+export const PencilIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="edit-outline" />
+);
+
+export const DeleteIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="trash-2-outline" />
+);

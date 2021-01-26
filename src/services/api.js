@@ -104,10 +104,12 @@ export function addNewChild(payload) {
   return http
     .post('child', payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 107 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      throw error.response.data;
+      console.log('🚀 ~ file: api.js ~ line 111 ~ addNewChild ~ error', error);
+      throw error;
     });
 }
 

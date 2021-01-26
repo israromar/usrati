@@ -23,3 +23,4 @@ export {
 };
 
 export { default as ImageOverlay } from './image-overlay.component';
+export { default as Loading } from './spinner/spinner.component';

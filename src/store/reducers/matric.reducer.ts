@@ -5,12 +5,16 @@ const initialState = {
   isAddingMatric: false,
   isAddMatricSuccess: false,
   isAddMatricFail: false,
+  isGetMatricsLoading: false,
+  isGetMatricsSuccess: false,
+  isGetMatricsFail: false,
   addMatricError: '',
   getMatricsError: '',
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
+  console.log('initialState', initialState);
 
   switch (type) {
     case matricsConstants.ADD_MATRIC_REQUEST: {
@@ -47,18 +51,29 @@ export default function (state = initialState, action) {
       return {
         ...state,
         // matrics: [...state.matrics],
+        isGetMatricsLoading: true,
+        isGetMatricsSuccess: false,
+        isGetMatricsFail: false,
+        getMatricsError: '',
       };
     }
     case matricsConstants.GET_MATRICS_SUCCESS: {
       return {
         ...state,
         matrics: [...payload],
+        isGetMatricsLoading: false,
+        isGetMatricsSuccess: true,
+        isGetMatricsFail: false,
+        getMatricsError: '',
       };
     }
     case matricsConstants.GET_MATRICS_FAIL: {
       return {
         ...state,
         matrics: [...state.matrics],
+        isGetMatricsLoading: false,
+        isGetMatricsSuccess: false,
+        isGetMatricsFail: true,
         getMatricsError: payload,
       };
     }

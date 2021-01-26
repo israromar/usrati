@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Layout, Button, Text, Card, Avatar } from '@ui-kitten/components';
-// import * as Progress from 'react-native-progress';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
@@ -17,21 +16,6 @@ interface IDashboard {
   onChildPress: (v: string) => void;
   getAllChildren: () => void;
 }
-
-const childs = [
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-];
 
 export const Dashboard = ({
   currentState,
@@ -126,7 +110,6 @@ export const Dashboard = ({
                         style={styles.card}
                         header={() => Header(child)}
                       />
-
                     );
                   })
                 ) : (
@@ -231,7 +214,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bottomWrap: {
-    // height: hp2dp('18%'),
     alignItems: 'center',
     justifyContent: 'space-around',
     padding: 10,
