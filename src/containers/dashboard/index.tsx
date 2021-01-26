@@ -19,14 +19,17 @@ export const DashboardContainer = () => {
   };
 
   let familyID: null = null;
+
+  console.log('currentState', currentState);
+
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;
-  } else if (currentState.family.family.families) {
-    familyID = currentState.family.family.families[0].id;
+  } else if (currentState?.family?.family?.families.length > 0) {
+    familyID = currentState?.family?.family?.families[0].id;
   }
 
   const handleGetChild = () => {
-    dispatch(getChildren({ familyID: familyID }));
+    dispatch(getChildren({ familyID: familyID ?? 0 }));
   };
 
   return (

@@ -7,16 +7,7 @@ export const addMatric = ({
   matricTitle,
   matricWeightage,
   matricDescription,
-}) => (dispatch) => {
-  console.log(
-    'sdas123123123',
-    parentID,
-    matricPhoto,
-    matricTitle,
-    matricWeightage,
-    matricDescription,
-  );
-
+}: any) => (dispatch: any) => {
   dispatch({
     type: matricsConstants.ADD_MATRIC_REQUEST,
   });
@@ -38,14 +29,15 @@ export const addMatric = ({
   formData.append('description', matricDescription);
 
   addMatricCategory(formData)
-    .then((res) => {
+    .then((res: any) => {
+      console.log('🚀 ~ file: matric.actions.ts ~ line 33 ~ .then ~ res', res);
       dispatch({
         type: matricsConstants.ADD_MATRIC_SUCCESS,
         payload: res.data,
       });
     })
-    .catch((error) => {
-      console.log('🚀 ~ file: matric.actions.ts ~ line 39 ~ error', error);
+    .catch((error: any) => {
+      console.log('🚀 ~ file: matric.actions.ts ~ line 40 ~ error', error);
       dispatch({
         type: matricsConstants.ADD_MATRIC_FAIL,
         payload: error?.ERROR
@@ -55,19 +47,19 @@ export const addMatric = ({
     });
 };
 
-export const getAllMatrics = ({ parentID }) => (dispatch) => {
+export const getAllMatrics = ({ parentID }: any) => (dispatch: any) => {
   dispatch({
     type: matricsConstants.GET_MATRICS_REQUEST,
   });
 
   getMatrics({ parentID })
-    .then((res) => {
+    .then((res: any) => {
       dispatch({
         type: matricsConstants.GET_MATRICS_SUCCESS,
         payload: res,
       });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       dispatch({
         type: matricsConstants.GET_MATRICS_FAIL,
         payload: error?.ERROR

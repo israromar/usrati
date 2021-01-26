@@ -144,7 +144,7 @@ const DrawerContent = ({ navigation, state }: any) => {
       <DrawerItem
         style={styles.itemOne}
         title={i18n.t('drawer.settingsAndPrivacy')}
-        onPress={() => navigation.navigate('Settings')}
+      // onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
     </Drawer>
