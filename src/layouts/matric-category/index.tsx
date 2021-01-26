@@ -9,6 +9,7 @@ import {
   View,
   PermissionsAndroid,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Layout,
@@ -28,67 +29,16 @@ import { launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-
 import { Loading, ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
 import { colors } from '../../styles';
-import { AddIcon } from './extra/icons';
+import { PlusIcon, MinusIcon } from './extra/icons';
 import constraints from '../../utils/constraints';
 import validate from 'validate.js';
 
-let matrics = [
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-  {
-    title: 'Matric Title',
-    weightage: 78,
-    description: 'Matric Test Cat',
-  },
-];
 interface IMatricCategory {
   currentState: {};
   onBackPress: (v: string) => void;
   onAddMatric: (v: object) => void;
   getAllMatrics: () => void;
+  updateMatrics: (v: Array<{}>) => void;
 }
 
 export const MatricCategory = ({
@@ -96,8 +46,12 @@ export const MatricCategory = ({
   onBackPress,
   onAddMatric,
   getAllMatrics,
+  updateMatrics,
 }: IMatricCategory) => {
   const [isLoadingMatrics, setIsLoadingMatrics] = useState(true);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isUpdatingMatrics, setIsUpdatingMatrics] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isAddMatric, setIsAddMatric] = useState(false);
   const [isSubscribe, setIsSubscribe] = useState(false);
@@ -114,10 +68,8 @@ export const MatricCategory = ({
   const [matricWeightage, setMatricWeightage] = useState(0);
   const [matricWeightageError, setMatricWeightageError] = useState(false);
   const [matricWeightageErrorMsg, setMatricWeightageErrorMsg] = useState('');
-
   const [matricPhoto, setMatricPhoto] = useState('');
-
-  const [allMatrics, setAllMatrics] = useState([]);
+  const [allMatrics, setAllMatrics] = useState<[]>([]);
 
   useEffect(() => {
     getAllMatrics();
@@ -149,9 +101,29 @@ export const MatricCategory = ({
       Alert.alert('Something went wrong, try again!');
     }
 
+    if (
+      currentState.matrics.isUpdateMatricsSuccess &&
+      !currentState.matrics.isUpdateMatricsFail &&
+      isUpdatingMatrics
+    ) {
+      Alert.alert('Updated successfully!');
+      setIsUpdate(false);
+      setIsUpdatingMatrics(false);
+    }
+
+    if (
+      !currentState.matrics.isUpdateMatricsSuccess &&
+      currentState.matrics.isUpdateMatricsFail &&
+      isUpdatingMatrics
+    ) {
+      Alert.alert('Something went wrong, try again!');
+      setIsUpdate(false);
+      setIsUpdatingMatrics(false);
+    }
+
     setAllMatrics(currentState?.matrics?.matrics);
     setIsLoadingMatrics(currentState?.matrics?.isGetMatricsLoading);
-  }, [currentState, isLoading]);
+  }, [currentState, isLoading, isUpdatingMatrics]);
 
   const handleAddMetricInput = (
     inputField: (v: React.SetStateAction<string>) => void,
@@ -209,6 +181,19 @@ export const MatricCategory = ({
   const renderLoading = () => {
     if (isLoadingMatrics) {
       return <Loading />;
+    }
+  };
+
+  const renderIsUpdating = () => {
+    if (isUpdatingMatrics) {
+      return (
+        <Layout style={[styles.updatingOuterWrap]}>
+          <Layout style={styles.updatingInnerWrap}>
+            <ActivityIndicator size="large" color={colors.primaryBlue} />
+            <Text style={{ color: '#111' }}>Updating...</Text>
+          </Layout>
+        </Layout>
+      );
     }
   };
 
@@ -278,7 +263,7 @@ export const MatricCategory = ({
   const RenderSubscribtion = () => {
     if (isAddMatric && isSubscribe) {
       return (
-        <Layout style={styles.subscribeWrap}>
+        <Layout style={[styles.subscribeWrap]}>
           <Image source={require('../../assets/images/subs-frame.png')} />
           <Text
             style={{
@@ -307,8 +292,48 @@ export const MatricCategory = ({
     }
   };
 
+  console.log({ allMatrics });
+
+  const weightageSum = async (): Promise<number> => {
+    return new Promise((resolve) => {
+      let matricsCpy = [...matrics];
+      let sum = matricsCpy.reduce((a, b) => {
+        return a + b.weightage;
+      }, 0);
+      resolve(sum);
+    });
+  };
+
+  const handleIncrementDecrement = async (
+    status: boolean,
+    operation: string,
+    index: number,
+  ) => {
+    setIsUpdate(true);
+    if (status) {
+      let matricsCpy = [...allMatrics];
+      matricsCpy[index].weightage =
+        operation === 'inc'
+          ? matricsCpy[index].weightage + 1
+          : matricsCpy[index].weightage - 1;
+
+      const sum: number = await weightageSum();
+
+      matricsCpy.map((m) => {
+        m.percentWeightage = parseFloat((m.weightage / sum) * 100);
+        return m;
+      });
+      setMatrics(matricsCpy);
+    }
+  };
+
   return (
-    <Layout style={{ flex: 1, backgroundColor: '#fff' }}>
+    <Layout
+      style={{
+        flex: 1,
+        alignItems: 'center',
+      }}
+    >
       <ImageOverlay
         style={[styles.headerContainer]}
         source={require('../../assets/images/vector.png')}
@@ -317,8 +342,7 @@ export const MatricCategory = ({
           style={{
             backgroundColor: 'transparent',
             alignSelf: 'flex-start',
-            marginLeft: -20,
-            marginTop: 10,
+            margin: 5,
           }}
         >
           <TouchableOpacity onPress={handleBackPress}>
@@ -411,25 +435,27 @@ export const MatricCategory = ({
           )}
         </Layout>
       </ImageOverlay>
-
+      {renderIsUpdating()}
       {!isAddMatric && !isSubscribe && (
         <ScrollView showsVerticalScrollIndicator={false}>
           <Layout style={styles.matricsWrap}>
             {renderLoading()}
-            {!isLoadingMatrics && matrics.length > 0 ? (
-              matrics.map((matric, idx) => {
+            {!isLoadingMatrics && allMatrics.length > 0 ? (
+              allMatrics.map((matric, idx) => {
                 return (
                   <Layout key={idx + 1} style={[styles.metrics]} level="1">
                     <Layout style={styles.matricsInnerWrap}>
-                      <Layout style={styles.matricsPercentage}>
-                        <Text category="h5">{matric.weightage}%</Text>
+                      <Layout style={[styles.matricsPercentage]}>
+                        <Text category="h6">
+                          {parseFloat(matric?.percentWeightage)?.toFixed(1)}%
+                        </Text>
                       </Layout>
                       <Layout style={styles.matricsMainBody}>
                         <Text style={styles.matricsTitle} category="h5">
-                          {matric.title}
+                          {matric?.title}
                         </Text>
                         <Text category="h6" style={{ color: '#606060' }}>
-                          {matric.description}
+                          {matric?.description}
                         </Text>
                         <Layout style={styles.smallBtnWrap}>
                           <TouchableOpacity
@@ -458,30 +484,51 @@ export const MatricCategory = ({
                       <Layout
                         style={{
                           justifyContent: 'center',
+                          alignItems: 'center',
                         }}
                       >
+                        <TouchableOpacity
+                          onPressIn={() =>
+                            handleIncrementDecrement(true, 'inc', idx)
+                          }
+                          onPressOut={() =>
+                            handleIncrementDecrement(false, 'inc', idx)
+                          }
+                        >
+                          <PlusIcon />
+                        </TouchableOpacity>
                         <Text style={styles.matricsWeightage} category="h5">
-                          {matric.weightage}
+                          {matric?.weightage}
                         </Text>
+                        <TouchableOpacity
+                          onPressIn={() =>
+                            handleIncrementDecrement(true, 'dec', idx)
+                          }
+                          onPressOut={() =>
+                            handleIncrementDecrement(false, 'dec', idx)
+                          }
+                        >
+                          <MinusIcon />
+                        </TouchableOpacity>
                       </Layout>
                     </Layout>
                   </Layout>
                 );
               })
             ) : (
-              <Text
-                style={{ backgroundColor: 'transparent', padding: 10 }}
-                category="h6"
-                status="info"
-              >
-                {isLoadingMatrics ? 'Loading...' : 'No Matrics found!'}
-              </Text>
-            )}
+                <Text
+                  style={{ backgroundColor: 'transparent', padding: 10 }}
+                  category="h6"
+                  status="info"
+                >
+                  {isLoadingMatrics ? 'Loading...' : 'No Matrics found!'}
+                </Text>
+              )}
           </Layout>
         </ScrollView>
       )}
       {isAddMatric && !isSubscribe && (
-        <ScrollView nestedScrollEnabled>
+        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
           <Layout style={styles.formContainer}>
             <Input
               style={styles.inputField}
@@ -555,18 +602,21 @@ export const MatricCategory = ({
             status="control"
             size="giant"
             appearance="ghost"
-            // accessoryLeft={AddIcon}
+          // accessoryLeft={AddIcon}
           >
             Add
           </Button>
           <Button
-            onPress={() => setIsAddMatric(!isAddMatric)}
+            onPress={() => {
+              setIsUpdatingMatrics(true);
+              updateMatrics(allMatrics);
+            }}
             style={[styles.actionBtn, { right: 0, left: 80 }]}
             status="control"
             size="giant"
             appearance="ghost"
-            disabled
-            // accessoryLeft={AddIcon}
+            disabled={!isUpdate}
+          // accessoryLeft={AddIcon}
           >
             Update
           </Button>
@@ -687,7 +737,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 20,
-    height: hp2dp('100%'),
+    // height: hp2dp('100%'),
   },
   primarySubmitButton: {
     width: wp2dp('85%'),
@@ -724,6 +774,26 @@ const styles = StyleSheet.create({
     height: 150,
     margin: 8,
   },
+  updatingOuterWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+    backgroundColor: 'transparent',
+  },
+  updatingInnerWrap: {
+    backgroundColor: 'grey',
+    width: 200,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity: 0.5,
+    borderRadius: 2,
+  },
   matricsWrap: {
     marginTop: hp2dp('2%'),
     alignItems: 'center',
@@ -737,18 +807,41 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.1,
-    borderRadius: 100,
+    borderWidth: 0,
+    borderRadius: 10,
     right: 5,
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
+
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 0.95,
+
+    elevation: 5,
   },
   matricsWeightage: {
-    borderWidth: 0.5,
+    // borderWidth: 0.5,
     padding: 5,
     borderRadius: 5,
     borderColor: '#606060',
     color: '#606060',
+    marginVertical: 5,
+
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 0.95,
+
+    elevation: 5,
   },
   metrics: {
     padding: 10,
