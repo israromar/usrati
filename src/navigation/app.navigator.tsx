@@ -7,13 +7,21 @@ import { DrawerContent } from '../components';
 
 const { Navigator, Screen } = createDrawerNavigator();
 // const { Navigator, Screen } = createStackNavigator();
+interface IAppNavigator {
+  isFamilyAdded: boolean;
+}
 
-export const AppNavigator = (): React.ReactElement => {
+export const AppNavigator = ({
+  isFamilyAdded,
+}: IAppNavigator): React.ReactElement => {
   return (
     <Navigator
       drawerContent={(props) => {
         return <DrawerContent {...props} />;
       }}
+      initialRouteName={
+        isFamilyAdded === true ? AppRoute.DASHBOARD : AppRoute.FAMILY_SETUP
+      }
     >
       {StackNavigationData.map((item, idx) => (
         <Screen

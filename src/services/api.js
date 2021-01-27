@@ -107,6 +107,65 @@ export function addNewChild(payload) {
       return response.data;
     })
     .catch((error) => {
+      throw error;
+    });
+}
+
+/**
+ * Get all children
+ * @returns {Promise<T | never>}
+ */
+export function getAllChildren({ familyID }) {
+  return http
+    .get(`family/${familyID}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function addMatric(payload) {
+  return http
+    .post('category', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function editMatric(id, payload) {
+  return http
+    .put(`category/${id}`, payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getMatrics({ parentID }) {
+  return http
+    .get(`parent/${parentID}/categories`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function updateMatrics(payload) {
+  return http
+    .post('category/update', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
       throw error.response.data;
     });
 }

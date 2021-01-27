@@ -1,8 +1,8 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Layout, Button, Text, Card, Avatar } from '@ui-kitten/components';
-// import * as Progress from 'react-native-progress';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
@@ -12,38 +12,40 @@ import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 interface IDashboard {
-  onChildPress: (v: string) => void;
+  currentState: {};
+  onPress: (v: string) => void;
+  getAllChildren: () => void;
 }
 
-const childs = [
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child.png' },
-  { name: 'Natasha', photoUri: './assets/child.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-  { name: 'Natasha', photoUri: './assets/child-avatar.png' },
-];
+export const Dashboard = ({
+  currentState,
+  onPress,
+  getAllChildren,
+}: IDashboard) => {
+  const [allChildren, setAllChildren] = useState([]);
+  useEffect(() => {
+    getAllChildren();
+    return () => {
+      // cleanup;
+    };
+  }, []);
 
-export const Dashboard = ({ onChildPress }: IDashboard) => {
-  const Header = (child: { name: string; photoUri: string }) => {
+  useEffect(() => {
+    if (currentState?.family) {
+      setAllChildren(currentState?.family?.child?.children);
+    }
+  }, [currentState]);
+
+  const Header = (child: { username: string; photo: string }) => {
     return (
       <>
         <Avatar
           shape="square"
-          source={require('./assets/child.png')}
+          source={child?.photo ? { uri: child.photo } : require('./assets/child.png')}
           style={styles.avatar}
         />
         <Text category="s1" style={{ color: 'grey' }}>
-          {child.name}
+          {child?.username}
         </Text>
       </>
     );
@@ -66,24 +68,26 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
         <Layout style={styles.childs} level="1">
-          <Layout
-            style={{
-              backgroundColor: 'transparent',
-              margin: 12,
-              // marginVertical: 10,
-            }}
-          >
-            <Text category="h6" status="control" style={{ color: 'grey' }}>
-              To see the progress
-            </Text>
-            <Text
-              category="h4"
-              status="control"
-              style={{ color: 'grey', fontWeight: 'bold' }}
+          {allChildren.length > 0 && (
+            <Layout
+              style={{
+                backgroundColor: 'transparent',
+                margin: 12,
+                // marginVertical: 10,
+              }}
             >
-              Select Child
-            </Text>
-          </Layout>
+              <Text category="h6" status="control" style={{ color: 'grey' }}>
+                To see the progress
+              </Text>
+              <Text
+                category="h4"
+                status="control"
+                style={{ color: 'grey', fontWeight: 'bold' }}
+              >
+                Select Child
+              </Text>
+            </Layout>
+          )}
           <SafeAreaView
             style={[
               {
@@ -97,27 +101,63 @@ export const Dashboard = ({ onChildPress }: IDashboard) => {
               showsVerticalScrollIndicator={false}
             >
               <Layout style={[styles.childsInnerWrap]}>
-                {childs.map((child) => {
-                  return (
-                    <Card
-                      onPress={() => onChildPress(AppRoute.CHILD_PROFILE)}
-                      style={styles.card}
-                      header={() => Header(child)}
-                    />
-                  );
-                })}
+                {allChildren.length > 0 ? (
+                  allChildren?.map((child, idx) => {
+                    return (
+                      <Card
+                        key={idx + 1}
+                        onPress={() => onPress(AppRoute.CHILD_PROFILE)}
+                        style={styles.card}
+                        header={() => Header(child)}
+                      />
+                    );
+                  })
+                ) : (
+                    <Layout
+                      style={{
+                        flex: 1,
+                        height: hp2dp('35%'),
+                        color: 'grey',
+                        fontWeight: 'bold',
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Text
+                        category="h4"
+                        status="info"
+                        style={{
+                          color: 'grey',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        No children data available!
+                    </Text>
+                      <Button
+                        onPress={() => onPress(AppRoute.FAMILY_SETUP)}
+                        style={styles.loadMoreButton}
+                        status="control"
+                        size="medium"
+                        appearance="ghost"
+                      >
+                        Add Child
+                    </Button>
+                    </Layout>
+                  )}
               </Layout>
             </ScrollView>
-            <Layout style={{ backgroundColor: 'transparent' }}>
-              <Button
-                style={styles.loadMoreButton}
-                status="control"
-                size="medium"
-                appearance="ghost"
-              >
-                Load more
-              </Button>
-            </Layout>
+            {allChildren.length > 9 && (
+              <Layout style={{ backgroundColor: 'transparent' }}>
+                <Button
+                  style={styles.loadMoreButton}
+                  status="control"
+                  size="medium"
+                  appearance="ghost"
+                >
+                  Load more
+                </Button>
+              </Layout>
+            )}
           </SafeAreaView>
         </Layout>
       </Layout>
@@ -174,7 +214,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bottomWrap: {
-    // height: hp2dp('18%'),
     alignItems: 'center',
     justifyContent: 'space-around',
     padding: 10,
@@ -221,9 +260,12 @@ const styles = StyleSheet.create({
     marginTop: -hp2dp('15%'),
     backgroundColor: 'transparent',
     alignItems: 'center',
+    height: hp2dp('67%'),
   },
   childs: {
     borderColor: 'grey',
+    minHeight: hp2dp('35%'),
+    // height: 'auto',
     height: hp2dp('65%'),
     width: wp2dp('85%'),
     borderRadius: 10,

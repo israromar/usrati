@@ -3,3 +3,4 @@ export { userConstants } from './user.constants';
 export { themeConstants } from './theme.constants';
 export { languageConstants } from './language.constants';
 export { familySettingsConstants } from './family.constants';
+export { matricsConstants } from './matric.constants';

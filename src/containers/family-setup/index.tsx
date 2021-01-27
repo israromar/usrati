@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 export interface IAddFamilySetup {
   familyName: string;
-  familyPhoto: string;
+  familyPhoto: null;
 }
 export interface IAddGuardian {
   photo: null;
@@ -17,10 +17,9 @@ export interface IAddGuardian {
   username: string;
   password: string;
 }
-
 export interface IAddChild {
   photo: null;
-  name: string;
+  childName: string;
   dob: Date;
   schoolName: string;
   interest: string;
@@ -28,12 +27,19 @@ export interface IAddChild {
   password: string;
 }
 
-export const FamilySetupContainer = () => {
+export const FamilySetupContainer = ({ ...rest }) => {
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 31 ~ FamilySetupContainer ~ props',
+    rest,
+  );
   const { navigate } = useNavigation();
-
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
 
+  let currentPosition = 0;
+  if (rest?.route?.params) {
+    currentPosition = rest?.route?.params?.currentPosition;
+  }
   const handleAddFamilySettings = ({
     familyName,
     familyPhoto,
@@ -52,7 +58,7 @@ export const FamilySetupContainer = () => {
 
   const handleAddChild = ({
     photo,
-    name,
+    childName,
     dob,
     schoolName,
     interest,
@@ -62,7 +68,7 @@ export const FamilySetupContainer = () => {
     dispatch(
       addChild({
         photo,
-        name,
+        childName,
         dob,
         schoolName,
         interest,
@@ -88,6 +94,7 @@ export const FamilySetupContainer = () => {
       onSkipNow={handleSkipNow}
       onSubmit={handleSubmit}
       currentState={currentState}
+      currentPosition={currentPosition}
     />
   );
 };

@@ -1,5 +1,10 @@
 import { familySettingsConstants } from '../../constants';
-import { addFamily, addNewGuardian, addNewChild } from '../../services/api';
+import {
+  addFamily,
+  addNewGuardian,
+  addNewChild,
+  getAllChildren,
+} from '../../services/api';
 
 export const addFamilySettings = ({ familyName, familyPhoto }) => (
   dispatch,
@@ -80,52 +85,83 @@ export const addGuardian = ({
 
 export const addChild = ({
   photo: childPhoto,
-  name,
+  childName,
   dob,
   schoolName,
   interest,
   username,
   password,
 }) => (dispatch) => {
-  console.log({
-    photo: childPhoto,
-    name,
+  dispatch({
+    type: familySettingsConstants.ADD_CHILD_REQUEST,
+  });
+
+  console.log('data child: ', {
+    childPhoto,
+    childName,
     dob,
     schoolName,
     interest,
     username,
     password,
   });
-  dispatch({
-    type: familySettingsConstants.ADD_CHILD_REQUEST,
-  });
 
-  // const { uri, type, fileName: name } = childPhoto;
-  // var photo = {
-  //   uri,
-  //   type,
-  //   name,
-  // };
+  let bd = dob.toString();
 
-  // var formData = new FormData();
-  // formData.append('photo', photo);
-  // formData.append('name', name);
-  // formData.append('dob', dob);
-  // formData.append('schoolName', schoolName);
-  // formData.append('interest', interest);
-  // formData.append('username', username);
-  // formData.append('password', password);
+  console.log('-00-120398109238', typeof bd, bd);
+  var formData = new FormData();
+  // formData.append('name', childName);
+  formData.append('username', username);
+  formData.append('password', password);
+  formData.append('dob', bd);
+  formData.append('interest', interest);
+  formData.append('schoolname', schoolName);
 
-  addNewChild({ username, password, dob })
+  if (childPhoto) {
+    const { uri, type, fileName: name } = childPhoto;
+    var photo = {
+      uri,
+      type,
+      name,
+    };
+    formData.append('photo', photo);
+  }
+
+  addNewChild(formData)
     .then((res) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 119 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 123 ~ error', error);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_FAIL,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
+      });
+    });
+};
+
+export const getChildren = ({ familyID }: any) => (dispatch: any) => {
+  dispatch({
+    type: familySettingsConstants.GET_CHILDREN_REQUEST,
+  });
+
+  getAllChildren({ familyID })
+    .then((res) => {
+      console.log('🚀 ~ file: family.actions.ts ~ line 139 ~ .then ~ res', res);
+      dispatch({
+        type: familySettingsConstants.GET_CHILDREN_SUCCESS,
+        payload: res,
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: familySettingsConstants.GET_CHILDREN_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',

@@ -6,8 +6,8 @@ import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
 import tabNavigationData from './tab-navigation-data';
 import { SettingsStackNavigator } from './settings-stack.navigator';
 import {
-  FamilySetupScreen,
   DashboardScreen,
+  MatricCategoryScreen,
   AddParentScreen,
   AddChildScreen,
   ChildProfileScreen,
@@ -49,6 +49,10 @@ const TabNavigator = () => {
         component={FamilySetupScreen}
       /> */}
       <Screen name={AppRoute.DASHBOARD} component={DashboardScreen} />
+      <Screen
+        name={AppRoute.MATRIC_CATEGORY}
+        component={MatricCategoryScreen}
+      />
       <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
       <Screen name={AppRoute.ADD_PARENT} component={AddParentScreen} />

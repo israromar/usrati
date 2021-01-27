@@ -23,8 +23,10 @@ import {
   ChevronUpIcon,
   BulbIcon,
   SignOutIcon,
+  FamilyIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
+import { AppRoute } from '../../navigation/app-routes';
 
 const Header = () => {
   const {
@@ -93,6 +95,9 @@ const Footer = () => {
 
 const DrawerContent = ({ navigation, state }: any) => {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
+  const handlePress = (toScreen: string) => {
+    navigation.navigate(toScreen);
+  };
 
   return (
     <Drawer
@@ -109,9 +114,16 @@ const DrawerContent = ({ navigation, state }: any) => {
         accessoryRight={ForwardIcon}
       />
       <DrawerItem
-        title={i18n.t('drawer.lists')}
+        title={'Family Setup'}
+        accessoryLeft={FamilyIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.FAMILY_SETUP)}
+      />
+      <DrawerItem
+        title={'Matric Categories'}
         accessoryLeft={ListsIcon}
         accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
         title={i18n.t('drawer.topics')}
@@ -132,7 +144,7 @@ const DrawerContent = ({ navigation, state }: any) => {
       <DrawerItem
         style={styles.itemOne}
         title={i18n.t('drawer.settingsAndPrivacy')}
-        onPress={() => navigation.navigate('Settings')}
+      // onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
     </Drawer>

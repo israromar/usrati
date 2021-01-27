@@ -17,9 +17,9 @@ import {
   Button,
   Input,
   Text,
-  // Modal,
   Calendar,
   Spinner,
+  Icon,
 } from '@ui-kitten/components';
 import { validate } from 'validate.js';
 import {
@@ -28,7 +28,7 @@ import {
 } from 'react-native-responsive-screen';
 import Modal from 'react-native-modal';
 
-import { ImageOverlay } from '../../../components';
+import { Loading, ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { CameraIcon, GalleryIcon } from './extra/icons';
 import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
@@ -40,6 +40,7 @@ import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '..
 import StepIndicator from '../../../components/step-indicator';
 import { AppRoute } from '../../../navigation/app-routes';
 import constraints from '../../../utils/constraints';
+import { colors } from '../../../styles';
 
 interface IAddFamilySetup {
   onAddFamilySettings(obj: IIAddFamilySetup): void;
@@ -69,6 +70,7 @@ interface IAddFamilySetup {
       }
     };
   };
+  currentPosition: number
 }
 
 export const LoadingIndicator = (props: any) => (
@@ -86,13 +88,13 @@ export const FamilySetup = ({
   currentState: {
     family: { family, guardian, child },
   },
-}: IAddFamilySetup): React.ReactElement => {
+  currentPosition: pos }: IAddFamilySetup): React.ReactElement => {
   const [isAddFamily, setIsAddFamily] = useState<boolean>(false);
   const [isAddGuardian, setIsAddGuardian] = useState<boolean>(false);
   const [isAddChild, setIsAddChild] = useState<boolean>(false);
 
-  const [currentPosition, setCurrentPosition] = useState(0);
-  const [familyPhoto, setFamilyPhoto] = useState('');
+  const [currentPosition, setCurrentPosition] = useState(pos);
+  const [familyPhoto, setFamilyPhoto] = useState(null);
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
   const [familyNameErrorMsg, setFamilyNameErrorMsg] = useState<string>('');
@@ -160,7 +162,7 @@ export const FamilySetup = ({
   );
 
   const screenHeight = Dimensions.get('screen').height;
-  const windowHeight = Dimensions.get('window').height;
+  // const windowHeight = Dimensions.get('window').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
 
   const resetPositionAnim = Animated.timing(panY, {
@@ -209,13 +211,35 @@ export const FamilySetup = ({
   ).current;
 
   const afterSuccessAlert = (flag: string, msg: string) => {
-
     Alert.alert(
       'Success',
       msg,
       [
         {
-          text: 'Cancel',
+          text: 'YES', onPress: () => {
+            if (flag === 'guardian') {
+              setCurrentPosition(1);
+              setGuardianPhoto(null);
+              setGuardianUsername('');
+              setGuardianEmail('');
+              setGuardianPassword('');
+              setIsAddGuardian(false);
+            } else {
+              setCurrentPosition(2);
+              setChildPhoto(null);
+              setChildName('');
+              setDate(new Date('Jan 01, 2010 00:20:18'));
+              setSchoolName('');
+              setChildInterest('');
+              setChildUsername('');
+              setChildPassword('');
+              setIsAddChild(false);
+              setIsNext(false);
+            }
+          },
+        },
+        {
+          text: 'NO',
           onPress: () => {
             if (flag === 'guardian') {
               setCurrentPosition(2);
@@ -228,7 +252,7 @@ export const FamilySetup = ({
               setCurrentPosition(3);
               setChildPhoto(null);
               setChildName('');
-              setDate(new Date());
+              setDate(new Date('Jan 01, 2010 00:20:18'));
               setSchoolName('');
               setChildInterest('');
               setChildUsername('');
@@ -238,40 +262,25 @@ export const FamilySetup = ({
           },
           style: 'cancel',
         },
-        {
-          text: 'Add', onPress: () => {
-            if (flag === 'guardian') {
-              setCurrentPosition(1);
-              setGuardianPhoto(null);
-              setGuardianUsername('');
-              setGuardianEmail('');
-              setGuardianPassword('');
-              setIsAddGuardian(false);
-            } else {
-              setCurrentPosition(2);
-              setChildPhoto(null);
-              setChildName('');
-              setDate(new Date());
-              setSchoolName('');
-              setChildInterest('');
-              setChildUsername('');
-              setChildPassword('');
-              setIsAddChild(false);
-              setIsNext(false);
-            }
-          },
-        },
+
       ],
       { cancelable: false }
     );
   };
 
   useEffect(() => {
+    if (familyNameError) {
+      setFamilyNameError(true);
+      setFamilyNameErrorMsg('Family name cannot be empty.');
+    }
+  }, [familyNameError]);
+
+  useEffect(() => {
     if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
       Alert.alert('Family successfully added.');
       setCurrentPosition(1);
       setFamilyName('');
-      setFamilyPhoto('');
+      setFamilyPhoto(null);
       setIsAddFamily(false);
     }
     if (isAddFamily && !family?.isAddingFamily && !family?.isAddFamilySuccess && family?.isAddFamilyFail) {
@@ -292,6 +301,10 @@ export const FamilySetup = ({
     }
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
       Alert.alert(child?.addChildError);
+      if (child?.addChildError === 'Username already in use') {
+        setChildUsernameError(true);
+        setChildUsernameErrorMsg('Username already in use');
+      }
       setIsAddChild(false);
       setCurrentPosition(2);
     }
@@ -341,35 +354,40 @@ export const FamilySetup = ({
     }
   };
 
-  const handleAddChild = (flag: string) => {
+  const handleAddChild = async (flag: string) => {
     if (flag === 'Next') {
       const validationResult = validate({ name: childName, schoolName: schoolName }, constraints);
       if (validationResult?.name) {
         setChildNameError(true);
         setChildNameErrorMsg(validationResult?.name[0]);
+        return;
       }
       if (validationResult?.schoolName) {
         setSchoolNameError(true);
         setSchoolNameErrorMsg(validationResult?.schoolName[0]);
-      }
-      if (!childNameError && !schoolNameError) {
+        return;
+      } if (!childNameError && !schoolNameError) {
         setIsNext(!!childName && !!schoolName);
+        return;
       }
     } else {
-      console.log({ childInterest, childUsername, childPassword });
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
         setChildInterestError(true);
         setChildInterestErrorMsg(validationResult?.interest[0]);
+        return;
       }
       if (validationResult?.username) {
         setChildUsernameError(true);
         setChildUsernameErrorMsg(validationResult?.username[0]);
+        return;
       }
       if (validationResult?.password) {
         setChildPasswordError(true);
         setChildPasswordErrorMsg(validationResult?.password[0]);
-      } else if (
+        return;
+      }
+      if (
         flag === 'Add' &&
         !childNameError &&
         !schoolNameError &&
@@ -378,56 +396,10 @@ export const FamilySetup = ({
         !childPasswordError
       ) {
         setIsAddChild(true);
-        onAddChild({ photo: childPhoto, name: childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+        onAddChild({ photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
       }
-
-      // setChildInterestError(!childInterest);
-      // setChildUsernameError(!childUsername);
-      // setChildPasswordError(!childPassword);
     }
   };
-
-  // family setting form effect
-  useEffect(() => {
-    if (!familyName) {
-      setFamilyNameErrorMsg('Family name cannot be empty');
-    }
-  }, [familyName]);
-
-  // guardian form effect
-  useEffect(() => {
-    if (!guardianUsername) {
-      setGuardianUsernameErrorMsg('Username cannot be empty');
-    }
-    if (!guardianEmail) {
-      setGuardianEmailErrorMsg('Email cannot be empty');
-    }
-    if (!guardianPassword) {
-      setGuardianPasswordErrorMsg('Password cannot be empty');
-    }
-  }, [guardianUsername, guardianEmail, guardianPassword]);
-
-  // child form effect
-  useEffect(() => {
-    if (!childName) {
-      setChildNameErrorMsg('Name cannot be empty');
-    }
-    if (!schoolName) {
-      setSchoolNameErrorMsg('School name cannot be empty');
-    }
-  }, [childName, schoolName]);
-
-  useEffect(() => {
-    if (!childInterest) {
-      setChildInterestErrorMsg('Interests cannot be empty');
-    }
-    if (!childUsername) {
-      setChildUsernameErrorMsg('Username cannot be empty');
-    }
-    if (!childPassword) {
-      setChildPasswordErrorMsg('Password cannot be empty');
-    }
-  }, [childInterest, childUsername, childPassword]);
 
   const handleSubmit = () => {
     onSubmit(AppRoute.DASHBOARD);
@@ -467,38 +439,102 @@ export const FamilySetup = ({
     }
   };
 
-  const renderFileUri = (val: string) => {
+  const handleRemovePhoto = () => {
+    [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](null);
+  };
+
+  const profileCameraIcon = () => {
+    return (
+      <Layout style={[styles.photoIcons]}>
+        <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
+          <Icon
+            style={styles.icon}
+            fill="#8F9BB3"
+            name={'camera-outline'}
+          />
+        </TouchableOpacity>
+      </Layout>
+
+    );
+  };
+
+  const profileEditIcons = () => {
+    return (
+      <>
+        <Layout style={[styles.photoIcons, { bottom: 72 }]}>
+          <TouchableOpacity onPress={() => handleRemovePhoto()}>
+            <Icon
+              style={styles.icon}
+              fill="#8F9BB3"
+              name={'trash-2-outline'}
+            />
+          </TouchableOpacity>
+        </Layout>
+
+        <Layout style={styles.photoIcons}>
+          <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
+            <Icon
+              style={styles.icon}
+              fill="#8F9BB3"
+              name={'edit-outline'}
+            />
+          </TouchableOpacity>
+        </Layout>
+      </>
+    );
+  };
+
+  const renderFileUri = () => {
     if (currentPosition === 0) {
       if (familyPhoto) {
-        return <Avatar source={{ uri: familyPhoto?.uri }} style={styles.avatar} />;
+        return <Layout><Avatar source={{ uri: familyPhoto?.uri }} style={styles.avatar} />{profileEditIcons()}</Layout>;
       } else {
         return (
-          <Avatar
-            source={require('./assets/guardian-avatar.png')}
-            style={styles.avatar}
-          />
+          <Layout>
+            <Avatar
+              source={require('./assets/guardian-avatar.png')}
+              style={styles.avatar}
+            />
+            {profileCameraIcon()}
+          </Layout>
         );
       }
     } else if (currentPosition === 1) {
       if (guardianPhoto) {
-        return <Avatar source={{ uri: guardianPhoto?.uri }} style={styles.avatar} />;
+        return (
+          <Layout>
+            <Avatar source={{ uri: guardianPhoto?.uri }} style={styles.avatar} />
+            {profileEditIcons()}
+          </Layout>
+        );
       } else {
         return (
-          <Avatar
-            source={require('./assets/guardian-avatar.png')}
-            style={styles.avatar}
-          />
+          <Layout>
+            <Avatar
+              source={require('./assets/guardian-avatar.png')}
+              style={styles.avatar}
+            />
+            {profileCameraIcon()}
+          </Layout>
         );
       }
-    } else if (val === 'child') {
+    } else if (currentPosition === 2) {
       if (childPhoto) {
-        return <Avatar source={{ uri: childPhoto?.uri }} style={styles.avatar} />;
+        return (
+          <Layout>
+            <Avatar source={{ uri: childPhoto?.uri }} style={styles.avatar} />
+            {profileEditIcons()}
+          </Layout>
+        );
       } else {
         return (
-          <Avatar
-            source={require('./assets/child-avatar.png')}
-            style={styles.avatar}
-          />
+          <Layout>
+            <Avatar
+              source={require('./assets/child-avatar.png')}
+              style={styles.avatar}
+            />
+            {profileCameraIcon()}
+          </Layout>
         );
       }
     }
@@ -633,16 +669,10 @@ export const FamilySetup = ({
           >
             Family Setting
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setMediaSelectorModalVisible(true);
-            }}
-          >
-            {renderFileUri('family')}
-          </TouchableOpacity>
+          {renderFileUri()}
           <Input
             style={styles.inputField}
-            value={familyName.trim()}
+            value={familyName}
             caption={familyNameError ? familyNameErrorMsg : ''}
             status={familyNameError ? 'danger' : 'basic'}
             placeholder="Family name"
@@ -654,7 +684,6 @@ export const FamilySetup = ({
               )
             }
           />
-
           <Button
             onPress={() => handleAddFamilySetup(1)}
             style={styles.primarySubmitButton}
@@ -677,9 +706,7 @@ export const FamilySetup = ({
           >
             Guardian
           </Text>
-          <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
-            {renderFileUri('guardian')}
-          </TouchableOpacity>
+          {renderFileUri()}
           <Input
             style={styles.inputField}
             value={guardianUsername.trim()}
@@ -700,12 +727,10 @@ export const FamilySetup = ({
             caption={guardianEmailError ? guardianEmailErrorMsg : ''}
             status={guardianEmailError ? 'danger' : 'basic'}
             placeholder="Email"
-            onChangeText={(nextValue) =>
-              handleFamilySettingInput(
-                setGuardianEmail,
-                setGuardianEmailError,
-                nextValue,
-              )
+            onChangeText={(nextValue) => {
+              setGuardianEmail(nextValue.trim());
+              setGuardianEmailError(false);
+            }
             }
           />
           <Input
@@ -747,14 +772,12 @@ export const FamilySetup = ({
           >
             Child
           </Text>
-          <TouchableOpacity onPress={() => setMediaSelectorModalVisible(true)}>
-            {renderFileUri('child')}
-          </TouchableOpacity>
+          {renderFileUri()}
           {!isNext && (
             <>
               <Input
                 style={styles.inputField}
-                value={childName.trim()}
+                value={childName}
                 caption={childNameError ? childNameErrorMsg : ''}
                 status={childNameError ? 'danger' : 'basic'}
                 placeholder="Name"
@@ -804,7 +827,7 @@ export const FamilySetup = ({
               </TouchableOpacity>
               <Input
                 style={styles.inputField}
-                value={schoolName.trim()}
+                value={schoolName}
                 caption={schoolNameError ? schoolNameErrorMsg : ''}
                 status={schoolNameError ? 'danger' : 'basic'}
                 placeholder="School name"
@@ -882,9 +905,9 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={child?.isAddingChild && LoadingIndicator}
+            accessoryLeft={child?.isAddingChild && isAddChild && LoadingIndicator}
           >
-            {child.isAddingChild ? '' : !isNext ? 'Next' : 'Add'}
+            {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : 'Add'}
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}
@@ -924,6 +947,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  photoIcons: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, position: 'absolute',
+    borderColor: colors.primaryBlue, borderWidth: 0.5, borderRadius: 50, width: 30, height: 30, bottom: 35, right: 1, zIndex: 2,
+  },
+  icon: { padding: 0, width: 20, height: 20 },
   Modalcontainer: {
     backgroundColor: 'white',
     paddingTop: 12,
@@ -986,7 +1014,7 @@ const styles = StyleSheet.create({
     width: wp2dp('85%'),
     minHeight: 40,
     marginTop: 10,
-    marginBottom: 5,
+    marginBottom: 4,
     justifyContent: 'center',
     paddingHorizontal: 8,
   },

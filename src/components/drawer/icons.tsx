@@ -11,6 +11,9 @@ export const EyeOffIcon = (style: ImageStyle): IconElement => (
 export const PersonIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name="person-outline" />
 );
+export const FamilyIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="people-outline" />
+);
 export const ListsIcon = (props: any): React.ReactElement<ImageProps> => (
   <Icon {...props} name="list-outline" />
 );
