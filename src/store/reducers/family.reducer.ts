@@ -27,11 +27,6 @@ const initialState = {
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log(
-    '🚀 ~ file: family.reducer.js ~ line 29 ~ type, payload ',
-    type,
-    payload,
-  );
   switch (type) {
     case familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST: {
       return {

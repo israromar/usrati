@@ -148,6 +148,19 @@ export function editMatric(id, payload) {
     });
 }
 
+export function deleteMatric(id) {
+  return http
+    .delete(`category/${id}`)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 155 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 159 ~ deleteMatric ~ error', error);
+      throw error.response.data;
+    });
+}
+
 export function getMatrics({ parentID }) {
   return http
     .get(`parent/${parentID}/categories`)

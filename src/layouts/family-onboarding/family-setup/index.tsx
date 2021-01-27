@@ -28,15 +28,13 @@ import {
 } from 'react-native-responsive-screen';
 import Modal from 'react-native-modal';
 
-import { Loading, ImageOverlay } from '../../../components';
+import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
 import { CameraIcon, GalleryIcon } from './extra/icons';
 import { launchCamera as CAMERA, launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
-// import { constraints } from '../../../utils/constraints';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { IAddChild, IAddFamilySetup as IIAddFamilySetup, IAddGuardian } from '../../../containers/family-setup';
-// import i18n from '../../../translations';
 import StepIndicator from '../../../components/step-indicator';
 import { AppRoute } from '../../../navigation/app-routes';
 import constraints from '../../../utils/constraints';
@@ -122,7 +120,6 @@ export const FamilySetup = ({
   const [guardianPasswordErrorMsg, setGuardianPasswordErrorMsg] = useState<
     string
   >('');
-
 
   // const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
@@ -563,9 +560,8 @@ export const FamilySetup = ({
     );
   };
 
-  return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
-
+  const RenderModal = () => {
+    return (
       <RNModal
         animated
         animationType="fade"
@@ -596,7 +592,7 @@ export const FamilySetup = ({
               accessoryRight={GalleryIcon}
             >
               Choose from gallery
-            </Button>
+          </Button>
             <Button
               onPress={() => {
                 chooseFile('photo', 'CAMERA', CAMERA);
@@ -609,7 +605,7 @@ export const FamilySetup = ({
               accessoryRight={CameraIcon}
             >
               Take Photo
-            </Button>
+          </Button>
             <Button
               onPress={handleDismiss}
               style={[
@@ -620,11 +616,15 @@ export const FamilySetup = ({
               appearance="outline"
             >
               Cancel
-            </Button>
+          </Button>
           </Animated.View>
         </View>
       </RNModal>
+    );
+  };
 
+  const RenderHeaderImageOverlay = () => {
+    return (
       <ImageOverlay
         style={styles.headerContainer}
         source={require('../../../assets/images/vector.png')}
@@ -645,7 +645,7 @@ export const FamilySetup = ({
         >
           <Text style={{ alignSelf: 'center' }} category="h1" status="control">
             Family Setup
-          </Text>
+        </Text>
           {currentPosition !== 3 && (
             <Layout style={{ backgroundColor: 'transparent', top: 10 }}>
               <StepIndicator
@@ -659,8 +659,12 @@ export const FamilySetup = ({
           )}
         </Layout>
       </ImageOverlay>
+    );
+  };
 
-      {currentPosition === 0 && (
+  const RenderAddFamilyForm = () => {
+    if (currentPosition === 0) {
+      return (
         <Layout style={styles.formContainer}>
           <Text
             style={{ alignSelf: 'center', color: 'grey' }}
@@ -668,7 +672,7 @@ export const FamilySetup = ({
             status="control"
           >
             Family Setting
-          </Text>
+    </Text>
           {renderFileUri()}
           <Input
             style={styles.inputField}
@@ -695,9 +699,13 @@ export const FamilySetup = ({
             {isAddFamily ? '' : 'Add'}
           </Button>
         </Layout>
-      )}
+      );
+    }
+  };
 
-      {currentPosition === 1 && (
+  const RenderAddGuardianForm = () => {
+    if (currentPosition === 1) {
+      return (
         <Layout style={styles.formContainer}>
           <Text
             style={{ alignSelf: 'center', color: 'grey' }}
@@ -761,9 +769,13 @@ export const FamilySetup = ({
             {renderSkipForNow()}
           </Layout>
         </Layout>
-      )}
+      );
+    }
+  };
 
-      {currentPosition === 2 && (
+  const RenderAddChildForm = () => {
+    if (currentPosition === 2) {
+      return (
         <Layout style={styles.formContainer}>
           <Text
             style={{ alignSelf: 'center', color: 'grey' }}
@@ -771,7 +783,7 @@ export const FamilySetup = ({
             status="control"
           >
             Child
-          </Text>
+        </Text>
           {renderFileUri()}
           {!isNext && (
             <>
@@ -896,7 +908,7 @@ export const FamilySetup = ({
                 appearance="outline"
               >
                 Back
-              </Button>
+            </Button>
             </>
           )}
           <Button
@@ -913,9 +925,13 @@ export const FamilySetup = ({
             {renderSkipForNow()}
           </Layout>
         </Layout>
-      )}
+      );
+    }
+  };
 
-      {currentPosition === 3 && (
+  const RenderHorizontalStepper = () => {
+    if (currentPosition === 3) {
+      return (
         <Layout style={styles.stepperContainer}>
           <StepIndicator
             currentPosition={currentPosition}
@@ -932,10 +948,19 @@ export const FamilySetup = ({
             appearance="ghost"
           >
             Go to Dashboard
-          </Button>
+               </Button>
         </Layout>
-      )}
-
+      );
+    }
+  };
+  return (
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
+      {RenderModal()}
+      {RenderHeaderImageOverlay()}
+      {RenderAddFamilyForm()}
+      {RenderAddGuardianForm()}
+      {RenderAddChildForm()}
+      {RenderHorizontalStepper()}
     </KeyboardAvoidingView>
   );
 };

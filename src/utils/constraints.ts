@@ -78,11 +78,11 @@ export const constraints = {
       allowEmpty: false,
       message: '^Please enter weightage',
     },
-    // format: {
-    //   pattern: '[a-z]+',
-    //   flags: 'i',
-    //   message: 'can only contain a-z',
-    // },
+    format: {
+      pattern: '[0-9]+',
+      flags: 'i',
+      message: 'can only contain 0-9',
+    },
   },
   matricDescription: {
     presence: {

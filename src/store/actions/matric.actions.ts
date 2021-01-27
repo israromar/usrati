@@ -2,6 +2,7 @@ import { matricsConstants } from '../../constants';
 import {
   addMatric as addMatricCat,
   editMatric as editMatricCat,
+  deleteMatric as deleteMatricCat,
   getMatrics,
   updateMatrics,
 } from '../../services/api';
@@ -35,12 +36,14 @@ export const addMatric = ({
 
   addMatricCat(formData)
     .then((res: any) => {
+      console.log('🚀 ~ file: matric.actions.ts ~ line 38 ~ .then ~ res', res);
       dispatch({
         type: matricsConstants.ADD_MATRIC_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error: any) => {
+      console.log('🚀 ~ file: matric.actions.ts ~ line 45 ~ error', error);
       dispatch({
         type: matricsConstants.ADD_MATRIC_FAIL,
         payload: error?.ERROR
@@ -52,7 +55,6 @@ export const addMatric = ({
 
 export const editMatric = ({
   matricId,
-  parentID,
   matricPhoto,
   matricTitle,
   matricWeightage,
@@ -75,7 +77,7 @@ export const editMatric = ({
       type,
       name,
     };
-    // formData.append('photo', photo);
+    formData.append('photo', photo);
   }
 
   editMatricCat(matricId, formData)
@@ -88,6 +90,28 @@ export const editMatric = ({
     .catch((error: any) => {
       dispatch({
         type: matricsConstants.EDIT_MATRIC_FAIL,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
+      });
+    });
+};
+
+export const deleteMatric = ({ matricId }: any) => (dispatch: any) => {
+  dispatch({
+    type: matricsConstants.DELETE_MATRICS_REQUEST,
+  });
+
+  deleteMatricCat(matricId)
+    .then((res: any) => {
+      dispatch({
+        type: matricsConstants.DELETE_MATRICS_SUCCESS,
+        payload: res,
+      });
+    })
+    .catch((error: any) => {
+      dispatch({
+        type: matricsConstants.DELETE_MATRICS_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',

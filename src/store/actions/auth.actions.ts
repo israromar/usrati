@@ -36,7 +36,7 @@ export const signUp = ({ username, email, password }) => (
                 });
                 dispatch({
                   type: userConstants.UPDATE_USER,
-                  payload: userInfo,
+                  payload: userInfo.data,
                 });
               })
               .catch((error) => {
@@ -71,7 +71,7 @@ export const signUp = ({ username, email, password }) => (
   }
 };
 
-export const signIn = ({ username, password }) => (dispatch) => {
+export const signIn = ({ username, password }: any) => (dispatch: any) => {
   dispatch({ type: authConstants.SIGNIN_REQUEST });
 
   login({ username, password })

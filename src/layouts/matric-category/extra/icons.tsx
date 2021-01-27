@@ -14,3 +14,9 @@ export const PlusIcon = () => (
 export const MinusIcon = () => (
   <AntIcon name="minuscircleo" size={30} color={colors.primaryBlue} />
 );
+export const PencilIcon = () => (
+  <AntIcon name="edit" size={25} color={colors.primaryBlue} />
+);
+export const DeleteIcon = () => (
+  <AntIcon name="delete" size={25} color={colors.primaryBlue} />
+);

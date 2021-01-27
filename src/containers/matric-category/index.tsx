@@ -5,6 +5,7 @@ import {
   getAllMatrics,
   addMatric,
   editMatric,
+  deleteMatric,
   updateAllMatrics,
 } from '../../store/actions/matric.actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,6 +67,14 @@ export const MatricCategoryContainer = () => {
     );
   };
 
+  const handleDeleteMatric = ({ matricId }: any) => {
+    dispatch(
+      deleteMatric({
+        matricId,
+      }),
+    );
+  };
+
   const handlePress = (toScreen: string) => {
     navigate(toScreen);
   };
@@ -75,10 +84,6 @@ export const MatricCategoryContainer = () => {
   };
 
   const handleupdateMatrics = (matrics: Array<{}>) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 58 ~ handleupdateMatrics ~ matrics',
-      matrics,
-    );
     dispatch(updateAllMatrics({ matrics }));
   };
 
@@ -87,6 +92,7 @@ export const MatricCategoryContainer = () => {
       currentState={currentState}
       onAddMatric={handleAddMatric}
       onEditMatric={handleEditMatric}
+      onDeleteMatric={handleDeleteMatric}
       getAllMatrics={handleGetMatrices}
       updateMatrics={handleupdateMatrics}
       onBackPress={handlePress}
