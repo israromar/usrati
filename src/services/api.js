@@ -139,7 +139,7 @@ export function addMatric(payload) {
 
 export function editMatric(id, payload) {
   return http
-    .put(`category/${id}`, payload)
+    .patch(`category/${id}`, payload)
     .then((response) => {
       return response.data;
     })
@@ -152,11 +152,9 @@ export function deleteMatric(id) {
   return http
     .delete(`category/${id}`)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 155 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 159 ~ deleteMatric ~ error', error);
       throw error.response.data;
     });
 }
@@ -175,6 +173,62 @@ export function getMatrics({ parentID }) {
 export function updateMatrics(payload) {
   return http
     .post('category/update', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+// Sub Categories apis
+export function addSubMatric(payload) {
+  return http
+    .post('subcategory', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function editSubMatric(id, payload) {
+  return http
+    .put(`subcategory/${id}`, payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function deleteSubMatric(id) {
+  return http
+    .delete(`subcategory/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getSubMatrics({ parentCategoryID }) {
+  return http
+    .get(`category/${parentCategoryID}/subcategories`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function updateSubMatrics(payload) {
+  return http
+    .post('subcategory/update', payload)
     .then((response) => {
       return response.data;
     })

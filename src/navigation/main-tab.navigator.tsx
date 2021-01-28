@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
-import tabNavigationData from './tab-navigation-data';
+// import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
+// import tabNavigationData from './tab-navigation-data';
 import { SettingsStackNavigator } from './settings-stack.navigator';
 import {
   DashboardScreen,
   MatricCategoryScreen,
+  MatricSubCategoryScreen,
   AddParentScreen,
   AddChildScreen,
   ChildProfileScreen,
@@ -16,20 +17,20 @@ import { AppRoute } from './app-routes';
 // const { Navigator, Screen } = createBottomTabNavigator();
 const { Navigator, Screen } = createStackNavigator();
 
-const BottomTabBar = ({ navigation: { navigate }, state }: any) => {
-  return (
-    <BottomNavigation
-      style={styles.bottomTabs}
-      selectedIndex={state.index}
-      onSelect={(index) => navigate(state.routeNames[index])}
-      appearance="noIndicator"
-    >
-      {tabNavigationData?.map(({ name, icon }: any) => {
-        return <BottomNavigationTab key={name} /*title={name}*/ icon={icon} />;
-      })}
-    </BottomNavigation>
-  );
-};
+// const BottomTabBar = ({ navigation: { navigate }, state }: any) => {
+//   return (
+//     <BottomNavigation
+//       style={styles.bottomTabs}
+//       selectedIndex={state.index}
+//       onSelect={(index) => navigate(state.routeNames[index])}
+//       appearance="noIndicator"
+//     >
+//       {tabNavigationData?.map(({ name, icon }: any) => {
+//         return <BottomNavigationTab key={name} /*title={name}*/ icon={icon} />;
+//       })}
+//     </BottomNavigation>
+//   );
+// };
 
 const TabNavigator = () => {
   return (
@@ -52,6 +53,10 @@ const TabNavigator = () => {
       <Screen
         name={AppRoute.MATRIC_CATEGORY}
         component={MatricCategoryScreen}
+      />
+      <Screen
+        name={AppRoute.MATRIC_SUB_CATEGORY}
+        component={MatricSubCategoryScreen}
       />
       <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />

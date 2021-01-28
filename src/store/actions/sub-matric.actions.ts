@@ -1,25 +1,25 @@
-import { matricsConstants } from '../../constants';
+import { subMatricsConstants } from '../../constants';
 import {
-  addMatric as addMatricCat,
-  editMatric as editMatricCat,
-  deleteMatric as deleteMatricCat,
-  getMatrics,
-  updateMatrics,
+  addSubMatric as addSubMatricCat,
+  editSubMatric as editSubMatricCat,
+  deleteSubMatric as deleteSubMatricCat,
+  getSubMatrics,
+  updateSubMatrics,
 } from '../../services/api';
 
-export const addMatric = ({
-  parentID,
+export const addSubMatric = ({
+  parentCategoryID,
   matricPhoto,
   matricTitle,
   matricWeightage,
   matricDescription,
 }: any) => (dispatch: any) => {
   dispatch({
-    type: matricsConstants.ADD_MATRIC_REQUEST,
+    type: subMatricsConstants.ADD_SUB_MATRIC_REQUEST,
   });
 
   let formData = new FormData();
-  formData.append('parentID', parentID);
+  formData.append('parentCategoryID', parentCategoryID);
   formData.append('title', matricTitle);
   formData.append('weightage', matricWeightage);
   formData.append('description', matricDescription);
@@ -34,16 +34,16 @@ export const addMatric = ({
     formData.append('photo', photo);
   }
 
-  addMatricCat(formData)
+  addSubMatricCat(formData)
     .then((res: any) => {
       dispatch({
-        type: matricsConstants.ADD_MATRIC_SUCCESS,
+        type: subMatricsConstants.ADD_SUB_MATRIC_SUCCESS,
         payload: res.data,
       });
     })
     .catch((error: any) => {
       dispatch({
-        type: matricsConstants.ADD_MATRIC_FAIL,
+        type: subMatricsConstants.ADD_SUB_MATRIC_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',
@@ -51,7 +51,7 @@ export const addMatric = ({
     });
 };
 
-export const editMatric = ({
+export const editSubMatric = ({
   matricId,
   matricPhoto,
   matricTitle,
@@ -59,7 +59,7 @@ export const editMatric = ({
   matricDescription,
 }: any) => (dispatch: any) => {
   dispatch({
-    type: matricsConstants.EDIT_MATRIC_REQUEST,
+    type: subMatricsConstants.EDIT_SUB_MATRIC_REQUEST,
   });
 
   let formData = new FormData();
@@ -78,16 +78,16 @@ export const editMatric = ({
     formData.append('photo', photo);
   }
 
-  editMatricCat(matricId, formData)
+  editSubMatricCat(matricId, formData)
     .then((res: any) => {
       dispatch({
-        type: matricsConstants.EDIT_MATRIC_SUCCESS,
+        type: subMatricsConstants.EDIT_SUB_MATRIC_SUCCESS,
         payload: res,
       });
     })
     .catch((error: any) => {
       dispatch({
-        type: matricsConstants.EDIT_MATRIC_FAIL,
+        type: subMatricsConstants.EDIT_SUB_MATRIC_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',
@@ -95,21 +95,21 @@ export const editMatric = ({
     });
 };
 
-export const deleteMatric = ({ matricId }: any) => (dispatch: any) => {
+export const deleteSubMatric = ({ matricId }: any) => (dispatch: any) => {
   dispatch({
-    type: matricsConstants.DELETE_MATRICS_REQUEST,
+    type: subMatricsConstants.DELETE_SUB_MATRIC_REQUEST,
   });
 
-  deleteMatricCat(matricId)
+  deleteSubMatricCat(matricId)
     .then((res: any) => {
       dispatch({
-        type: matricsConstants.DELETE_MATRICS_SUCCESS,
+        type: subMatricsConstants.DELETE_SUB_MATRIC_SUCCESS,
         payload: res,
       });
     })
     .catch((error: any) => {
       dispatch({
-        type: matricsConstants.DELETE_MATRICS_FAIL,
+        type: subMatricsConstants.DELETE_SUB_MATRIC_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',
@@ -117,21 +117,23 @@ export const deleteMatric = ({ matricId }: any) => (dispatch: any) => {
     });
 };
 
-export const getAllMatrics = ({ parentID }: any) => (dispatch: any) => {
+export const getAllSubMatrics = ({ parentCategoryID }: any) => (
+  dispatch: any,
+) => {
   dispatch({
-    type: matricsConstants.GET_MATRICS_REQUEST,
+    type: subMatricsConstants.GET_SUB_MATRICS_REQUEST,
   });
 
-  getMatrics({ parentID })
+  getSubMatrics({ parentCategoryID })
     .then((res: any) => {
       dispatch({
-        type: matricsConstants.GET_MATRICS_SUCCESS,
+        type: subMatricsConstants.GET_SUB_MATRICS_SUCCESS,
         payload: res,
       });
     })
     .catch((error: any) => {
       dispatch({
-        type: matricsConstants.GET_MATRICS_FAIL,
+        type: subMatricsConstants.GET_SUB_MATRICS_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',
@@ -139,24 +141,24 @@ export const getAllMatrics = ({ parentID }: any) => (dispatch: any) => {
     });
 };
 
-export const updateAllMatrics = ({ matrics }: any) => (dispatch: any) => {
+export const updateAllSubMatrics = ({ matrics }: any) => (dispatch: any) => {
   dispatch({
-    type: matricsConstants.UPDATE_MATRICS_REQUEST,
+    type: subMatricsConstants.UPDATE_SUB_MATRICS_REQUEST,
   });
   const stringyFiedMatrics = JSON.stringify(matrics);
   let formData = new FormData();
-  formData.append('categories', stringyFiedMatrics);
+  formData.append('subcategories', stringyFiedMatrics);
 
-  updateMatrics(formData)
+  updateSubMatrics(formData)
     .then((res: any) => {
       dispatch({
-        type: matricsConstants.UPDATE_MATRICS_SUCCESS,
+        type: subMatricsConstants.UPDATE_SUB_MATRICS_SUCCESS,
         payload: res,
       });
     })
     .catch((error: any) => {
       dispatch({
-        type: matricsConstants.UPDATE_MATRICS_FAIL,
+        type: subMatricsConstants.UPDATE_SUB_MATRICS_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',

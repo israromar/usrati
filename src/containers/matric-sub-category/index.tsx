@@ -1,25 +1,23 @@
 /* eslint-disable no-undef */
 import React from 'react';
-import { MatricCategoryScreen } from '../../layouts';
+import { MatricSubCategoryScreen } from '../../layouts';
 import {
-  getAllMatrics,
-  addMatric,
-  editMatric,
-  deleteMatric,
-  updateAllMatrics,
-} from '../../store/actions/matric.actions';
+  getAllSubMatrics,
+  addSubMatric,
+  editSubMatric,
+  deleteSubMatric,
+  updateAllSubMatrics,
+} from '../../store/actions/sub-matric.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { AppRoute } from '../../navigation/app-routes';
 
 export interface ISignIn {
   email: string;
   password: string;
 }
 
-export const MatricCategoryContainer = () => {
+export const MatricSubCategoryContainer = ({ ...rest }) => {
   const { navigate } = useNavigation();
-
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
 
@@ -30,15 +28,15 @@ export const MatricCategoryContainer = () => {
     parentID = currentState?.user?.userInfo?.parent[0]?.id;
   }
 
-  const handleAddMatric = ({
+  const handleAddSubMatric = ({
     matricPhoto,
     matricTitle,
     matricWeightage,
     matricDescription,
   }: any) => {
     dispatch(
-      addMatric({
-        parentID,
+      addSubMatric({
+        parentCategoryID: rest?.route?.params?.matricId ?? 0,
         matricPhoto,
         matricTitle,
         matricWeightage,
@@ -47,7 +45,7 @@ export const MatricCategoryContainer = () => {
     );
   };
 
-  const handleEditMatric = ({
+  const handleEditSubMatric = ({
     matricId,
     matricPhoto,
     matricTitle,
@@ -55,7 +53,7 @@ export const MatricCategoryContainer = () => {
     matricDescription,
   }: any) => {
     dispatch(
-      editMatric({
+      editSubMatric({
         matricId,
         parentID,
         matricPhoto,
@@ -66,9 +64,9 @@ export const MatricCategoryContainer = () => {
     );
   };
 
-  const handleDeleteMatric = ({ matricId }: any) => {
+  const handleDeleteSubMatric = ({ matricId }: any) => {
     dispatch(
-      deleteMatric({
+      deleteSubMatric({
         matricId,
       }),
     );
@@ -78,28 +76,26 @@ export const MatricCategoryContainer = () => {
     navigate(toScreen);
   };
 
-  const handleGetMatrices = () => {
-    dispatch(getAllMatrics({ parentID: parentID ?? 0 }));
+  const handleGetSubMatrices = () => {
+    dispatch(
+      getAllSubMatrics({
+        parentCategoryID: rest?.route?.params?.matricId ?? 0,
+      }),
+    );
   };
 
-  const handleupdateMatrics = (matrics: Array<{}>) => {
-    dispatch(updateAllMatrics({ matrics }));
-  };
-
-  const handleMatricPress = (matricId: number) => {
-    // dispatch(getAllSubMatrics({ matricId }));
-    navigate(AppRoute.MATRIC_SUB_CATEGORY, { matricId });
+  const handleUpdateSubMatrics = (matrics: Array<{}>) => {
+    dispatch(updateAllSubMatrics({ matrics }));
   };
 
   return (
-    <MatricCategoryScreen
+    <MatricSubCategoryScreen
       currentState={currentState}
-      onAddMatric={handleAddMatric}
-      onEditMatric={handleEditMatric}
-      onDeleteMatric={handleDeleteMatric}
-      getAllMatrics={handleGetMatrices}
-      updateMatrics={handleupdateMatrics}
-      onMatricPress={handleMatricPress}
+      onAddSubMatric={handleAddSubMatric}
+      onEditSubMatric={handleEditSubMatric}
+      onDeleteSubMatric={handleDeleteSubMatric}
+      getAllSubMatrics={handleGetSubMatrices}
+      updateSubMatrics={handleUpdateSubMatrics}
       onBackPress={handlePress}
     />
   );

@@ -8,7 +8,6 @@ import {
   View,
   PermissionsAndroid,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import {
   Layout,
@@ -33,32 +32,36 @@ import { PlusIcon, MinusIcon, PencilIcon, DeleteIcon } from './extra/icons';
 import constraints from '../../utils/constraints';
 import LoadingComponent from './components/loading/loading.component';
 
-interface IMatricCategory {
+interface IMatricSubCategory {
   currentState: {};
   onBackPress: (v: string) => void;
-  onAddMatric: (v: object) => void;
-  onEditMatric: (v: object) => void;
-  onDeleteMatric: (v: object) => void;
-  getAllMatrics: () => void;
-  onMatricPress: (v: number) => void;
-  updateMatrics: (v: Array<{}>) => void;
+  onAddSubMatric: (v: object) => void;
+  onEditSubMatric: (v: object) => void;
+  onDeleteSubMatric: (v: object) => void;
+  getAllSubMatrics: () => void;
+  updateSubMatrics: (v: Array<{}>) => void;
 }
 
-export const MatricCategory = ({
+interface IMatric {
+  title: string;
+  description: string;
+  percentWeightage: string;
+  weightage: number;
+}
+
+export const MatricSubCategory = ({
   currentState,
   onBackPress,
-  onAddMatric,
-  onEditMatric,
-  onDeleteMatric,
-  onMatricPress,
-  getAllMatrics,
-  updateMatrics,
-}: IMatricCategory) => {
+  onAddSubMatric,
+  onEditSubMatric,
+  onDeleteSubMatric,
+  getAllSubMatrics,
+  updateSubMatrics,
+}: IMatricSubCategory) => {
   const [isLoadingMatrics, setIsLoadingMatrics] = useState(true);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [isUpdateMatrics, setIsUpdateMatrics] = useState(false);
+  const [isUpdateSubMatrics, setIsUpdateSubMatrics] = useState(false);
   const [isDeleteMatric, setIsDeleteMatric] = useState(false);
-  const [deletedMatricId, setDeletedMatricId] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,12 +82,12 @@ export const MatricCategory = ({
   const [matricWeightage, setMatricWeightage] = useState(0);
   const [matricWeightageError, setMatricWeightageError] = useState(false);
   const [matricWeightageErrorMsg, setMatricWeightageErrorMsg] = useState('');
-  const [matricPhoto, setMatricPhoto] = useState('' || {});
-  const [allMatrics, setAllMatrics] = useState([]);
+  const [matricPhoto, setMatricPhoto] = useState('' || { uri: '' });
+  const [allSubMatrics, setAllSubMatrics] = useState([]);
   const [selectedMatric, setSelectedMatric] = useState({});
 
   useEffect(() => {
-    getAllMatrics();
+    getAllSubMatrics();
     return () => {
       // cleanup;
     };
@@ -92,13 +95,13 @@ export const MatricCategory = ({
 
   useEffect(() => {
     if (
-      !currentState.matrics.isAddingMatric &&
-      currentState.matrics.isAddMatricSuccess &&
+      !currentState.subMatrics.isAddingSubMatric &&
+      currentState.subMatrics.isAddSubMatricSuccess &&
       !isEditMatric &&
       isLoading
     ) {
       setIsLoading(false);
-      Alert.alert('Matric category successfully added');
+      Alert.alert('Sub category successfully added');
       setIsAddMatric(false);
       setMatricPhoto('');
       setMatricTitle('');
@@ -106,8 +109,8 @@ export const MatricCategory = ({
       setMatricDescription('');
     }
     if (
-      !currentState.matrics.isAddingMatric &&
-      currentState.matrics.isAddMatricFail &&
+      !currentState.subMatrics.isAddingSubMatric &&
+      currentState.subMatrics.isAddSubMatricFail &&
       isLoading
     ) {
       setIsLoading(false);
@@ -115,70 +118,66 @@ export const MatricCategory = ({
     }
 
     if (
-      currentState.matrics.isUpdateMatricsSuccess &&
-      !currentState.matrics.isUpdateMatricsFail &&
-      isUpdateMatrics
+      currentState.subMatrics.isUpdateSubMatricsSuccess &&
+      !currentState.subMatrics.isUpdateSubMatricsFail &&
+      isUpdateSubMatrics
     ) {
       Alert.alert('Updated successfully!');
       setIsUpdate(false);
-      setIsUpdateMatrics(false);
+      setIsUpdateSubMatrics(false);
     }
 
     if (
-      !currentState.matrics.isUpdateMatricsSuccess &&
-      currentState.matrics.isUpdateMatricsFail &&
-      isUpdateMatrics
+      !currentState.subMatrics.isUpdateSubMatricsSuccess &&
+      currentState.subMatrics.isUpdateSubMatricsFail &&
+      isUpdateSubMatrics
     ) {
       Alert.alert('Something went wrong, try again!');
       setIsUpdate(false);
-      setIsUpdateMatrics(false);
+      setIsUpdateSubMatrics(false);
     }
 
     // delete matric category
     if (
-      currentState?.matrics?.isDeletingMatricSuccess &&
-      !currentState?.matrics?.isDeletingMatricFail &&
+      currentState?.subMatrics?.isDeletingSubMatricSuccess &&
+      !currentState?.subMatrics?.isDeletingSubMatricFail &&
       isDeleteMatric
     ) {
       Alert.alert('Deleted successfully!');
       setIsDeleteMatric(false);
-      // setIsUpdateMatrics(false);
-      setTimeout(() => {
-        handleIncrementDecrement(true, 'none', null);
-        // updateMatrics(allMatrics);
-      }, 500);
+      // setIsUpdateSubMatrics(false);
     }
 
     if (
-      !currentState.matrics.isDeletingMatricSuccess &&
-      currentState.matrics.isDeletingMatricFail &&
-      isUpdateMatrics
+      !currentState.subMatrics.isDeletingSubMatricSuccess &&
+      currentState.subMatrics.isDeletingSubMatricFail &&
+      isDeleteMatric
     ) {
       Alert.alert('Something went wrong, try again!');
       setIsDeleteMatric(false);
-      // setIsUpdateMatrics(false);
+      // setIsUpdateSubMatrics(false);
     }
 
     if (
-      currentState.matrics.isEditingMatricSuccess &&
-      !currentState.matrics.isEditingMatricFail &&
+      currentState.subMatrics.isEditingSubMatricSuccess &&
+      !currentState.subMatrics.isEditingSubMatricFail &&
       isEditMatric
     ) {
       Alert.alert('Edited successfully!');
 
-      let index = allMatrics.findIndex((cat) => cat?.id === matricId);
-      let cpy = [...allMatrics];
+      let index = allSubMatrics.findIndex((cat) => cat?.id === matricId);
+      let cpy = [...allSubMatrics];
       let obj = cpy.find((c) => c.id === matricId);
       obj.photo = selectedMatric.matricPhoto;
       obj.title = selectedMatric.matricTitle;
       obj.weightage = parseFloat(selectedMatric.matricWeightage);
       obj.description = selectedMatric.matricDescription;
 
-      setAllMatrics(cpy);
+      setAllSubMatrics(cpy);
 
       setTimeout(() => {
         handleIncrementDecrement(true, 'none', index);
-        // updateMatrics(allMatrics);
+        // updateSubMatrics(allSubMatrics);
       }, 1000);
 
       setIsEditMatric(false);
@@ -191,17 +190,17 @@ export const MatricCategory = ({
     }
 
     if (
-      !currentState.matrics.isEditingMatricSuccess &&
-      currentState.matrics.isEditingMatricFail &&
+      !currentState.subMatrics.isEditingSubMatricSuccess &&
+      currentState.subMatrics.isEditingSubMatricFail &&
       isEditMatric
     ) {
       Alert.alert('Something went wrong, try again!');
       setIsLoading(false);
     }
 
-    setAllMatrics(currentState?.matrics?.matrics);
-    setIsLoadingMatrics(currentState?.matrics?.isGetMatricsLoading);
-  }, [currentState, isLoading, isUpdateMatrics]);
+    setAllSubMatrics(currentState?.subMatrics?.subMatrics);
+    setIsLoadingMatrics(currentState?.subMatrics?.isGetSubMatricsLoading);
+  }, [currentState, isLoading, isUpdateSubMatrics]);
 
   const handleAddMetricInput = (
     inputField: (v: React.SetStateAction<string>) => void,
@@ -218,13 +217,13 @@ export const MatricCategory = ({
       setIsAddMatric(false);
       setIsEditMatric(false);
     } else {
-      onBackPress(AppRoute.DASHBOARD);
+      onBackPress(AppRoute.MATRIC_CATEGORY);
     }
   };
 
   const handleAddEditMatricCategory = () => {
     if (!isEditMatric) {
-      if (currentState?.matrics?.matrics?.length >= 3) {
+      if (currentState?.subMatrics?.subMatrics?.length >= 3) {
         setIsSubscribe(true);
         return;
       }
@@ -259,14 +258,14 @@ export const MatricCategory = ({
     }
     if (!matricTitleError && !matricWeightageError && !matricDescriptionError) {
       if (isAddMatric) {
-        onAddMatric({
+        onAddSubMatric({
           matricPhoto,
           matricTitle,
           matricWeightage,
           matricDescription,
         });
       } else if (isEditMatric) {
-        onEditMatric({
+        onEditSubMatric({
           matricId,
           matricPhoto,
           matricTitle,
@@ -285,7 +284,7 @@ export const MatricCategory = ({
   };
 
   const renderIsUpdating = () => {
-    if (isUpdateMatrics) {
+    if (isUpdateSubMatrics) {
       return <LoadingComponent text={'Updating...'} />;
     }
   };
@@ -317,7 +316,7 @@ export const MatricCategory = ({
     }
   };
 
-  const requestCameraPermission = async (permissionFor: string) => {
+  const requestMediaPermission = async (permissionFor: string) => {
     try {
       const permission = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS[permissionFor],
@@ -341,7 +340,7 @@ export const MatricCategory = ({
       quality: 1,
     };
     try {
-      const permission = await requestCameraPermission(permissionFor);
+      const permission = await requestMediaPermission(permissionFor);
       if (permission === 'never_ask_again') {
         Alert.alert(
           `Go to your app info and enable permission for ${permissionFor}.`,
@@ -561,8 +560,8 @@ export const MatricCategory = ({
           </Button>
           <Button
             onPress={() => {
-              setIsUpdateMatrics(true);
-              updateMatrics(allMatrics);
+              setIsUpdateSubMatrics(true);
+              updateSubMatrics(allSubMatrics);
               setIsAddMatric(false);
             }}
             style={[styles.actionBtn]}
@@ -581,10 +580,7 @@ export const MatricCategory = ({
 
   const weightageSum = async (): Promise<number> => {
     return new Promise((resolve) => {
-      let matricsCpy = [...allMatrics];
-      if (deletedMatricId) {
-        matricsCpy = matricsCpy.filter((m) => m.id !== deletedMatricId);
-      }
+      let matricsCpy = [...allSubMatrics];
       let sum = matricsCpy.reduce((a, b) => {
         return a + b.weightage;
       }, 0);
@@ -599,30 +595,26 @@ export const MatricCategory = ({
   ) => {
     setIsUpdate(true);
     if (status) {
-      let matricsCpy = [...allMatrics];
-      if (index || index == 0) {
-        matricsCpy[index].weightage =
-          operation === 'inc'
-            ? matricsCpy[index].weightage + 1
-            : operation === 'dec'
-              ? matricsCpy[index].weightage - 1
-              : matricsCpy[index].weightage;
-      }
+      let matricsCpy = [...allSubMatrics];
+
+      matricsCpy[index].weightage =
+        operation === 'inc'
+          ? matricsCpy[index].weightage + 1
+          : operation === 'dec'
+            ? matricsCpy[index].weightage - 1
+            : matricsCpy[index].weightage;
 
       const sum: number = await weightageSum();
-      if (deletedMatricId) {
-        matricsCpy = matricsCpy.filter((m) => m.id !== deletedMatricId);
-      }
 
       matricsCpy.map((m) => {
         m.percentWeightage = parseFloat((m.weightage / sum) * 100);
         return m;
       });
-      setAllMatrics(matricsCpy);
+      setAllSubMatrics(matricsCpy);
     }
   };
 
-  const handleEditMatric = ({
+  const handleEditSubMatric = ({
     id,
     photo,
     title,
@@ -645,8 +637,7 @@ export const MatricCategory = ({
     setMatricWeightage(weightage.toString());
   };
 
-  const handleDeleteMatric = (matric: {}) => {
-    setDeletedMatricId(matric.id);
+  const handleDeleteSubMatric = (matric: { title: string; id: number }) => {
     Alert.alert(
       'Warning!',
       `Are you sure, you want to delete: ${matric?.title}?`,
@@ -654,7 +645,7 @@ export const MatricCategory = ({
         {
           text: 'Confirm',
           onPress: () => {
-            onDeleteMatric({ matricId: matric?.id });
+            onDeleteSubMatric({ matricId: matric?.id });
             setIsDeleteMatric(true);
           },
         },
@@ -695,7 +686,7 @@ export const MatricCategory = ({
           {isAddMatric && !isSubscribe && !isEditMatric && (
             <Layout style={styles.addMatricWrap}>
               <Text style={styles.addMatricText} category="h2" status="control">
-                Matric Category
+                Sub Category
               </Text>
               <TouchableOpacity
                 style={{ alignContent: 'center' }}
@@ -715,7 +706,7 @@ export const MatricCategory = ({
           {isEditMatric && !isAddMatric && !isSubscribe && (
             <Layout style={styles.addMatricWrap}>
               <Text style={styles.addMatricText} category="h2" status="control">
-                Edit Matric Category
+                Edit Sub Category
               </Text>
               <TouchableOpacity
                 style={{ alignContent: 'center' }}
@@ -743,7 +734,7 @@ export const MatricCategory = ({
                   category="h1"
                   status="control"
                 >
-                  Matric
+                  Sub
                 </Text>
                 <Text
                   style={{
@@ -777,10 +768,10 @@ export const MatricCategory = ({
         <ScrollView showsVerticalScrollIndicator={false}>
           <Layout style={[styles.matricsWrap]}>
             {renderLoading()}
-            {!isLoadingMatrics && allMatrics?.length > 0 ? (
-              allMatrics.map((matric, idx) => {
+            {!isLoadingMatrics && allSubMatrics?.length > 0 ? (
+              allSubMatrics.map((matric: IMatric, idx) => {
                 return (
-                  <Layout key={idx + 1} style={styles.metrics} level="1">
+                  <Layout key={idx + 1} style={[styles.metrics]} level="1">
                     <Layout style={styles.matricsInnerWrap}>
                       <Layout style={[styles.matricsPercentage]}>
                         <Text category="h6">
@@ -788,11 +779,7 @@ export const MatricCategory = ({
                         </Text>
                       </Layout>
                       <Layout style={styles.matricsMainBody}>
-                        <Text
-                          onPress={() => onMatricPress(matric.id)}
-                          style={styles.matricsTitle}
-                          category="h6"
-                        >
+                        <Text style={styles.matricsTitle} category="h6">
                           {matric?.title.length > 80
                             ? `${matric?.title.substring(0, 70)}...`
                             : matric?.title}
@@ -804,7 +791,7 @@ export const MatricCategory = ({
                         </Text>
                         <Layout style={styles.smallBtnWrap}>
                           <TouchableOpacity
-                            onPress={() => handleEditMatric(matric)}
+                            onPress={() => handleEditSubMatric(matric)}
                             style={[
                               styles.smallBtn,
                               {
@@ -815,7 +802,7 @@ export const MatricCategory = ({
                             <PencilIcon />
                           </TouchableOpacity>
                           <TouchableOpacity
-                            onPress={() => handleDeleteMatric(matric)}
+                            onPress={() => handleDeleteSubMatric(matric)}
                             style={[styles.smallBtn]}
                           >
                             <DeleteIcon />
@@ -862,7 +849,9 @@ export const MatricCategory = ({
                   category="h6"
                   status="info"
                 >
-                  {isLoadingMatrics ? 'Loading...' : 'No Matrics found!'}
+                  {isLoadingMatrics
+                    ? 'Loading...'
+                    : 'Sub categories are not available for this Matric!'}
                 </Text>
               )}
           </Layout>
@@ -882,12 +871,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     marginTop: -200,
-    // minHeight: hp2dp('30%'),
     width: wp2dp('90%'),
     margin: 100,
     alignItems: 'center',
     justifyContent: 'space-around',
-    // zIndex: 10,
   },
   actionBtn: {
     backgroundColor: colors.primaryBlue,
