@@ -54,7 +54,12 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
             </Button>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
-            <Button style={styles.signUpButton} size="giant" appearance="ghost">
+            <Button
+              style={styles.signUpButton}
+              status="info"
+              size="giant"
+              appearance="ghost"
+            >
               Sign Up
             </Button>
           </TouchableOpacity>
@@ -124,21 +129,25 @@ const styles = StyleSheet.create({
     top: -50,
     alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
-  bottomContainer: { marginTop: 'auto', alignSelf: 'center', backgroundColor: 'transparent' },
+  bottomContainer: {
+    marginTop: 'auto',
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
   signInButton: {
     marginTop: 'auto',
     width: wp2dp('85%'),
     borderRadius: 5,
     backgroundColor: '#6F99EB',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   signUpButton: {
     width: wp2dp('85%'),
     borderRadius: 5,
     marginHorizontal: 28,
     color: colors.primaryBlue,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 });
