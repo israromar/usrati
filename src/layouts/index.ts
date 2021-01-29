@@ -6,6 +6,7 @@ export { SignUp as SignUpScreen } from './auth/sign-up';
 export { ForgotPassword as ForgotPasswordScreen } from './auth/forgot-password';
 export { Home as HomeScreen } from './home';
 export { Dashboard as DashboardScreen } from './dashboard';
+export { ParentProfile as ParentProfileScreen } from './parent-profile';
 export { ChildProfile as ChildProfileScreen } from './child-profile';
 export { Calendar as CalendarScreen } from './calendar';
 export { Grids as GridsScreen } from './grids';

@@ -12,6 +12,7 @@ import {
   AddParentScreen,
   AddChildScreen,
   ChildProfileScreen,
+  ParentProfileScreen,
 } from '../containers';
 import { AppRoute } from './app-routes';
 // const { Navigator, Screen } = createBottomTabNavigator();
@@ -42,13 +43,7 @@ const TabNavigator = () => {
       {/* {tabNavigationData?.map(({ name, component }) => (
         <Screen key={name} name={name} component={component} />
       ))} */}
-      {/* <Screen
-        options={{
-          gestureEnabled: false,
-        }}
-        name={AppRoute.FAMILY_SETUP}
-        component={FamilySetupScreen}
-      /> */}
+
       <Screen name={AppRoute.DASHBOARD} component={DashboardScreen} />
       <Screen
         name={AppRoute.MATRIC_CATEGORY}
@@ -58,6 +53,7 @@ const TabNavigator = () => {
         name={AppRoute.MATRIC_SUB_CATEGORY}
         component={MatricSubCategoryScreen}
       />
+      <Screen name={AppRoute.PARENT_PROFILE} component={ParentProfileScreen} />
       <Screen name={AppRoute.CHILD_PROFILE} component={ChildProfileScreen} />
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
       <Screen name={AppRoute.ADD_PARENT} component={AddParentScreen} />
@@ -66,11 +62,11 @@ const TabNavigator = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  bottomTabs: {
-    borderWidth: 0.25,
-    borderColor: '#808080',
-  },
-});
+// const styles = StyleSheet.create({
+//   bottomTabs: {
+//     borderWidth: 0.25,
+//     borderColor: '#808080',
+//   },
+// });
 
 export default TabNavigator;

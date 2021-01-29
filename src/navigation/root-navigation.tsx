@@ -12,6 +12,7 @@ export interface IAppRooStack {
   auth: {
     isLoggedIn: boolean;
     userToken: string;
+    user: { familyID: { id: number } }
   };
   family: { family: { families: [] } };
   theme: { activeTheme: string };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { getChildren } from '../../store/actions/family.actions';
-import { DashboardScreen } from '../../layouts';
+import { ParentProfileScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRoute } from '../../navigation/app-routes';
 
@@ -10,18 +10,23 @@ export interface ISignIn {
   password: string;
 }
 
-export const DashboardContainer = () => {
+export const ParentProfileContainer = () => {
   const currentState = useSelector((state) => state);
   const { navigate } = useNavigation();
   const dispatch = useDispatch();
 
   const handlePress = (toScreen: string) => {
-    navigate(toScreen, { currentPosition: 2 });
+    if (toScreen === AppRoute.FAMILY_SETUP) {
+      console.log('toScreen', toScreen);
+      navigate(toScreen, { currentPosition: 2 });
+    } else {
+      navigate(toScreen);
+    }
   };
 
   let familyID: null = null;
 
-  console.log('DashboardScreen currentState', currentState);
+  console.log('currentState', currentState);
 
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;
@@ -34,7 +39,7 @@ export const DashboardContainer = () => {
   };
 
   return (
-    <DashboardScreen
+    <ParentProfileScreen
       onPress={handlePress}
       getAllChildren={handleGetChild}
       currentState={currentState}

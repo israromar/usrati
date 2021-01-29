@@ -8,7 +8,6 @@ import {
   View,
   PermissionsAndroid,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import {
   Layout,

@@ -117,8 +117,6 @@ export const Dashboard = ({
                       style={{
                         flex: 1,
                         height: hp2dp('35%'),
-                        color: 'grey',
-                        fontWeight: 'bold',
                         justifyContent: 'space-around',
                         alignItems: 'center',
                       }}

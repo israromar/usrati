@@ -92,8 +92,16 @@ const Footer = () => {
 };
 
 const DrawerContent = ({ navigation, state }: any) => {
+  console.log(
+    '🚀 ~ file: drawer.component.tsx ~ line 95 ~ DrawerContent ~ state',
+    state,
+  );
   // const [selectedIndex, setSelectedIndex] = React.useState(null);
   const handlePress = (toScreen: string) => {
+    console.log(
+      '🚀 ~ file: drawer.component.tsx ~ line 97 ~ handlePress ~ toScreen',
+      toScreen,
+    );
     navigation.navigate(toScreen);
   };
 
@@ -117,6 +125,7 @@ const DrawerContent = ({ navigation, state }: any) => {
         title={i18n.t('drawer.profile')}
         accessoryLeft={PersonIcon}
         accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.PARENT_PROFILE)}
       />
       <DrawerItem
         title={'Children'}
