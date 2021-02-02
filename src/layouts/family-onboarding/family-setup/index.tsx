@@ -44,8 +44,10 @@ interface IAddFamilySetup {
   onAddFamilySettings(obj: IIAddFamilySetup): void;
   onAddGuardian(obj: IAddGuardian): void;
   onAddChild(obj: IAddChild): void;
+  onUpdateChild(obj: IAddChild): void;
   onSkipNow: (v: string) => void,
   onSubmit: (v: string) => void,
+  onGoBack: () => void,
   currentState: {
     family: {
       family: {
@@ -68,7 +70,8 @@ interface IAddFamilySetup {
       }
     };
   };
-  currentPosition: number
+  currentPosition: number,
+  rest: object
 }
 
 export const LoadingIndicator = (props: any) => (
@@ -81,22 +84,32 @@ export const FamilySetup = ({
   onAddFamilySettings,
   onAddGuardian,
   onAddChild,
+  onUpdateChild,
   onSkipNow,
   onSubmit,
+  onGoBack,
   currentState: {
     family: { family, guardian, child },
   },
-  currentPosition: pos }: IAddFamilySetup): React.ReactElement => {
+  currentPosition: pos,
+  rest }: IAddFamilySetup): React.ReactElement => {
+
+  const [familyId, setFamilyId] = useState<number>(0);
   const [isAddFamily, setIsAddFamily] = useState<boolean>(false);
   const [isAddGuardian, setIsAddGuardian] = useState<boolean>(false);
   const [isAddChild, setIsAddChild] = useState<boolean>(false);
 
-  const [currentPosition, setCurrentPosition] = useState(pos);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isAddNew, setIsAddNew] = useState<boolean>(false);
+
+  const [currentPosition, setCurrentPosition] = useState(rest?.route?.params?.currentPosition ?? 0);
   const [familyPhoto, setFamilyPhoto] = useState(null);
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
   const [familyNameErrorMsg, setFamilyNameErrorMsg] = useState<string>('');
 
+  // guardian state
+  const [guardianId, setGuardianId] = useState<number>(0);
   const [guardianUsername, setGuardianUsername] = useState('');
   const [guardianUsernameError, setGuardianUsernameError] = useState<boolean>(
     false,
@@ -121,7 +134,6 @@ export const FamilySetup = ({
     string
   >('');
 
-  // const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [isNext, setIsNext] = useState(false);
   const [visible, setVisible] = useState(false);
   const [mediaSelectorModalVisible, setMediaSelectorModalVisible] = useState(
@@ -129,12 +141,15 @@ export const FamilySetup = ({
   );
   const [guardianPhoto, setGuardianPhoto] = useState(null);
 
+  // Child State
+  const [childId, setChildId] = useState<number>(0);
   const [childPhoto, setChildPhoto] = useState(null);
   const [childName, setChildName] = useState<string>('');
   const [childNameError, setChildNameError] = useState<boolean>(false);
   const [childNameErrorMsg, setChildNameErrorMsg] = useState<string>('');
   const [date, setDate] = useState(new Date('Jan 01, 2010 00:20:18'));
   const [dateSelected, setDateSelected] = useState(false);
+
 
   const [schoolName, setSchoolName] = useState<string>('');
   const [schoolNameError, setSchoolNameError] = useState<boolean>(false);
@@ -158,8 +173,73 @@ export const FamilySetup = ({
     '',
   );
 
+  // use effect to get editable data
+  useEffect(() => {
+    setIsEdit(rest?.route?.params?.isEdit);
+    setIsAddNew(rest?.route?.params?.isAddNew);
+
+    if (rest?.route?.params?.isEdit) {
+      setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
+    }
+
+    if (rest?.route?.params?.isAddNew) {
+      //reset child form
+      setChildPhoto(null);
+      setChildName('');
+      setDate(new Date('Jan 01, 2010 00:20:18'));
+      setSchoolName('');
+      setChildInterest('');
+      setChildUsername('');
+      setChildPassword('');
+      // setIsAddChild(false);
+      setIsNext(false);
+
+      //reset guardian form
+      setGuardianPhoto(null);
+      setGuardianUsername('');
+      setGuardianEmail('');
+      setGuardianPassword('');
+      // setIsAddGuardian(false);
+
+      // reset family form
+      setFamilyName('');
+      setFamilyPhoto(null);
+    }
+
+    if (childId !== rest?.route?.params?.childData?.id && rest?.route?.params?.isEdit) {
+      setChildId(rest?.route?.params?.childData?.id ?? 0);
+      if (rest?.route?.params?.isAddNew) {
+        setDate(new Date('Jan 01, 2010 00:20:18'));
+      } else {
+        setDate(new Date(rest?.route?.params?.childData?.dob));
+      }
+      setChildPhoto(rest?.route?.params?.childData?.photo);
+      setChildName(rest?.route?.params?.childData?.name);
+      setSchoolName(rest?.route?.params?.childData?.schoolname);
+      setChildInterest(rest?.route?.params?.childData?.interest);
+      setChildUsername(rest?.route?.params?.childData?.username);
+      setChildPassword(rest?.route?.params?.childData?.password ?? '');
+    }
+
+    if (guardianId !== rest?.route?.params?.guardianData?.id && rest?.route?.params?.isEdit) {
+      setGuardianId(rest?.route?.params?.guardianData?.id);
+      setGuardianPhoto(rest?.route?.params?.guardianData?.photo);
+      setGuardianUsername(rest?.route?.params?.guardianData?.username);
+      setGuardianEmail(rest?.route?.params?.guardianData?.email);
+      setGuardianPassword(rest?.route?.params?.guardianData?.password);
+    }
+
+
+    if (familyId !== rest?.route?.params?.familyData?.id && rest?.route?.params?.isEdit) {
+      setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
+      setFamilyId(rest?.route?.params?.familyData?.id);
+      setFamilyName(rest?.route?.params?.familyData?.name);
+      setFamilyPhoto(rest?.route?.params?.familyData?.photo);
+    }
+
+  }, [rest]);
+
   const screenHeight = Dimensions.get('screen').height;
-  // const windowHeight = Dimensions.get('window').height;
   const panY = useRef(new Animated.Value(screenHeight)).current;
 
   const resetPositionAnim = Animated.timing(panY, {
@@ -239,14 +319,22 @@ export const FamilySetup = ({
           text: 'NO',
           onPress: () => {
             if (flag === 'guardian') {
-              setCurrentPosition(2);
+              if (isEdit && isAddNew) {
+                onGoBack();
+              } else {
+                setCurrentPosition(2);
+              }
               setGuardianPhoto(null);
               setGuardianUsername('');
               setGuardianEmail('');
               setGuardianPassword('');
               setIsAddGuardian(false);
             } else {
-              setCurrentPosition(3);
+              if (isEdit && isAddNew) {
+                onGoBack();
+              } else {
+                setCurrentPosition(3);
+              }
               setChildPhoto(null);
               setChildName('');
               setDate(new Date('Jan 01, 2010 00:20:18'));
@@ -275,16 +363,33 @@ export const FamilySetup = ({
   useEffect(() => {
     if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
       Alert.alert('Family successfully added.');
-      setCurrentPosition(1);
+      if (!isEdit) {
+        setCurrentPosition(1);
+      }
       setFamilyName('');
       setFamilyPhoto(null);
       setIsAddFamily(false);
     }
-    if (isAddFamily && !family?.isAddingFamily && !family?.isAddFamilySuccess && family?.isAddFamilyFail) {
-      Alert.alert(family.addFamilyError);
+    if (isAddFamily && !family?.isUpdatingFamily && family?.isUpdateFamilySuccess && !family?.isUpdateFamilyFail) {
+      Alert.alert('Family successfully updated.');
+      if (!isEdit) {
+        setCurrentPosition(1);
+      }
+      setFamilyName('');
+      setFamilyPhoto(null);
       setIsAddFamily(false);
-      setCurrentPosition(0);
     }
+    if (isAddFamily && !family?.isUpdatingFamily && !family?.isUpdateFamilySuccess && family?.isUpdateFamilyFail) {
+      Alert.alert(family?.updateFamilyError);
+      setIsAddFamily(false);
+      // setCurrentPosition(0);
+      if (!isEdit) {
+        setCurrentPosition(0);
+      }
+    }
+
+    console.log('isAddGuardianSuccess: ', isAddGuardian, guardian);
+
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
     }
@@ -292,6 +397,9 @@ export const FamilySetup = ({
       Alert.alert(guardian.addGuardianError);
       setIsAddGuardian(false);
       setCurrentPosition(1);
+      if (!isEdit) {
+        setCurrentPosition(1);
+      }
     }
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
       afterSuccessAlert('child', 'Child successfully added, do you want to add another one?');
@@ -303,7 +411,10 @@ export const FamilySetup = ({
         setChildUsernameErrorMsg('Username already in use');
       }
       setIsAddChild(false);
-      setCurrentPosition(2);
+      if (!isEdit) {
+        setCurrentPosition(2);
+      }
+      // setCurrentPosition(2);
     }
   }, [child, family, guardian, isAddChild, isAddFamily, isAddGuardian]);
 
@@ -320,10 +431,11 @@ export const FamilySetup = ({
     if (position === 1) {
       if (familyName) {
         setIsAddFamily(true);
-        onAddFamilySettings({
-          familyName,
-          familyPhoto,
-        });
+        if (isEdit) {
+          onAddFamilySettings({ familyName, familyPhoto, flag: 'edit' });
+        } else {
+          onAddFamilySettings({ familyName, familyPhoto, flag: 'add' });
+        }
       }
       setFamilyNameError(!familyName);
     } else {
@@ -331,14 +443,17 @@ export const FamilySetup = ({
       if (validationResult?.username) {
         setGuardianUsernameError(true);
         setGuardianUsernameErrorMsg(validationResult?.username[0]);
+        return;
       }
       if (validationResult?.email) {
         setGuardianEmailError(true);
         setGuardianEmailErrorMsg(validationResult?.email[0]);
+        return;
       }
       if (validationResult?.password) {
         setGuardianPasswordError(true);
         setGuardianPasswordErrorMsg(validationResult?.password[0]);
+        return;
       } else {
         setIsAddGuardian(true);
         onAddGuardian({
@@ -384,16 +499,28 @@ export const FamilySetup = ({
         setChildPasswordErrorMsg(validationResult?.password[0]);
         return;
       }
+
       if (
         flag === 'Add' &&
         !childNameError &&
         !schoolNameError &&
         !childUsernameError &&
         !childInterestError &&
-        !childPasswordError
+        !childPasswordError &&
+        isEdit && isAddNew
       ) {
         setIsAddChild(true);
         onAddChild({ photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+      } else if (
+        flag === 'Add' &&
+        !childNameError &&
+        !schoolNameError &&
+        !childUsernameError &&
+        !childInterestError &&
+        !childPasswordError &&
+        isEdit && !isAddNew
+      ) {
+        onUpdateChild({ id: childId, photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
       }
     }
   };
@@ -484,7 +611,7 @@ export const FamilySetup = ({
   const renderFileUri = () => {
     if (currentPosition === 0) {
       if (familyPhoto) {
-        return <Layout><Avatar source={{ uri: familyPhoto?.uri }} style={styles.avatar} />{profileEditIcons()}</Layout>;
+        return <Layout><Avatar source={{ uri: familyPhoto?.uri ? familyPhoto?.uri : familyPhoto }} style={styles.avatar} />{profileEditIcons()}</Layout>;
       } else {
         return (
           <Layout>
@@ -500,7 +627,7 @@ export const FamilySetup = ({
       if (guardianPhoto) {
         return (
           <Layout>
-            <Avatar source={{ uri: guardianPhoto?.uri }} style={styles.avatar} />
+            <Avatar source={{ uri: guardianPhoto?.uri ? guardianPhoto?.uri : guardianPhoto }} style={styles.avatar} />
             {profileEditIcons()}
           </Layout>
         );
@@ -516,10 +643,11 @@ export const FamilySetup = ({
         );
       }
     } else if (currentPosition === 2) {
+
       if (childPhoto) {
         return (
           <Layout>
-            <Avatar source={{ uri: childPhoto?.uri }} style={styles.avatar} />
+            <Avatar source={{ uri: childPhoto?.uri ? childPhoto?.uri : childPhoto }} style={styles.avatar} />
             {profileEditIcons()}
           </Layout>
         );
@@ -542,22 +670,23 @@ export const FamilySetup = ({
     const handleOnSkip = () => {
       currentPosition === 1 ? setCurrentPosition(2) : onSkipNow(AppRoute.DASHBOARD);
     };
-
-    return (
-      <TouchableOpacity
-        style={styles.skipForNowView}
-        onPress={handleOnSkip}
-      >
-        <Text
-          style={styles.skipForNowText}
-          appearance="default"
-          category="h6"
-          status="info"
+    if (!isEdit) {
+      return (
+        <TouchableOpacity
+          style={styles.skipForNowView}
+          onPress={handleOnSkip}
         >
-          Skip for now
-        </Text>
-      </TouchableOpacity >
-    );
+          <Text
+            style={styles.skipForNowText}
+            appearance="default"
+            category="h6"
+            status="info"
+          >
+            Skip for now
+      </Text>
+        </TouchableOpacity >
+      );
+    }
   };
 
   const RenderModal = () => {
@@ -646,7 +775,7 @@ export const FamilySetup = ({
           <Text style={{ alignSelf: 'center' }} category="h1" status="control">
             Family Setup
         </Text>
-          {currentPosition !== 3 && (
+          {isEdit ? <Layout /> : currentPosition !== 3 && (
             <Layout style={{ backgroundColor: 'transparent', top: 10 }}>
               <StepIndicator
                 currentPosition={currentPosition}
@@ -672,7 +801,7 @@ export const FamilySetup = ({
             status="control"
           >
             Family Setting
-    </Text>
+          </Text>
           {renderFileUri()}
           <Input
             style={styles.inputField}
@@ -696,7 +825,7 @@ export const FamilySetup = ({
             appearance="ghost"
             accessoryLeft={isAddFamily && LoadingIndicator}
           >
-            {isAddFamily ? '' : 'Add'}
+            {isAddFamily ? '' : isEdit && !isAddNew ? 'Update' : 'Add'}
           </Button>
         </Layout>
       );
@@ -717,7 +846,7 @@ export const FamilySetup = ({
           {renderFileUri()}
           <Input
             style={styles.inputField}
-            value={guardianUsername.trim()}
+            value={guardianUsername?.trim()}
             caption={guardianUsernameError ? guardianUsernameErrorMsg : ''}
             status={guardianUsernameError ? 'danger' : 'basic'}
             placeholder="Username"
@@ -731,19 +860,19 @@ export const FamilySetup = ({
           />
           <Input
             style={styles.inputField}
-            value={guardianEmail.trim()}
+            value={guardianEmail?.trim()}
             caption={guardianEmailError ? guardianEmailErrorMsg : ''}
             status={guardianEmailError ? 'danger' : 'basic'}
             placeholder="Email"
             onChangeText={(nextValue) => {
-              setGuardianEmail(nextValue.trim());
+              setGuardianEmail(nextValue?.trim());
               setGuardianEmailError(false);
             }
             }
           />
           <Input
             style={styles.inputField}
-            value={guardianPassword.trim()}
+            value={guardianPassword?.trim()}
             caption={guardianPasswordError ? guardianPasswordErrorMsg : ''}
             status={guardianPasswordError ? 'danger' : 'basic'}
             placeholder="Password"
@@ -763,7 +892,7 @@ export const FamilySetup = ({
             appearance="ghost"
             accessoryLeft={guardian?.isAddingGuardian && LoadingIndicator}
           >
-            {guardian.isAddingGuardian ? '' : 'Add'}
+            {guardian.isAddingGuardian ? '' : isEdit && !isAddNew ? 'Update' : 'Add'}
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}
@@ -811,7 +940,7 @@ export const FamilySetup = ({
                 <Calendar
                   style={{ backgroundColor: '#fff' }}
                   min={new Date('January 01, 2000 00:20:18')}
-                  date={date}
+                  date={date ?? new Date('Jan 01, 2010 00:20:18')}
                   onSelect={(nextDate) => {
                     setDate(nextDate);
                     setDateSelected(true);
@@ -830,7 +959,8 @@ export const FamilySetup = ({
                   style={{
                     alignItems: 'center',
                     paddingLeft: 10,
-                    color: dateSelected ? '#111' : '#A9A9A9',
+                    // color: dateSelected ? '#111' : '#A9A9A9',
+                    color: '#111',
                     fontSize: 15,
                   }}
                 >
@@ -872,7 +1002,7 @@ export const FamilySetup = ({
               />
               <Input
                 style={styles.inputField}
-                value={childUsername.trim()}
+                value={childUsername?.trim()}
                 caption={childUsernameError ? childUsernameErrorMsg : ''}
                 status={childUsernameError ? 'danger' : 'basic'}
                 placeholder="Username"
@@ -886,7 +1016,7 @@ export const FamilySetup = ({
               />
               <Input
                 style={styles.inputField}
-                value={childPassword.trim()}
+                value={childPassword?.trim()}
                 caption={childPasswordError ? childPasswordErrorMsg : ''}
                 status={childPasswordError ? 'danger' : 'basic'}
                 placeholder="Password"
@@ -919,7 +1049,7 @@ export const FamilySetup = ({
             appearance="ghost"
             accessoryLeft={child?.isAddingChild && isAddChild && LoadingIndicator}
           >
-            {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : 'Add'}
+            {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : isEdit && !isAddNew ? 'Update' : 'Add'}
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}
@@ -953,6 +1083,7 @@ export const FamilySetup = ({
       );
     }
   };
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       {RenderModal()}
@@ -964,7 +1095,6 @@ export const FamilySetup = ({
     </KeyboardAvoidingView>
   );
 };
-
 
 const styles = StyleSheet.create({
   overlay: {

@@ -127,12 +127,49 @@ const DrawerContent = ({ navigation, state }: any) => {
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.PARENT_PROFILE)}
       />
+
       <DrawerItem
-        title={'Children'}
+        title={'Add Family'}
         accessoryLeft={ChildrenIcon}
         accessoryRight={ForwardIcon}
         onPress={() =>
-          navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2 })
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 0,
+            isEdit: true,
+            isAddNew: true,
+            childData: {},
+            guardianData: {},
+          })
+        }
+      />
+
+      <DrawerItem
+        title={'Add Guardian'}
+        accessoryLeft={ChildrenIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() =>
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 1,
+            isEdit: true,
+            isAddNew: true,
+            childData: {},
+            guardianData: {},
+          })
+        }
+      />
+
+      <DrawerItem
+        title={'Add Child'}
+        accessoryLeft={ChildrenIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() =>
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 2,
+            isEdit: true,
+            isAddNew: true,
+            childData: {},
+            guardianData: {},
+          })
         }
       />
       <DrawerItem

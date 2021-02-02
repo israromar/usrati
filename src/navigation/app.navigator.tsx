@@ -20,7 +20,7 @@ export const AppNavigator = ({
         return <DrawerContent {...props} />;
       }}
       initialRouteName={
-        isFamilyAdded === true ? AppRoute.PARENT_PROFILE : AppRoute.FAMILY_SETUP
+        isFamilyAdded === true ? AppRoute.DASHBOARD : AppRoute.FAMILY_SETUP
       }
     >
       {StackNavigationData.map((item, idx) => (

@@ -16,6 +16,7 @@ import {
   Avatar,
   Input,
   Spinner,
+  Icon,
 } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
@@ -79,6 +80,8 @@ export const MatricCategory = ({
   const [matricWeightageError, setMatricWeightageError] = useState(false);
   const [matricWeightageErrorMsg, setMatricWeightageErrorMsg] = useState('');
   const [matricPhoto, setMatricPhoto] = useState('' || {});
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
+
   const [allMatrics, setAllMatrics] = useState([]);
   const [selectedMatric, setSelectedMatric] = useState({});
 
@@ -97,7 +100,7 @@ export const MatricCategory = ({
       isLoading
     ) {
       setIsLoading(false);
-      Alert.alert('Matric category successfully added');
+      Alert.alert('Metric category successfully added');
       setIsAddMatric(false);
       setMatricPhoto('');
       setMatricTitle('');
@@ -267,7 +270,7 @@ export const MatricCategory = ({
       } else if (isEditMatric) {
         onEditMatric({
           matricId,
-          matricPhoto,
+          matricPhoto: isPhotoUpdated ? matricPhoto : '',
           matricTitle,
           matricWeightage,
           matricDescription,
@@ -295,23 +298,71 @@ export const MatricCategory = ({
     }
   };
 
+  const profileCameraIcon = () => {
+    return (
+      <Layout style={[styles.photoIcons]}>
+        <TouchableOpacity
+          onPress={() => {
+            chooseFile('photo', 'READ_EXTERNAL_STORAGE', READ_EXTERNAL_STORAGE);
+          }}
+        >
+          <Icon style={styles.icon} fill="#8F9BB3" name={'camera-outline'} />
+        </TouchableOpacity>
+      </Layout>
+    );
+  };
+
+  const profileEditIcons = () => {
+    return (
+      <>
+        <Layout style={[styles.photoIcons, { bottom: 72 }]}>
+          <TouchableOpacity onPress={() => setMatricPhoto('')}>
+            <Icon style={styles.icon} fill="#8F9BB3" name={'trash-2-outline'} />
+          </TouchableOpacity>
+        </Layout>
+
+        <Layout style={styles.photoIcons}>
+          <TouchableOpacity
+            onPress={() => {
+              chooseFile(
+                'photo',
+                'READ_EXTERNAL_STORAGE',
+                READ_EXTERNAL_STORAGE,
+              );
+            }}
+          >
+            <Icon style={styles.icon} fill="#8F9BB3" name={'edit-outline'} />
+          </TouchableOpacity>
+        </Layout>
+      </>
+    );
+  };
+
   const renderFileUri = () => {
     if (matricPhoto) {
       return (
-        <Avatar
-          source={{
-            uri:
-              matricPhoto && matricPhoto?.uri ? matricPhoto?.uri : matricPhoto,
-          }}
-          style={[styles.avatar]}
-        />
+        <>
+          <Avatar
+            source={{
+              uri:
+                matricPhoto && matricPhoto?.uri
+                  ? matricPhoto?.uri
+                  : matricPhoto,
+            }}
+            style={[styles.avatar]}
+          />
+          {profileEditIcons()}
+        </>
       );
     } else {
       return (
-        <Avatar
-          source={require('../../assets/images/usericon.png')}
-          style={styles.avatar}
-        />
+        <>
+          <Avatar
+            source={require('./assets/guardian-avatar.png')}
+            style={styles.avatar}
+          />
+          {profileCameraIcon()}
+        </>
       );
     }
   };
@@ -350,6 +401,11 @@ export const MatricCategory = ({
         mediaTypeInvoker(options, async (response: any) => {
           if (!response?.didCancel) {
             setMatricPhoto(response);
+            if (isEditMatric && !isAddMatric && !isSubscribe) {
+              setIsPhotoUpdated(true);
+            } else {
+              setIsPhotoUpdated(false);
+            }
           }
         });
       }
@@ -432,7 +488,7 @@ export const MatricCategory = ({
 
             <Input
               style={styles.inputField}
-              value={matricDescription.trim()}
+              value={matricDescription}
               caption={matricDescriptionError ? matricDescriptionErrorMsg : ''}
               status={matricDescriptionError ? 'danger' : 'basic'}
               placeholder="Description"
@@ -668,23 +724,12 @@ export const MatricCategory = ({
   };
 
   return (
-    <Layout
-      style={{
-        flex: 1,
-        alignItems: 'center',
-      }}
-    >
+    <Layout style={styles.container}>
       <ImageOverlay
         style={[styles.headerContainer]}
         source={require('../../assets/images/vector.png')}
       >
-        <Layout
-          style={{
-            backgroundColor: 'transparent',
-            alignSelf: 'flex-start',
-            margin: 5,
-          }}
-        >
+        <Layout style={styles.headerContainerWrap}>
           <TouchableOpacity onPress={handleBackPress}>
             <Image source={require('../../assets/images/backarrow.png')} />
           </TouchableOpacity>
@@ -694,18 +739,9 @@ export const MatricCategory = ({
           {isAddMatric && !isSubscribe && !isEditMatric && (
             <Layout style={styles.addMatricWrap}>
               <Text style={styles.addMatricText} category="h2" status="control">
-                Matric Category
+                Metric Category
               </Text>
-              <TouchableOpacity
-                style={{ alignContent: 'center' }}
-                onPress={() => {
-                  chooseFile(
-                    'photo',
-                    'READ_EXTERNAL_STORAGE',
-                    READ_EXTERNAL_STORAGE,
-                  );
-                }}
-              >
+              <TouchableOpacity style={{ alignContent: 'center' }}>
                 {renderFileUri()}
               </TouchableOpacity>
             </Layout>
@@ -714,18 +750,9 @@ export const MatricCategory = ({
           {isEditMatric && !isAddMatric && !isSubscribe && (
             <Layout style={styles.addMatricWrap}>
               <Text style={styles.addMatricText} category="h2" status="control">
-                Edit Matric Category
+                Edit Metric Category
               </Text>
-              <TouchableOpacity
-                style={{ alignContent: 'center' }}
-                onPress={() => {
-                  chooseFile(
-                    'photo',
-                    'READ_EXTERNAL_STORAGE',
-                    READ_EXTERNAL_STORAGE,
-                  );
-                }}
-              >
+              <TouchableOpacity style={{ alignContent: 'center' }}>
                 {renderFileUri()}
               </TouchableOpacity>
             </Layout>
@@ -742,7 +769,7 @@ export const MatricCategory = ({
                   category="h1"
                   status="control"
                 >
-                  Matric
+                  Metric
                 </Text>
                 <Text
                   style={{
@@ -861,7 +888,7 @@ export const MatricCategory = ({
                   category="h6"
                   status="info"
                 >
-                  {isLoadingMatrics ? 'Loading...' : 'No Matrics found!'}
+                  {isLoadingMatrics ? 'Loading...' : 'No Metrics found!'}
                 </Text>
               )}
           </Layout>
@@ -913,6 +940,22 @@ const styles = StyleSheet.create({
     // top: 5,
     // backgroundColor: 'red',
   },
+  photoIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    position: 'absolute',
+    borderColor: colors.primaryBlue,
+    borderWidth: 0.5,
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    bottom: 35,
+    right: 1,
+    zIndex: 2,
+  },
+  icon: { padding: 0, width: 20, height: 20 },
   smallBtn: {
     // height: 20,
     // color: 'grey',
@@ -963,6 +1006,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    alignItems: 'center',
   },
   bottomWrap: {
     // height: hp2dp('18%'),
@@ -1139,6 +1183,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     backgroundColor: 'transparent',
     padding: 10,
+  },
+  headerContainerWrap: {
+    backgroundColor: 'transparent',
+    alignSelf: 'flex-start',
+    margin: 5,
   },
   addMatricHeader: {
     flex: 1,

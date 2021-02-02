@@ -7,9 +7,11 @@ import {
     widthPercentageToDP as wp2dp,
     heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import { ArrowForward } from '../assets/icons';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { colors } from '../../../styles';
 
 interface IProfileBodyCard {
     currentState: {};
@@ -18,11 +20,12 @@ interface IProfileBodyCard {
 }
 
 export const ProfileBodyCard = ({ currentState, item, onPressItem }: IProfileBodyCard) => {
+    console.log('🚀 ~ file: body-elements.component.tsx ~ line 21 ~ ProfileBodyCard ~ item', item);
     return (
         <TouchableWithoutFeedback onPress={() => onPressItem(item.id)}>
             <Layout style={styles.bodyWrap}>
                 <Layout style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                    <Avatar style={styles.icon} shape="square" source={require('../../../assets/images/usericon.png')} />
+                    <MaterialIcon style={styles.icon} name={item.icon} size={40} color={colors.primaryBlue} />
                     <Text
                         category="h4"
                         status="info"
@@ -65,7 +68,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center',
     },
-    icon: { left: -20, backgroundColor: 'transparent', width: 60, height: 60 },
+    icon: {
+        left: -20,
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: colors.primaryBlue,
+        padding: 2,
+    },
     innerWrap: {
         justifyContent: 'center',
         borderColor: 'grey',

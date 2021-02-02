@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { getChildren } from '../../store/actions/family.actions';
+import {
+  getChildren,
+  deleteChild,
+  deleteGuardian,
+} from '../../store/actions/family.actions';
 import { ParentProfileScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRoute } from '../../navigation/app-routes';
@@ -38,10 +42,28 @@ export const ParentProfileContainer = () => {
     dispatch(getChildren({ familyID: familyID ?? 0 }));
   };
 
+  const handleDeleteChild = ({ childId }: any) => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 42 ~ handleDeleteChild ~ childId',
+      childId,
+    );
+    dispatch(deleteChild({ childId }));
+  };
+
+  const handleDeleteGuardian = ({ parentId }: any) => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 50 ~ handleDeleteGuardian ~ parentId',
+      parentId,
+    );
+    dispatch(deleteGuardian({ parentId }));
+  };
+
   return (
     <ParentProfileScreen
       onPress={handlePress}
       getAllChildren={handleGetChild}
+      onDeleteChild={handleDeleteChild}
+      onDeleteGuardian={handleDeleteGuardian}
       currentState={currentState}
     />
   );

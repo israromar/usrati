@@ -55,15 +55,26 @@ export function createParent(payload) {
  * Add family
  * @returns {Promise<T | never>}
  */
-export function addFamily(payload) {
-  return http
-    .post('family', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error;
-    });
+export function addFamily(payload, action) {
+  if (action === 'add') {
+    return http
+      .post('family', payload)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  } else {
+    return http
+      .patch('family', payload)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
 
 /**
@@ -96,13 +107,65 @@ export function addNewGuardian(payload) {
     });
 }
 
+export function updateGuardianData(id) {
+  return http
+    .patch(`parent/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function deleteGuardianData(id) {
+  return http
+    .delete(`parent/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 /**
  * Add child user
  * @returns {Promise<T | never>}
  */
 export function addNewChild(payload) {
+  console.log('🚀 ~ file: api.js ~ line 137 ~ addNewChild ~ payload', payload);
   return http
     .post('child', payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 141 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 145 ~ addNewChild ~ error', error);
+      throw error;
+    });
+}
+
+export function updateChildData(id, payload) {
+  console.log('id, payload', id, payload);
+  return http
+    .patch(`child/${id}`, payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(
+        '🚀 ~ file: api.js ~ line 158 ~ updateChildData ~ error',
+        error,
+      );
+      throw error;
+    });
+}
+
+export function deleteChildData(id) {
+  return http
+    .delete(`child/${id}`)
     .then((response) => {
       return response.data;
     })

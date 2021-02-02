@@ -16,6 +16,7 @@ import {
   Avatar,
   Input,
   Spinner,
+  Icon,
 } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
@@ -83,15 +84,9 @@ export const MatricSubCategory = ({
   const [matricWeightageError, setMatricWeightageError] = useState(false);
   const [matricWeightageErrorMsg, setMatricWeightageErrorMsg] = useState('');
   const [matricPhoto, setMatricPhoto] = useState('' || { uri: '' });
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
   const [allSubMatrics, setAllSubMatrics] = useState([]);
   const [selectedMatric, setSelectedMatric] = useState({});
-
-  useEffect(() => {
-    getAllSubMatrics();
-    return () => {
-      // cleanup;
-    };
-  }, []);
 
   useEffect(() => {
     if (
@@ -267,7 +262,7 @@ export const MatricSubCategory = ({
       } else if (isEditMatric) {
         onEditSubMatric({
           matricId,
-          matricPhoto,
+          matricPhoto: isPhotoUpdated ? matricPhoto : '',
           matricTitle,
           matricWeightage,
           matricDescription,
@@ -295,23 +290,71 @@ export const MatricSubCategory = ({
     }
   };
 
+  const profileCameraIcon = () => {
+    return (
+      <Layout style={[styles.photoIcons]}>
+        <TouchableOpacity
+          onPress={() => {
+            chooseFile('photo', 'READ_EXTERNAL_STORAGE', READ_EXTERNAL_STORAGE);
+          }}
+        >
+          <Icon style={styles.icon} fill="#8F9BB3" name={'camera-outline'} />
+        </TouchableOpacity>
+      </Layout>
+    );
+  };
+
+  const profileEditIcons = () => {
+    return (
+      <>
+        <Layout style={[styles.photoIcons, { bottom: 72 }]}>
+          <TouchableOpacity onPress={() => setMatricPhoto('')}>
+            <Icon style={styles.icon} fill="#8F9BB3" name={'trash-2-outline'} />
+          </TouchableOpacity>
+        </Layout>
+
+        <Layout style={styles.photoIcons}>
+          <TouchableOpacity
+            onPress={() => {
+              chooseFile(
+                'photo',
+                'READ_EXTERNAL_STORAGE',
+                READ_EXTERNAL_STORAGE,
+              );
+            }}
+          >
+            <Icon style={styles.icon} fill="#8F9BB3" name={'edit-outline'} />
+          </TouchableOpacity>
+        </Layout>
+      </>
+    );
+  };
+
   const renderFileUri = () => {
     if (matricPhoto) {
       return (
-        <Avatar
-          source={{
-            uri:
-              matricPhoto && matricPhoto?.uri ? matricPhoto?.uri : matricPhoto,
-          }}
-          style={[styles.avatar]}
-        />
+        <>
+          <Avatar
+            source={{
+              uri:
+                matricPhoto && matricPhoto?.uri
+                  ? matricPhoto?.uri
+                  : matricPhoto,
+            }}
+            style={[styles.avatar]}
+          />
+          {profileEditIcons()}
+        </>
       );
     } else {
       return (
-        <Avatar
-          source={require('../../assets/images/usericon.png')}
-          style={styles.avatar}
-        />
+        <>
+          <Avatar
+            source={require('../../assets/images/guardian-avatar.png')}
+            style={styles.avatar}
+          />
+          {profileCameraIcon()}
+        </>
       );
     }
   };
@@ -350,6 +393,11 @@ export const MatricSubCategory = ({
         mediaTypeInvoker(options, async (response: any) => {
           if (!response?.didCancel) {
             setMatricPhoto(response);
+            if (isEditMatric && !isAddMatric && !isSubscribe) {
+              setIsPhotoUpdated(true);
+            } else {
+              setIsPhotoUpdated(false);
+            }
           }
         });
       }
@@ -432,7 +480,7 @@ export const MatricSubCategory = ({
 
             <Input
               style={styles.inputField}
-              value={matricDescription.trim()}
+              value={matricDescription}
               caption={matricDescriptionError ? matricDescriptionErrorMsg : ''}
               status={matricDescriptionError ? 'danger' : 'basic'}
               placeholder="Description"
@@ -690,13 +738,13 @@ export const MatricSubCategory = ({
               </Text>
               <TouchableOpacity
                 style={{ alignContent: 'center' }}
-                onPress={() => {
-                  chooseFile(
-                    'photo',
-                    'READ_EXTERNAL_STORAGE',
-                    READ_EXTERNAL_STORAGE,
-                  );
-                }}
+              // onPress={() => {
+              //   chooseFile(
+              //     'photo',
+              //     'READ_EXTERNAL_STORAGE',
+              //     READ_EXTERNAL_STORAGE,
+              //   );
+              // }}
               >
                 {renderFileUri()}
               </TouchableOpacity>
@@ -710,13 +758,13 @@ export const MatricSubCategory = ({
               </Text>
               <TouchableOpacity
                 style={{ alignContent: 'center' }}
-                onPress={() => {
-                  chooseFile(
-                    'photo',
-                    'READ_EXTERNAL_STORAGE',
-                    READ_EXTERNAL_STORAGE,
-                  );
-                }}
+              // onPress={() => {
+              //   chooseFile(
+              //     'photo',
+              //     'READ_EXTERNAL_STORAGE',
+              //     READ_EXTERNAL_STORAGE,
+              //   );
+              // }}
               >
                 {renderFileUri()}
               </TouchableOpacity>
@@ -851,7 +899,7 @@ export const MatricSubCategory = ({
                 >
                   {isLoadingMatrics
                     ? 'Loading...'
-                    : 'Sub categories are not available for this Matric!'}
+                    : 'Sub categories are not available for this Metric!'}
                 </Text>
               )}
           </Layout>
@@ -867,6 +915,22 @@ export const MatricSubCategory = ({
 };
 
 const styles = StyleSheet.create({
+  photoIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    position: 'absolute',
+    borderColor: colors.primaryBlue,
+    borderWidth: 0.5,
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    bottom: 35,
+    right: 1,
+    zIndex: 2,
+  },
+  icon: { padding: 0, width: 20, height: 20 },
   subscribeWrap: {
     flex: 1,
     backgroundColor: 'transparent',

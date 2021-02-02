@@ -24,3 +24,7 @@ export const DeleteIcon = () => (
 export const UpIcon = () => (
     <AntIcon name="up" size={20} color={colors.primaryBlue} />
 );
+
+export const AddIcon = () => (
+    <AntIcon name="plus" size={50} color={colors.primaryBlue} />
+);

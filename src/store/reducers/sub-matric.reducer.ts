@@ -124,7 +124,7 @@ export default function (state = initialState, action) {
     case subMatricsConstants.GET_SUB_MATRICS_REQUEST: {
       return {
         ...state,
-        // subMatrics: [...state.subMatrics],
+        subMatrics: [],
         isGetSubMatricsLoading: true,
         isGetSubMatricsSuccess: false,
         isGetSubMatricsFail: false,
