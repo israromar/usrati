@@ -9,17 +9,22 @@ import { FamilySetupScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 export interface IAddFamilySetup {
+  id: number;
   familyName: string;
   familyPhoto: null;
+  isFamilyPhotoDeleted: boolean;
   flag: string;
 }
 export interface IAddGuardian {
+  id: number;
   photo: null;
   email: string;
   username: string;
   password: string;
+  flag: string;
 }
 export interface IAddChild {
+  id: number;
   photo: null;
   childName: string;
   dob: Date;
@@ -49,20 +54,43 @@ export const FamilySetupContainer = ({ ...rest }) => {
   }, [rest]);
 
   const handleAddFamilySettings = ({
+    id,
     familyName,
     familyPhoto,
+    isFamilyPhotoDeleted,
     flag,
   }: IAddFamilySetup) => {
-    dispatch(addFamilySettings({ familyName, familyPhoto, flag }));
+    dispatch(
+      addFamilySettings({
+        id,
+        familyName,
+        familyPhoto,
+        isFamilyPhotoDeleted,
+        flag,
+      }),
+    );
   };
 
   const handleAddGuardian = ({
+    id,
     photo,
     email,
     username,
     password,
+    isGuardianPhotoDeleted,
+    flag,
   }: IAddGuardian) => {
-    dispatch(addGuardian({ photo, email, username, password }));
+    dispatch(
+      addGuardian({
+        id,
+        photo,
+        email,
+        username,
+        password,
+        isGuardianPhotoDeleted,
+        flag,
+      }),
+    );
   };
 
   const handleAddChild = ({
@@ -129,6 +157,7 @@ export const FamilySetupContainer = ({ ...rest }) => {
     <FamilySetupScreen
       onAddFamilySettings={handleAddFamilySettings}
       onAddGuardian={handleAddGuardian}
+      // onUpdateGuardian={handleUpdateGuardian}
       onAddChild={handleAddChild}
       onUpdateChild={handleUpdateChild}
       onSkipNow={handleSkipNow}

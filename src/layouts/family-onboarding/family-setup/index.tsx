@@ -94,7 +94,7 @@ export const FamilySetup = ({
   currentPosition: pos,
   rest }: IAddFamilySetup): React.ReactElement => {
 
-  const [familyId, setFamilyId] = useState<number>(0);
+  const [familyId, setFamilyId] = useState(null);
   const [isAddFamily, setIsAddFamily] = useState<boolean>(false);
   const [isAddGuardian, setIsAddGuardian] = useState<boolean>(false);
   const [isAddChild, setIsAddChild] = useState<boolean>(false);
@@ -102,14 +102,16 @@ export const FamilySetup = ({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isAddNew, setIsAddNew] = useState<boolean>(false);
 
-  const [currentPosition, setCurrentPosition] = useState(rest?.route?.params?.currentPosition ?? 0);
+  const [currentPosition, setCurrentPosition] = useState(rest?.route?.params?.currentPosition ?? null);
   const [familyPhoto, setFamilyPhoto] = useState(null);
+  const [isFamilyPhotoUpdated, setIsFamilyPhotoUpdated] = useState(false);
+  const [isFamilyPhotoDeleted, setIsFamilyPhotoDeleted] = useState(false);
   const [familyName, setFamilyName] = useState<string>('');
   const [familyNameError, setFamilyNameError] = useState<boolean>(false);
   const [familyNameErrorMsg, setFamilyNameErrorMsg] = useState<string>('');
 
   // guardian state
-  const [guardianId, setGuardianId] = useState<number>(0);
+  const [guardianId, setGuardianId] = useState(null);
   const [guardianUsername, setGuardianUsername] = useState('');
   const [guardianUsernameError, setGuardianUsernameError] = useState<boolean>(
     false,
@@ -140,10 +142,14 @@ export const FamilySetup = ({
     false,
   );
   const [guardianPhoto, setGuardianPhoto] = useState(null);
+  const [isGuardianPhotoUpdated, setIsGuardianPhotoUpdated] = useState(false);
+  const [isGuardianPhotoDeleted, setIsGuardianPhotoDeleted] = useState(false);
 
   // Child State
-  const [childId, setChildId] = useState<number>(0);
+  const [childId, setChildId] = useState(null);
   const [childPhoto, setChildPhoto] = useState(null);
+  const [isChildPhotoUpdated, setIsChildPhotoUpdated] = useState(false);
+  const [isChildPhotoDeleted, setIsChildPhotoDeleted] = useState(false);
   const [childName, setChildName] = useState<string>('');
   const [childNameError, setChildNameError] = useState<boolean>(false);
   const [childNameErrorMsg, setChildNameErrorMsg] = useState<string>('');
@@ -175,14 +181,18 @@ export const FamilySetup = ({
 
   // use effect to get editable data
   useEffect(() => {
+    console.log('rest?.route?.params?', rest?.route?.params);
+
     setIsEdit(rest?.route?.params?.isEdit);
     setIsAddNew(rest?.route?.params?.isAddNew);
 
-    if (rest?.route?.params?.isEdit) {
-      setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
-    }
+    // if (rest?.route?.params?.isEdit) {
+    //   setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
+    // }
+    setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
 
-    if (rest?.route?.params?.isAddNew) {
+
+    if (rest?.route?.params?.isAddNew && !isAddChild) {
       //reset child form
       setChildPhoto(null);
       setChildName('');
@@ -228,7 +238,6 @@ export const FamilySetup = ({
       setGuardianEmail(rest?.route?.params?.guardianData?.email);
       setGuardianPassword(rest?.route?.params?.guardianData?.password);
     }
-
 
     if (familyId !== rest?.route?.params?.familyData?.id && rest?.route?.params?.isEdit) {
       setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
@@ -319,7 +328,7 @@ export const FamilySetup = ({
           text: 'NO',
           onPress: () => {
             if (flag === 'guardian') {
-              if (isEdit && isAddNew) {
+              if (isEdit || isAddNew) {
                 onGoBack();
               } else {
                 setCurrentPosition(2);
@@ -374,6 +383,9 @@ export const FamilySetup = ({
       Alert.alert('Family successfully updated.');
       if (!isEdit) {
         setCurrentPosition(1);
+      } else {
+        setFamilyId(null);
+        onGoBack();
       }
       setFamilyName('');
       setFamilyPhoto(null);
@@ -389,7 +401,7 @@ export const FamilySetup = ({
     }
 
     console.log('isAddGuardianSuccess: ', isAddGuardian, guardian);
-
+    // GUARDIAN
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
     }
@@ -401,6 +413,33 @@ export const FamilySetup = ({
         setCurrentPosition(1);
       }
     }
+    if (isAddGuardian && !guardian?.isUpdatingGuardian && guardian?.isUpdateGuardianSuccess && !guardian?.isUpdateGuardianFail) {
+      Alert.alert('Guardian successfully updated.');
+      if (!isEdit) {
+        setCurrentPosition(1);
+      } else {
+        setFamilyId(null);
+        onGoBack();
+      }
+      setFamilyName('');
+      setFamilyPhoto(null);
+      setIsAddFamily(false);
+    }
+
+    if (isAddGuardian && !guardian?.isUpdatingGuardian && !guardian?.isUpdateGuardianSuccess && guardian?.isUpdateGuardianFail) {
+      Alert.alert('Updating guardian failed, something went wrong!');
+      // if (!isEdit) {
+      //   setCurrentPosition(1);
+      // } else {
+      // setFamilyId(null);
+      // onGoBack();
+      // }
+      // setFamilyName('');
+      // setFamilyPhoto(null);
+      setIsAddFamily(false);
+    }
+
+
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
       afterSuccessAlert('child', 'Child successfully added, do you want to add another one?');
     }
@@ -432,9 +471,9 @@ export const FamilySetup = ({
       if (familyName) {
         setIsAddFamily(true);
         if (isEdit) {
-          onAddFamilySettings({ familyName, familyPhoto, flag: 'edit' });
+          onAddFamilySettings({ id: familyId, familyName, familyPhoto: isFamilyPhotoUpdated ? familyPhoto : null, isFamilyPhotoDeleted, flag: 'edit' });
         } else {
-          onAddFamilySettings({ familyName, familyPhoto, flag: 'add' });
+          onAddFamilySettings({ id: 0, familyName, familyPhoto, isFamilyPhotoDeleted, flag: 'add' });
         }
       }
       setFamilyNameError(!familyName);
@@ -457,10 +496,14 @@ export const FamilySetup = ({
       } else {
         setIsAddGuardian(true);
         onAddGuardian({
+          id: guardianId,
           photo: guardianPhoto,
+          // photo: isGuardianPhotoUpdated ? guardianPhoto : null,
           email: guardianEmail,
           username: guardianUsername,
           password: guardianPassword,
+          isGuardianPhotoDeleted,
+          flag: isEdit ? 'edit' : 'add',
         });
       }
     }
@@ -472,13 +515,11 @@ export const FamilySetup = ({
       if (validationResult?.name) {
         setChildNameError(true);
         setChildNameErrorMsg(validationResult?.name[0]);
-        return;
       }
       if (validationResult?.schoolName) {
         setSchoolNameError(true);
         setSchoolNameErrorMsg(validationResult?.schoolName[0]);
-        return;
-      } if (!childNameError && !schoolNameError) {
+      } else if (!childNameError && !schoolNameError) {
         setIsNext(!!childName && !!schoolName);
         return;
       }
@@ -500,6 +541,8 @@ export const FamilySetup = ({
         return;
       }
 
+      console.log('isEditisEditisEdit', isEdit, isAddNew);
+
       if (
         flag === 'Add' &&
         !childNameError &&
@@ -507,10 +550,10 @@ export const FamilySetup = ({
         !childUsernameError &&
         !childInterestError &&
         !childPasswordError &&
-        isEdit && isAddNew
+        !isEdit && isAddNew
       ) {
         setIsAddChild(true);
-        onAddChild({ photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+        onAddChild({ id: 0, photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
       } else if (
         flag === 'Add' &&
         !childNameError &&
@@ -520,7 +563,7 @@ export const FamilySetup = ({
         !childPasswordError &&
         isEdit && !isAddNew
       ) {
-        onUpdateChild({ id: childId, photo: childPhoto, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+        onUpdateChild({ id: childId, photo: isChildPhotoUpdated ? childPhoto : null, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
       }
     }
   };
@@ -555,6 +598,7 @@ export const FamilySetup = ({
         mediaTypeInvoker(options, async (response: any) => {
           if (!response?.didCancel) {
             [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](response);
+            [setIsFamilyPhotoUpdated, setIsGuardianPhotoUpdated, setIsChildPhotoUpdated][currentPosition](true);
           }
         });
       }
@@ -565,6 +609,7 @@ export const FamilySetup = ({
 
   const handleRemovePhoto = () => {
     [setFamilyPhoto, setGuardianPhoto, setChildPhoto][currentPosition](null);
+    [setIsFamilyPhotoDeleted, setIsGuardianPhotoDeleted, setIsChildPhotoDeleted][currentPosition](true);
   };
 
   const profileCameraIcon = () => {
@@ -670,7 +715,11 @@ export const FamilySetup = ({
     const handleOnSkip = () => {
       currentPosition === 1 ? setCurrentPosition(2) : onSkipNow(AppRoute.DASHBOARD);
     };
-    if (!isEdit) {
+    if (isEdit) {
+      return;
+    } else if (isAddNew) {
+      return;
+    } else {
       return (
         <TouchableOpacity
           style={styles.skipForNowView}
@@ -775,7 +824,7 @@ export const FamilySetup = ({
           <Text style={{ alignSelf: 'center' }} category="h1" status="control">
             Family Setup
         </Text>
-          {isEdit ? <Layout /> : currentPosition !== 3 && (
+          {isAddNew ? <Layout /> : isEdit ? <Layout /> : currentPosition !== 3 && (
             <Layout style={{ backgroundColor: 'transparent', top: 10 }}>
               <StepIndicator
                 currentPosition={currentPosition}
@@ -846,10 +895,11 @@ export const FamilySetup = ({
           {renderFileUri()}
           <Input
             style={styles.inputField}
-            value={guardianUsername?.trim()}
+            value={guardianUsername}
             caption={guardianUsernameError ? guardianUsernameErrorMsg : ''}
             status={guardianUsernameError ? 'danger' : 'basic'}
             placeholder="Username"
+            disabled={!isAddNew && isEdit}
             onChangeText={(nextValue) =>
               handleFamilySettingInput(
                 setGuardianUsername,
@@ -890,9 +940,9 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={guardian?.isAddingGuardian && LoadingIndicator}
+            accessoryLeft={guardian?.isAddingGuardian || guardian?.isUpdatingGuardian && LoadingIndicator}
           >
-            {guardian.isAddingGuardian ? '' : isEdit && !isAddNew ? 'Update' : 'Add'}
+            {guardian.isAddingGuardian || guardian?.isUpdatingGuardian ? '' : isEdit && !isAddNew ? 'Update' : 'Add'}
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}

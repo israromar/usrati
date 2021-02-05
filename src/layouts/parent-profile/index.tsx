@@ -75,26 +75,6 @@ export const ParentProfile = ({
 
   const handleEditFamilyPress = (familyData: any) => {
     navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 0, isEdit: true, isAddNew: false, familyData });
-
-  };
-  const handleChildAction = (actionType: string, childData: object) => {
-    if (actionType === 'delete') {
-      onDeleteChild({ childId: childData?.id ?? 0 });
-    } else {
-      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2, isEdit: true, isAddNew: false, childData });
-    }
-  };
-
-  const handleAddNewPress = (flag: string) => {
-    console.log('handleAddNewPress:', flag);
-
-    if (flag === 'family') {
-      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 0, isEdit: true, isAddNew: true, familyData: {} });
-    } else if (flag === 'guardian') {
-      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 1, isEdit: true, isAddNew: true, guardianData: {} });
-    } else {
-      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2, isEdit: true, isAddNew: true, childData: {} });
-    }
   };
 
   const handleGuardianAction = (actionType: string, guardianData: object) => {
@@ -104,6 +84,28 @@ export const ParentProfile = ({
       navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 1, isEdit: true, isAddNew: false, guardianData });
     }
   };
+
+  const handleChildAction = (actionType: string, childData: object) => {
+    if (actionType === 'delete') {
+      onDeleteChild({ childId: childData?.id ?? 0 });
+    } else {
+      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2, isEdit: true, isAddNew: false, childData });
+    }
+  };
+
+
+
+  const handleAddNewPress = (flag: string) => {
+    if (flag === 'family') {
+      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 0, isEdit: false, isAddNew: true, familyData: {} });
+    } else if (flag === 'guardian') {
+      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 1, isEdit: false, isAddNew: true, guardianData: {} });
+    } else {
+      navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2, isEdit: false, isAddNew: true, childData: {} });
+    }
+  };
+
+
 
 
   return (
@@ -117,13 +119,7 @@ export const ParentProfile = ({
         <Text
           category="h5"
           status="info"
-          style={{
-            color: '#fff',
-            fontWeight: 'bold',
-            // justifyContent: 'center',
-            alignItems: 'flex-end',
-            alignSelf: 'center',
-          }}
+          style={styles.headerText}
         >
           Manage {selectedTab === 1 ? 'Family' : selectedTab === 2 ? 'Guardians' : selectedTab === 3 ? 'Children' : 'Profile'}
         </Text>
@@ -138,7 +134,6 @@ export const ParentProfile = ({
         onChildAction={handleChildAction}
         onAddNewPress={handleAddNewPress}
         onEditFamilyPress={handleEditFamilyPress}
-
       />
 
       {renderBodyElements.map((item) => {
@@ -159,6 +154,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     backgroundColor: 'transparent',
     padding: 10,
+  },
+  headerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    // justifyContent: 'center',
+    alignItems: 'flex-end',
+    alignSelf: 'center',
   },
   backBtnWrap: {
     marginLeft: -20,

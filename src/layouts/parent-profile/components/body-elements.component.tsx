@@ -20,7 +20,6 @@ interface IProfileBodyCard {
 }
 
 export const ProfileBodyCard = ({ currentState, item, onPressItem }: IProfileBodyCard) => {
-    console.log('🚀 ~ file: body-elements.component.tsx ~ line 21 ~ ProfileBodyCard ~ item', item);
     return (
         <TouchableWithoutFeedback onPress={() => onPressItem(item.id)}>
             <Layout style={styles.bodyWrap}>

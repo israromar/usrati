@@ -92,16 +92,8 @@ const Footer = () => {
 };
 
 const DrawerContent = ({ navigation, state }: any) => {
-  console.log(
-    '🚀 ~ file: drawer.component.tsx ~ line 95 ~ DrawerContent ~ state',
-    state,
-  );
   // const [selectedIndex, setSelectedIndex] = React.useState(null);
   const handlePress = (toScreen: string) => {
-    console.log(
-      '🚀 ~ file: drawer.component.tsx ~ line 97 ~ handlePress ~ toScreen',
-      toScreen,
-    );
     navigation.navigate(toScreen);
   };
 
@@ -135,8 +127,9 @@ const DrawerContent = ({ navigation, state }: any) => {
         onPress={() =>
           navigation.navigate(AppRoute.FAMILY_SETUP, {
             currentPosition: 0,
-            isEdit: true,
+            isEdit: false,
             isAddNew: true,
+            familyData: {},
             childData: {},
             guardianData: {},
           })
@@ -145,13 +138,14 @@ const DrawerContent = ({ navigation, state }: any) => {
 
       <DrawerItem
         title={'Add Guardian'}
-        accessoryLeft={ChildrenIcon}
+        accessoryLeft={GuardianIcon}
         accessoryRight={ForwardIcon}
         onPress={() =>
           navigation.navigate(AppRoute.FAMILY_SETUP, {
             currentPosition: 1,
-            isEdit: true,
+            isEdit: false,
             isAddNew: true,
+            familyData: {},
             childData: {},
             guardianData: {},
           })
@@ -165,8 +159,9 @@ const DrawerContent = ({ navigation, state }: any) => {
         onPress={() =>
           navigation.navigate(AppRoute.FAMILY_SETUP, {
             currentPosition: 2,
-            isEdit: true,
+            isEdit: false,
             isAddNew: true,
+            familyData: {},
             childData: {},
             guardianData: {},
           })
@@ -189,14 +184,6 @@ const DrawerContent = ({ navigation, state }: any) => {
         accessoryLeft={TaskIcon}
         accessoryRight={ForwardIcon}
       // onPress={() => handlePress(AppRoute.FAMILY_SETUP)}
-      />
-      <DrawerItem
-        title={'Guardian'}
-        accessoryLeft={GuardianIcon}
-        accessoryRight={ForwardIcon}
-        onPress={() =>
-          navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 1 })
-        }
       />
       <Divider />
     </Drawer>

@@ -84,7 +84,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                         <UpIcon />
                     </TouchableOpacity>}
                 </Layout>
-                {
+                {/* {
                     selectedTab === 0 &&
                     <Layout
                         style={styles.description}
@@ -102,23 +102,20 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             the 1500s
                         </Text>
                     </Layout>
-                }
+                } */}
             </>
         );
     };
 
     const RenderFamily = () => {
-        console.log('userInfo?.familyID', userInfo?.familyID);
-
         if (selectedTab === 1) {
             return (
                 <Layout style={[styles.familyInfoWrap]}>
-                    {userInfo?.familyID ?
+                    { currentState?.family?.family?.families?.length > 0 ?
                         <>
-                            <Avatar style={{ width: 150, height: 150, borderRadius: 5 }} shape="square"
-                                source={userInfo?.familyID?.photo ? { uri: userInfo?.familyID?.photo } : require('../../../assets/images/usericon.png')} />
+                            <Avatar style={{ width: 150, height: 150, borderRadius: 5 }} shape="square" source={currentState?.family?.family?.families[0]?.photo ? { uri: currentState?.family?.family?.families[0]?.photo } : require('../../../assets/images/usericon.png')} />
                             <Text category="h4" status="info" style={{ color: 'grey', fontWeight: 'bold' }}>
-                                {userInfo?.familyID?.name}
+                                {currentState?.family?.family?.families[0]?.name}
                             </Text>
                             <Layout style={styles.familyInfoInnerWrap}>
                                 <Button
@@ -126,16 +123,17 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                                     status="control"
                                     size="medium"
                                     appearance="ghost"
-                                    onPress={() => onEditFamilyPress(userInfo?.familyID)}
+                                    onPress={() => onEditFamilyPress(currentState?.family?.family?.families[0])}
                                 >
                                     Edit
-                                </Button>
+                                    </Button>
                             </Layout>
-                        </> : currentState?.family?.family?.families?.length > 0 ?
+                        </> : userInfo?.familyID ?
                             <>
-                                <Avatar style={{ width: 150, height: 150, borderRadius: 5 }} shape="square" source={currentState?.family?.family?.families[0]?.photo ? { uri: currentState?.family?.family?.families[0]?.photo } : require('../../../assets/images/usericon.png')} />
+                                <Avatar style={{ width: 150, height: 150, borderRadius: 5 }} shape="square"
+                                    source={userInfo?.familyID?.photo ? { uri: userInfo?.familyID?.photo } : require('../../../assets/images/usericon.png')} />
                                 <Text category="h4" status="info" style={{ color: 'grey', fontWeight: 'bold' }}>
-                                    {currentState?.family?.family?.families[0]?.name}
+                                    {userInfo?.familyID?.name}
                                 </Text>
                                 <Layout style={styles.familyInfoInnerWrap}>
                                     <Button
@@ -143,10 +141,10 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                                         status="control"
                                         size="medium"
                                         appearance="ghost"
-                                        onPress={() => onEditFamilyPress(currentState?.family?.family?.families[0])}
+                                        onPress={() => onEditFamilyPress(userInfo?.familyID)}
                                     >
                                         Edit
-                            </Button>
+                                </Button>
                                 </Layout>
                             </> :
                             <>
@@ -402,7 +400,7 @@ const styles = StyleSheet.create({
     innerWrap: {
         justifyContent: 'center',
         borderColor: 'grey',
-        height: 200,
+        // height: 200,
         width: wp2dp('85%'),
         borderRadius: 5,
         shadowColor: '#000',

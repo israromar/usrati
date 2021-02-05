@@ -1,3 +1,4 @@
+import object from 'react-native-ui-lib/generatedTypes/style/colorName';
 import { familySettingsConstants } from '../../constants';
 
 const initialState = {
@@ -106,7 +107,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         family: {
-          families: [...state.family.families, payload],
+          families: [payload[0]],
           isUpdatingFamily: false,
           isUpdateFamilySuccess: true,
           isUpdateFamilyFail: false,
@@ -213,13 +214,14 @@ export default function (state = initialState, action) {
     }
     case familySettingsConstants.UPDATE_CHILD_SUCCESS: {
       console.log('1239412809813049823', state.child.children, payload);
+      let index = state.child.children.findIndex(
+        (a: { id: number }) => a.id === payload.parentId,
+      );
 
       return {
         ...state,
         child: {
-          children: [
-            ...state.child.children.filter((a) => a?.user !== payload.childId),
-          ],
+          children: [...state.child.children.splice(index, 1, payload)],
           isUpdatingChild: false,
           isUpdateChildSuccess: true,
           isUpdateChildFail: false,
@@ -299,7 +301,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         guardian: {
-          guardians: [...state.child.children],
+          guardians: [...state.guardian.guardians],
           isUpdatingGuardian: true,
           isUpdateGuardianSuccess: false,
           isUpdateGuardianFail: false,
@@ -308,14 +310,23 @@ export default function (state = initialState, action) {
       };
     }
     case familySettingsConstants.UPDATE_GUARDIAN_SUCCESS: {
+      console.log(
+        'payloadpayloadpayload',
+        // index,
+        state.guardian.guardians,
+        payload,
+      );
+
+      let index = state.guardian.guardians.findIndex(
+        (a: { id: number }) => a.id === payload?.data?.id,
+      );
+
+      state.guardian.guardians.splice(index, 1, payload.data);
+
       return {
         ...state,
         guardian: {
-          guardians: [
-            ...state.guardian.guardians.filter(
-              (a) => a?.id !== payload.parentId,
-            ),
-          ],
+          guardians: [...state.guardian.guardians],
           isUpdatingGuardian: false,
           isUpdateGuardianSuccess: true,
           isUpdateGuardianFail: false,

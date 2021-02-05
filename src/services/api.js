@@ -55,61 +55,81 @@ export function createParent(payload) {
  * Add family
  * @returns {Promise<T | never>}
  */
-export function addFamily(payload, action) {
+export function addFamily(id, payload, action) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 59 ~ addFamily ~ id, payload, action',
+    id,
+    payload,
+    action,
+  );
   if (action === 'add') {
     return http
       .post('family', payload)
       .then((response) => {
+        console.log('🚀 ~ file: api.js ~ line 69 ~ .then ~ response', response);
         return response.data;
       })
       .catch((error) => {
+        console.log('🚀 ~ file: api.js ~ line 73 ~ addFamily ~ error', error);
         throw error;
       });
   } else {
     return http
-      .patch('family', payload)
+      .patch(`family/${id}`, payload)
       .then((response) => {
+        console.log('🚀 ~ file: api.js ~ line 79 ~ .then ~ response', response);
         return response.data;
       })
       .catch((error) => {
+        console.log('🚀 ~ file: api.js ~ line 83 ~ addFamily ~ error', error);
         throw error;
       });
   }
 }
 
 /**
- * Add user photo
- * @returns {Promise<T | never>}
- */
-export function addUserPhoto(payload) {
-  return http
-    .post('family', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
-}
-
-/**
  * Add guardian user
  * @returns {Promise<T | never>}
  */
-export function addNewGuardian(payload) {
-  return http
-    .post('guardian', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
+export function addNewGuardian(id, payload, flag) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 110 ~ addNewGuardian ~ id, payload, flag',
+    id,
+    payload,
+    flag,
+  );
+  if (flag === 'add') {
+    return http
+      .post('guardian', payload)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  } else {
+    return http
+      .patch(`guardian/${id}`, payload)
+      .then((response) => {
+        console.log(
+          '🚀 ~ file: api.js ~ line 119 ~ .then ~ response',
+          response,
+        );
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(
+          '🚀 ~ file: api.js ~ line 130 ~ addNewGuardian ~ error',
+          error,
+        );
+        throw error?.response?.data;
+      });
+  }
 }
 
-export function updateGuardianData(id) {
+export function updateGuardianData(id, payload) {
   return http
-    .patch(`parent/${id}`)
+    .patch(`parent/${id}`, payload)
     .then((response) => {
       return response.data;
     })
@@ -134,15 +154,14 @@ export function deleteGuardianData(id) {
  * @returns {Promise<T | never>}
  */
 export function addNewChild(payload) {
-  console.log('🚀 ~ file: api.js ~ line 137 ~ addNewChild ~ payload', payload);
   return http
     .post('child', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 141 ~ .then ~ response', response);
+      console.log('🚀 ~ file: api.js ~ line 161 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 145 ~ addNewChild ~ error', error);
+      console.log('🚀 ~ file: api.js ~ line 164 ~ addNewChild ~ error', error);
       throw error;
     });
 }
@@ -152,6 +171,7 @@ export function updateChildData(id, payload) {
   return http
     .patch(`child/${id}`, payload)
     .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 189 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
