@@ -180,10 +180,10 @@ const DrawerContent = ({ navigation, state }: any) => {
       // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
-        title={'Task Assign'}
+        title={'Assign Task'}
         accessoryLeft={TaskIcon}
         accessoryRight={ForwardIcon}
-      // onPress={() => handlePress(AppRoute.FAMILY_SETUP)}
+        onPress={() => handlePress(AppRoute.ASSIGN_TASK)}
       />
       <Divider />
     </Drawer>

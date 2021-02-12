@@ -9,9 +9,9 @@ import {
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
-import { ImageOverlay } from '../../components';
+import { ImageOverlay, BodyCard } from '../../components';
 import { ProfileHeader } from './components/profile-header.component';
-import { ProfileBodyCard } from './components/body-elements.component';
+// import { BodyCard } from './components/body-elements.component';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 import { AppRoute } from '../../navigation/app-routes';
 
@@ -137,7 +137,7 @@ export const ParentProfile = ({
       />
 
       {renderBodyElements.map((item) => {
-        return <ProfileBodyCard key={item.id} currentState={currentState} item={item} onPressItem={handlePressItem} />;
+        return <BodyCard key={item.id} currentState={currentState} item={item} onPressItem={handlePressItem} />;
       })}
     </KeyboardAvoidingView >
   );

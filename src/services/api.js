@@ -5,14 +5,16 @@ import http from './usrati';
  * @returns {Promise<T | never>}
  */
 export function login(payload) {
-  return http
-    .post('user/auth/login', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      return error;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('user/auth/login', payload)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 /**
@@ -20,14 +22,16 @@ export function login(payload) {
  * @returns {Promise<T | never>}
  */
 export function createUser(payload) {
-  return http
-    .post('user', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('user', payload)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error?.response?.data ?? 'Something went wrong!');
+      });
+  });
 }
 
 /**
@@ -35,20 +39,22 @@ export function createUser(payload) {
  * @returns {Promise<T | never>}
  */
 export function createParent(payload) {
-  return http
-    .post('parent', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: payload.token,
-      },
-      email: payload.email,
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('parent', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: payload.token,
+        },
+        email: payload.email,
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 /**
@@ -272,6 +278,20 @@ export function addSubMatric(payload) {
       return response.data;
     })
     .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function taskAssign(payload) {
+  console.log('🚀 ~ file: api.js ~ line 286 ~ taskAssign ~ payload', payload);
+  return http
+    .post('task', payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 289 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 292 ~ taskAssign ~ error', error);
       throw error.response.data;
     });
 }

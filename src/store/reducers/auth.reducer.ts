@@ -52,6 +52,8 @@ export default function (state = initialState, action) {
       };
     }
     case authConstants.SIGNIN_SUCCESS: {
+      console.log('payload: qw1 qw ', payload);
+
       return {
         ...state,
         userToken: payload.token,

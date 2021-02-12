@@ -1,4 +1,5 @@
 import {
+  AssignTaskScreen,
   ChildProfileScreen,
   DashboardScreen,
   FamilySetupScreen,
@@ -33,6 +34,10 @@ const StackNavigationData = [
   {
     name: AppRoute.CHILD_PROFILE,
     component: ChildProfileScreen,
+  },
+  {
+    name: AppRoute.ASSIGN_TASK,
+    component: AssignTaskScreen,
   },
 ];
 
