@@ -1,5 +1,6 @@
 import object from 'react-native-ui-lib/generatedTypes/style/colorName';
 import { familySettingsConstants } from '../../constants';
+import { loadItems } from '../../containers/calendar/CalendarState';
 
 const initialState = {
   family: {
@@ -213,7 +214,6 @@ export default function (state = initialState, action) {
       };
     }
     case familySettingsConstants.UPDATE_CHILD_SUCCESS: {
-      console.log('1239412809813049823', state.child.children, payload);
       let index = state.child.children.findIndex(
         (a: { id: number }) => a.id === payload.parentId,
       );
@@ -259,8 +259,6 @@ export default function (state = initialState, action) {
       };
     }
     case familySettingsConstants.DELETE_CHILD_SUCCESS: {
-      console.log('1239412809813049823', state.child.children, payload);
-
       return {
         ...state,
         child: {
@@ -394,10 +392,15 @@ export default function (state = initialState, action) {
       };
     }
     case familySettingsConstants.GET_CHILDREN_SUCCESS: {
+      let children = [...payload?.children];
+      children.map((item: any) => {
+        item.isChecked = false;
+      });
+
       return {
         ...state,
         child: {
-          children: [...payload.children],
+          children,
         },
         guardian: {
           guardians: [...payload.parents],

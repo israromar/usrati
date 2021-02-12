@@ -19,3 +19,4 @@ export { GridsContainer as GridsScreen } from './grid';
 export { PagesContainer as PagesScreen } from './page';
 export { ForgotContainer as ForgotPasswordScreen } from './forgot-password';
 export { SettingsContainer as SettingsScreen } from './settings';
+export { AssignTaskContainer as AssignTaskScreen } from './assign-task';

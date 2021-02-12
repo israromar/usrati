@@ -18,4 +18,5 @@ export enum AppRoute {
   PAGES = 'pages',
   PROFILE = 'Profile',
   ABOUT = 'About',
+  ASSIGN_TASK = 'Assign Task',
 }

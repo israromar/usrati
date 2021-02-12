@@ -19,3 +19,4 @@ export {
 } from './family-onboarding';
 export { MatricCategory as MatricCategoryScreen } from './matric-category';
 export { MatricSubCategory as MatricSubCategoryScreen } from './matric-sub-category';
+export { AssignTask as AssignTaskScreen } from './assign-task';

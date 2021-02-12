@@ -5,6 +5,7 @@ import {
   deleteSubMatric as deleteSubMatricCat,
   getSubMatrics,
   updateSubMatrics,
+  taskAssign,
 } from '../../services/api';
 
 export const addSubMatric = ({
@@ -159,6 +160,41 @@ export const updateAllSubMatrics = ({ matrics }: any) => (dispatch: any) => {
     .catch((error: any) => {
       dispatch({
         type: subMatricsConstants.UPDATE_SUB_MATRICS_FAIL,
+        payload: error?.ERROR
+          ? error?.ERROR
+          : 'Something went wrong, please try again.',
+      });
+    });
+};
+
+export const assignTask = ({ selectedTask, selectedChildren, rule }: any) => (
+  dispatch: any,
+) => {
+  console.log('selectedTask, selectedChildren, rule', {
+    selectedTask,
+    selectedChildren,
+    rule,
+  });
+
+  dispatch({
+    type: subMatricsConstants.ASSIGN_TASK_REQUEST,
+  });
+  // const stringyFiedMatrics = JSON.stringify(matrics);
+  let formData = new FormData();
+  formData.append('RecurrenceRule', JSON.stringify(rule));
+  formData.append('childrenIDs', JSON.stringify(selectedChildren));
+  formData.append('subCategoryID', JSON.stringify(selectedTask));
+
+  taskAssign(formData)
+    .then((res: any) => {
+      dispatch({
+        type: subMatricsConstants.ASSIGN_TASK_SUCCESS,
+        payload: res,
+      });
+    })
+    .catch((error: any) => {
+      dispatch({
+        type: subMatricsConstants.ASSIGN_TASK_FAIL,
         payload: error?.ERROR
           ? error?.ERROR
           : 'Something went wrong, please try again.',

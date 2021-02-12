@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+// import { StyleSheet } from 'react-native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 // import { BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
@@ -13,6 +13,7 @@ import {
   AddChildScreen,
   ChildProfileScreen,
   ParentProfileScreen,
+  AssignTaskScreen,
 } from '../containers';
 import { AppRoute } from './app-routes';
 // const { Navigator, Screen } = createBottomTabNavigator();
@@ -58,6 +59,7 @@ const TabNavigator = () => {
       <Screen name={AppRoute.SETTINGS} component={SettingsStackNavigator} />
       <Screen name={AppRoute.ADD_PARENT} component={AddParentScreen} />
       <Screen name={AppRoute.ADD_CHILD} component={AddChildScreen} />
+      <Screen name={AppRoute.ASSIGN_TASK} component={AssignTaskScreen} />
     </Navigator>
   );
 };

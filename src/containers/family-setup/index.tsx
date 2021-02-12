@@ -22,6 +22,7 @@ export interface IAddGuardian {
   username: string;
   password: string;
   flag: string;
+  isGuardianPhotoDeleted: boolean;
 }
 export interface IAddChild {
   id: number;
@@ -80,6 +81,16 @@ export const FamilySetupContainer = ({ ...rest }) => {
     isGuardianPhotoDeleted,
     flag,
   }: IAddGuardian) => {
+    console.log(
+      '123123123123123',
+      id,
+      photo,
+      email,
+      username,
+      password,
+      isGuardianPhotoDeleted,
+      flag,
+    );
     dispatch(
       addGuardian({
         id,

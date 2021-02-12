@@ -22,10 +22,12 @@ const initialState = {
   getSubMatricsError: '',
   updateSubMatricsError: '',
   deleteSubMatricError: '',
+  assignTaskStatus: '',
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
+  console.log('🚀 ~ file: sub-matric.reducer.ts ~ line 29 ~ payload', payload);
 
   switch (type) {
     case subMatricsConstants.ADD_SUB_MATRIC_REQUEST: {
@@ -179,6 +181,25 @@ export default function (state = initialState, action) {
         isUpdateSubMatricsSuccess: false,
         isUpdateSubMatricsFail: true,
         updateSubMatricsError: '',
+      };
+    }
+
+    case subMatricsConstants.ASSIGN_TASK_REQUEST: {
+      return {
+        ...state,
+        assignTaskStatus: subMatricsConstants.ASSIGN_TASK_REQUEST,
+      };
+    }
+    case subMatricsConstants.ASSIGN_TASK_SUCCESS: {
+      return {
+        ...state,
+        assignTaskStatus: subMatricsConstants.ASSIGN_TASK_SUCCESS,
+      };
+    }
+    case subMatricsConstants.ASSIGN_TASK_FAIL: {
+      return {
+        ...state,
+        assignTaskStatus: subMatricsConstants.ASSIGN_TASK_FAIL,
       };
     }
 
