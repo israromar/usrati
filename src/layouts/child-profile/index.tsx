@@ -30,7 +30,7 @@ import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 import { colors } from '../../styles';
 
 interface IChildProfile {
-  onBackPress: (v: string) => void;
+  onBackPress: () => void;
 }
 
 const fill = 'rgb(134, 65, 244)';
@@ -57,7 +57,8 @@ const data = [
 export const ChildProfile = ({ onBackPress }: IChildProfile) => {
   const hanldeBackPress = () => {
     // rest.goBack();
-    onBackPress(AppRoute.DASHBOARD);
+    onBackPress();
+    // onBackPress(AppRoute.DASHBOARD);
   };
 
   const data1 = [
@@ -143,7 +144,7 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
           />
           <Text category="h3" status="control">
             Natasha
-            </Text>
+          </Text>
         </Layout>
       </ImageOverlay>
       <Layout style={styles.childDataWrap}>
@@ -215,9 +216,7 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
               endAngle={Math.PI * 0.9}
             />
           </Card>
-          <Card
-            style={styles.card}
-          >
+          <Card style={styles.card}>
             <Text style={styles.kpiName}>Task 3</Text>
 
             <ProgressCircle
@@ -228,9 +227,7 @@ export const ChildProfile = ({ onBackPress }: IChildProfile) => {
               endAngle={Math.PI * 0.9}
             />
           </Card>
-          <Card
-            style={styles.card}
-          >
+          <Card style={styles.card}>
             <Text style={styles.kpiName}>Task 4</Text>
 
             <ProgressCircle
@@ -252,11 +249,10 @@ const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBasedHeight = 600;
 
-const scale = size => width / guidelineBaseWidth * size;
-const verticalScale = size => height / guidelineBasedHeight * size;
-const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
-
-
+const scale = (size) => (width / guidelineBaseWidth) * size;
+const verticalScale = (size) => (height / guidelineBasedHeight) * size;
+const moderateScale = (size, factor = 0.5) =>
+  size + (scale(size) - size) * factor;
 
 const styles = StyleSheet.create({
   container: {
@@ -281,7 +277,7 @@ const styles = StyleSheet.create({
   },
   kpiName: {
     marginLeft: -15,
-    color: colors.lightGray
+    color: colors.lightGray,
   },
   kpiProgress: {
     height: hp2dp('12%'),
@@ -323,8 +319,7 @@ const styles = StyleSheet.create({
     // height: hp2dp('15%'),
     // width: wp2dp('25%') * 0.9,
     width: moderateScale(100),
-    height: verticalScale(90)
-
+    height: verticalScale(90),
   },
   childDataWrap: {
     display: 'flex',

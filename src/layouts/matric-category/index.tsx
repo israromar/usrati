@@ -2,14 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
   PermissionsAndroid,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import {
   Layout,
@@ -18,6 +16,7 @@ import {
   Avatar,
   Input,
   Spinner,
+  Icon,
 } from '@ui-kitten/components';
 // import * as Progress from 'react-native-progress';
 import {
@@ -25,19 +24,23 @@ import {
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
 import { launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
+import validate from 'validate.js';
 
 import { Loading, ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
 import { colors } from '../../styles';
-import { PlusIcon, MinusIcon } from './extra/icons';
+import { PlusIcon, MinusIcon, PencilIcon, DeleteIcon } from './extra/icons';
 import constraints from '../../utils/constraints';
-import validate from 'validate.js';
+import LoadingComponent from './components/loading/loading.component';
 
 interface IMatricCategory {
   currentState: {};
   onBackPress: (v: string) => void;
   onAddMatric: (v: object) => void;
+  onEditMatric: (v: object) => void;
+  onDeleteMatric: (v: object) => void;
   getAllMatrics: () => void;
+  onMatricPress: (v: number) => void;
   updateMatrics: (v: Array<{}>) => void;
 }
 
@@ -45,16 +48,24 @@ export const MatricCategory = ({
   currentState,
   onBackPress,
   onAddMatric,
+  onEditMatric,
+  onDeleteMatric,
+  onMatricPress,
   getAllMatrics,
   updateMatrics,
 }: IMatricCategory) => {
   const [isLoadingMatrics, setIsLoadingMatrics] = useState(true);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [isUpdatingMatrics, setIsUpdatingMatrics] = useState(false);
+  const [isUpdateMatrics, setIsUpdateMatrics] = useState(false);
+  const [isDeleteMatric, setIsDeleteMatric] = useState(false);
+  const [deletedMatricId, setDeletedMatricId] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
+
   const [isAddMatric, setIsAddMatric] = useState(false);
+  const [isEditMatric, setIsEditMatric] = useState(false);
   const [isSubscribe, setIsSubscribe] = useState(false);
+  const [matricId, setMatricId] = useState('');
   const [matricTitle, setMatricTitle] = useState('');
   const [matricTitleError, setMatricTitleError] = useState(false);
   const [matricTitleErrorMsg, setMatricTitleErrorMsg] = useState('');
@@ -68,8 +79,11 @@ export const MatricCategory = ({
   const [matricWeightage, setMatricWeightage] = useState(0);
   const [matricWeightageError, setMatricWeightageError] = useState(false);
   const [matricWeightageErrorMsg, setMatricWeightageErrorMsg] = useState('');
-  const [matricPhoto, setMatricPhoto] = useState('');
-  const [allMatrics, setAllMatrics] = useState<[]>([]);
+  const [matricPhoto, setMatricPhoto] = useState('' || {});
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
+
+  const [allMatrics, setAllMatrics] = useState([]);
+  const [selectedMatric, setSelectedMatric] = useState({});
 
   useEffect(() => {
     getAllMatrics();
@@ -82,14 +96,15 @@ export const MatricCategory = ({
     if (
       !currentState.matrics.isAddingMatric &&
       currentState.matrics.isAddMatricSuccess &&
+      !isEditMatric &&
       isLoading
     ) {
       setIsLoading(false);
-      Alert.alert('Matric category successfully added');
+      Alert.alert('Metric category successfully added');
       setIsAddMatric(false);
       setMatricPhoto('');
       setMatricTitle('');
-      setMatricWeightage('');
+      setMatricWeightage(0);
       setMatricDescription('');
     }
     if (
@@ -104,26 +119,91 @@ export const MatricCategory = ({
     if (
       currentState.matrics.isUpdateMatricsSuccess &&
       !currentState.matrics.isUpdateMatricsFail &&
-      isUpdatingMatrics
+      isUpdateMatrics
     ) {
       Alert.alert('Updated successfully!');
       setIsUpdate(false);
-      setIsUpdatingMatrics(false);
+      setIsUpdateMatrics(false);
     }
 
     if (
       !currentState.matrics.isUpdateMatricsSuccess &&
       currentState.matrics.isUpdateMatricsFail &&
-      isUpdatingMatrics
+      isUpdateMatrics
     ) {
       Alert.alert('Something went wrong, try again!');
       setIsUpdate(false);
-      setIsUpdatingMatrics(false);
+      setIsUpdateMatrics(false);
+    }
+
+    // delete matric category
+    if (
+      currentState?.matrics?.isDeletingMatricSuccess &&
+      !currentState?.matrics?.isDeletingMatricFail &&
+      isDeleteMatric
+    ) {
+      Alert.alert('Deleted successfully!');
+      setIsDeleteMatric(false);
+      // setIsUpdateMatrics(false);
+      setTimeout(() => {
+        handleIncrementDecrement(true, 'none', null);
+        // updateMatrics(allMatrics);
+      }, 500);
+    }
+
+    if (
+      !currentState.matrics.isDeletingMatricSuccess &&
+      currentState.matrics.isDeletingMatricFail &&
+      isUpdateMatrics
+    ) {
+      Alert.alert('Something went wrong, try again!');
+      setIsDeleteMatric(false);
+      // setIsUpdateMatrics(false);
+    }
+
+    if (
+      currentState.matrics.isEditingMatricSuccess &&
+      !currentState.matrics.isEditingMatricFail &&
+      isEditMatric
+    ) {
+      Alert.alert('Edited successfully!');
+
+      let index = allMatrics.findIndex((cat) => cat?.id === matricId);
+      let cpy = [...allMatrics];
+      let obj = cpy.find((c) => c.id === matricId);
+      obj.photo = selectedMatric.matricPhoto;
+      obj.title = selectedMatric.matricTitle;
+      obj.weightage = parseFloat(selectedMatric.matricWeightage);
+      obj.description = selectedMatric.matricDescription;
+
+      setAllMatrics(cpy);
+
+      setTimeout(() => {
+        handleIncrementDecrement(true, 'none', index);
+        // updateMatrics(allMatrics);
+      }, 1000);
+
+      setIsEditMatric(false);
+      setIsLoading(false);
+      setIsAddMatric(false);
+      setMatricPhoto('');
+      setMatricTitle('');
+      setMatricWeightage(0);
+      setMatricDescription('');
+    }
+
+    if (
+      !currentState.matrics.isEditingMatricSuccess &&
+      currentState.matrics.isEditingMatricFail &&
+      isEditMatric
+    ) {
+      Alert.alert('Something went wrong, try again!');
+      setIsLoading(false);
     }
 
     setAllMatrics(currentState?.matrics?.matrics);
     setIsLoadingMatrics(currentState?.matrics?.isGetMatricsLoading);
-  }, [currentState, isLoading, isUpdatingMatrics]);
+  }, [currentState, isLoading, isUpdateMatrics]);
 
   const handleAddMetricInput = (
     inputField: (v: React.SetStateAction<string>) => void,
@@ -136,44 +216,66 @@ export const MatricCategory = ({
 
   const handleBackPress = () => {
     setIsSubscribe(false);
-    isAddMatric === true
-      ? setIsAddMatric(false)
-      : onBackPress(AppRoute.DASHBOARD);
+    if (isAddMatric || isEditMatric) {
+      setIsAddMatric(false);
+      setIsEditMatric(false);
+    } else {
+      onBackPress(AppRoute.DASHBOARD);
+    }
   };
 
-  const handleAddMatricCategory = () => {
-    if (currentState?.matrics?.matrics?.length >= 3) {
-      setIsSubscribe(true);
-      return;
+  const handleAddEditMatricCategory = () => {
+    if (!isEditMatric) {
+      if (currentState?.matrics?.matrics?.length >= 3) {
+        setIsSubscribe(true);
+        return;
+      }
     }
+
+    setSelectedMatric({
+      matricId,
+      matricPhoto,
+      matricTitle,
+      matricWeightage,
+      matricDescription,
+    });
 
     const validationResult = validate(
       { matricTitle, matricWeightage, matricDescription },
       constraints,
     );
-
     if (validationResult?.matricTitle) {
       setMatricTitleError(true);
       setMatricTitleErrorMsg(validationResult?.matricTitle[0]);
+      return;
     }
     if (validationResult?.matricWeightage) {
       setMatricWeightageError(true);
       setMatricWeightageErrorMsg(validationResult?.matricWeightage[0]);
+      return;
     }
     if (validationResult?.matricDescription) {
       setMatricDescriptionError(true);
       setMatricDescriptionErrorMsg(validationResult?.matricDescription[0]);
-    } else if (
-      !matricTitleError &&
-      !matricWeightageError &&
-      !matricDescriptionError
-    ) {
-      onAddMatric({
-        matricPhoto,
-        matricTitle,
-        matricWeightage,
-        matricDescription,
-      });
+      return;
+    }
+    if (!matricTitleError && !matricWeightageError && !matricDescriptionError) {
+      if (isAddMatric) {
+        onAddMatric({
+          matricPhoto,
+          matricTitle,
+          matricWeightage,
+          matricDescription,
+        });
+      } else if (isEditMatric) {
+        onEditMatric({
+          matricId,
+          matricPhoto: isPhotoUpdated ? matricPhoto : '',
+          matricTitle,
+          matricWeightage,
+          matricDescription,
+        });
+      }
       setIsLoading(true);
     }
   };
@@ -185,29 +287,82 @@ export const MatricCategory = ({
   };
 
   const renderIsUpdating = () => {
-    if (isUpdatingMatrics) {
-      return (
-        <Layout style={[styles.updatingOuterWrap]}>
-          <Layout style={styles.updatingInnerWrap}>
-            <ActivityIndicator size="large" color={colors.primaryBlue} />
-            <Text style={{ color: '#111' }}>Updating...</Text>
-          </Layout>
-        </Layout>
-      );
+    if (isUpdateMatrics) {
+      return <LoadingComponent text={'Updating...'} />;
     }
+  };
+
+  const renderIsDeleting = () => {
+    if (isDeleteMatric) {
+      return <LoadingComponent text={'Deleting...'} />;
+    }
+  };
+
+  const profileCameraIcon = () => {
+    return (
+      <Layout style={[styles.photoIcons]}>
+        <TouchableOpacity
+          onPress={() => {
+            chooseFile('photo', 'READ_EXTERNAL_STORAGE', READ_EXTERNAL_STORAGE);
+          }}
+        >
+          <Icon style={styles.icon} fill="#8F9BB3" name={'camera-outline'} />
+        </TouchableOpacity>
+      </Layout>
+    );
+  };
+
+  const profileEditIcons = () => {
+    return (
+      <>
+        <Layout style={[styles.photoIcons, { bottom: 72 }]}>
+          <TouchableOpacity onPress={() => setMatricPhoto('')}>
+            <Icon style={styles.icon} fill="#8F9BB3" name={'trash-2-outline'} />
+          </TouchableOpacity>
+        </Layout>
+
+        <Layout style={styles.photoIcons}>
+          <TouchableOpacity
+            onPress={() => {
+              chooseFile(
+                'photo',
+                'READ_EXTERNAL_STORAGE',
+                READ_EXTERNAL_STORAGE,
+              );
+            }}
+          >
+            <Icon style={styles.icon} fill="#8F9BB3" name={'edit-outline'} />
+          </TouchableOpacity>
+        </Layout>
+      </>
+    );
   };
 
   const renderFileUri = () => {
     if (matricPhoto) {
       return (
-        <Avatar source={{ uri: matricPhoto?.uri }} style={[styles.avatar]} />
+        <>
+          <Avatar
+            source={{
+              uri:
+                matricPhoto && matricPhoto?.uri
+                  ? matricPhoto?.uri
+                  : matricPhoto,
+            }}
+            style={[styles.avatar]}
+          />
+          {profileEditIcons()}
+        </>
       );
     } else {
       return (
-        <Avatar
-          source={require('./assets/guardian-avatar.png')}
-          style={styles.avatar}
-        />
+        <>
+          <Avatar
+            source={require('./assets/guardian-avatar.png')}
+            style={styles.avatar}
+          />
+          {profileCameraIcon()}
+        </>
       );
     }
   };
@@ -246,6 +401,11 @@ export const MatricCategory = ({
         mediaTypeInvoker(options, async (response: any) => {
           if (!response?.didCancel) {
             setMatricPhoto(response);
+            if (isEditMatric && !isAddMatric && !isSubscribe) {
+              setIsPhotoUpdated(true);
+            } else {
+              setIsPhotoUpdated(false);
+            }
           }
         });
       }
@@ -261,7 +421,7 @@ export const MatricCategory = ({
   );
 
   const RenderSubscribtion = () => {
-    if (isAddMatric && isSubscribe) {
+    if (isAddMatric && isSubscribe && !isEditMatric) {
       return (
         <Layout style={[styles.subscribeWrap]}>
           <Image source={require('../../assets/images/subs-frame.png')} />
@@ -278,7 +438,6 @@ export const MatricCategory = ({
             To access premium features
           </Text>
           <Button
-            onPress={() => handleAddMatricCategory()}
             style={styles.primarySubmitButton}
             status="control"
             size="giant"
@@ -292,242 +451,78 @@ export const MatricCategory = ({
     }
   };
 
-  console.log({ allMatrics });
+  const RenderAddMatricForm = () => {
+    if (isAddMatric && !isSubscribe && !isEditMatric) {
+      return (
+        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
+          <Layout style={styles.formContainer}>
+            <Input
+              style={styles.inputField}
+              value={matricTitle}
+              caption={matricTitleError ? matricTitleErrorMsg : ''}
+              status={matricTitleError ? 'danger' : 'basic'}
+              placeholder="Title"
+              onChangeText={(nextValue) =>
+                handleAddMetricInput(
+                  setMatricTitle,
+                  setMatricTitleError,
+                  nextValue,
+                )
+              }
+            />
+            <Input
+              style={styles.inputField}
+              value={matricWeightage}
+              keyboardType={'numeric'}
+              caption={matricWeightageError ? matricWeightageErrorMsg : ''}
+              status={matricWeightageError ? 'danger' : 'basic'}
+              placeholder="Weightage"
+              onChangeText={(nextValue) =>
+                handleAddMetricInput(
+                  setMatricWeightage,
+                  setMatricWeightageError,
+                  nextValue,
+                )
+              }
+            />
 
-  const weightageSum = async (): Promise<number> => {
-    return new Promise((resolve) => {
-      let matricsCpy = [...matrics];
-      let sum = matricsCpy.reduce((a, b) => {
-        return a + b.weightage;
-      }, 0);
-      resolve(sum);
-    });
-  };
+            <Input
+              style={styles.inputField}
+              value={matricDescription}
+              caption={matricDescriptionError ? matricDescriptionErrorMsg : ''}
+              status={matricDescriptionError ? 'danger' : 'basic'}
+              placeholder="Description"
+              multiline={true}
+              textStyle={{ minHeight: 64 }}
+              // {...matricDescription}
+              onChangeText={(nextValue) =>
+                handleAddMetricInput(
+                  setMatricDescription,
+                  setMatricDescriptionError,
+                  nextValue,
+                )
+              }
+            />
 
-  const handleIncrementDecrement = async (
-    status: boolean,
-    operation: string,
-    index: number,
-  ) => {
-    setIsUpdate(true);
-    if (status) {
-      let matricsCpy = [...allMatrics];
-      matricsCpy[index].weightage =
-        operation === 'inc'
-          ? matricsCpy[index].weightage + 1
-          : matricsCpy[index].weightage - 1;
-
-      const sum: number = await weightageSum();
-
-      matricsCpy.map((m) => {
-        m.percentWeightage = parseFloat((m.weightage / sum) * 100);
-        return m;
-      });
-      setMatrics(matricsCpy);
+            <Button
+              onPress={() => handleAddEditMatricCategory()}
+              style={[styles.primarySubmitButton]}
+              status="control"
+              size="giant"
+              appearance="ghost"
+              accessoryLeft={isLoading && LoadingIndicator}
+            >
+              {isLoading ? '' : 'Add'}
+            </Button>
+          </Layout>
+        </ScrollView>
+      );
     }
   };
 
-  return (
-    <Layout
-      style={{
-        flex: 1,
-        alignItems: 'center',
-      }}
-    >
-      <ImageOverlay
-        style={[styles.headerContainer]}
-        source={require('../../assets/images/vector.png')}
-      >
-        <Layout
-          style={{
-            backgroundColor: 'transparent',
-            alignSelf: 'flex-start',
-            margin: 5,
-          }}
-        >
-          <TouchableOpacity onPress={handleBackPress}>
-            <Image source={require('../../assets/images/backarrow.png')} />
-          </TouchableOpacity>
-        </Layout>
-
-        <Layout
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            backgroundColor: 'transparent',
-            minWidth: wp2dp('90%'),
-            alignSelf: 'center',
-            justifyContent: 'space-around',
-          }}
-        >
-          {isAddMatric && !isSubscribe && (
-            <Layout
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  // flex: 1,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  backgroundColor: 'transparent',
-                }}
-                category="h2"
-                status="control"
-              >
-                Matric Category
-              </Text>
-              <TouchableOpacity
-                style={{ alignContent: 'center' }}
-                onPress={() => {
-                  chooseFile(
-                    'photo',
-                    'READ_EXTERNAL_STORAGE',
-                    READ_EXTERNAL_STORAGE,
-                  );
-                }}
-              >
-                {renderFileUri()}
-              </TouchableOpacity>
-            </Layout>
-          )}
-          {!isAddMatric && !isSubscribe && (
-            <>
-              <Layout style={{ backgroundColor: 'transparent' }}>
-                <Text
-                  style={{
-                    fontSize: wp2dp('18%'),
-                    fontWeight: 'bold',
-                  }}
-                  category="h1"
-                  status="control"
-                >
-                  Matric
-                </Text>
-                <Text
-                  style={{
-                    fontSize: wp2dp('8%'),
-                    textDecorationLine: 'underline',
-                  }}
-                  category="h2"
-                  status="control"
-                >
-                  Categories
-                </Text>
-              </Layout>
-              <Layout
-                style={{
-                  backgroundColor: 'transparent',
-                  marginLeft: 'auto',
-                  marginTop: 15,
-                }}
-              >
-                <Image
-                  source={require('../../assets/images/matric-category-frame.png')}
-                />
-              </Layout>
-            </>
-          )}
-        </Layout>
-      </ImageOverlay>
-      {renderIsUpdating()}
-      {!isAddMatric && !isSubscribe && (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Layout style={styles.matricsWrap}>
-            {renderLoading()}
-            {!isLoadingMatrics && allMatrics.length > 0 ? (
-              allMatrics.map((matric, idx) => {
-                return (
-                  <Layout key={idx + 1} style={[styles.metrics]} level="1">
-                    <Layout style={styles.matricsInnerWrap}>
-                      <Layout style={[styles.matricsPercentage]}>
-                        <Text category="h6">
-                          {parseFloat(matric?.percentWeightage)?.toFixed(1)}%
-                        </Text>
-                      </Layout>
-                      <Layout style={styles.matricsMainBody}>
-                        <Text style={styles.matricsTitle} category="h5">
-                          {matric?.title}
-                        </Text>
-                        <Text category="h6" style={{ color: '#606060' }}>
-                          {matric?.description}
-                        </Text>
-                        <Layout style={styles.smallBtnWrap}>
-                          <TouchableOpacity
-                            style={[
-                              styles.smallBtn,
-                              {
-                                width: 35,
-                                marginRight: 5,
-                              },
-                            ]}
-                          >
-                            <Text style={styles.smallBtnText}>Edit</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={[
-                              styles.smallBtn,
-                              {
-                                width: 45,
-                              },
-                            ]}
-                          >
-                            <Text style={styles.smallBtnText}>Delete</Text>
-                          </TouchableOpacity>
-                        </Layout>
-                      </Layout>
-                      <Layout
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPressIn={() =>
-                            handleIncrementDecrement(true, 'inc', idx)
-                          }
-                          onPressOut={() =>
-                            handleIncrementDecrement(false, 'inc', idx)
-                          }
-                        >
-                          <PlusIcon />
-                        </TouchableOpacity>
-                        <Text style={styles.matricsWeightage} category="h5">
-                          {matric?.weightage}
-                        </Text>
-                        <TouchableOpacity
-                          onPressIn={() =>
-                            handleIncrementDecrement(true, 'dec', idx)
-                          }
-                          onPressOut={() =>
-                            handleIncrementDecrement(false, 'dec', idx)
-                          }
-                        >
-                          <MinusIcon />
-                        </TouchableOpacity>
-                      </Layout>
-                    </Layout>
-                  </Layout>
-                );
-              })
-            ) : (
-                <Text
-                  style={{ backgroundColor: 'transparent', padding: 10 }}
-                  category="h6"
-                  status="info"
-                >
-                  {isLoadingMatrics ? 'Loading...' : 'No Matrics found!'}
-                </Text>
-              )}
-          </Layout>
-        </ScrollView>
-      )}
-      {isAddMatric && !isSubscribe && (
+  const RenderEditMatricForm = () => {
+    if (isEditMatric && !isAddMatric && !isSubscribe) {
+      return (
         <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
           <Layout style={styles.formContainer}>
             <Input
@@ -579,39 +574,53 @@ export const MatricCategory = ({
             />
 
             <Button
-              onPress={() => handleAddMatricCategory()}
-              style={styles.primarySubmitButton}
+              onPress={() => handleAddEditMatricCategory()}
+              style={[styles.primarySubmitButton]}
               status="control"
               size="giant"
               appearance="ghost"
               accessoryLeft={isLoading && LoadingIndicator}
             >
-              {isLoading ? '' : 'Add'}
+              {isLoading ? '' : 'Edit'}
             </Button>
           </Layout>
         </ScrollView>
-      )}
+      );
+    }
+  };
 
-      {RenderSubscribtion()}
-
-      {!isAddMatric && !isSubscribe && (
-        <>
+  const RenderBottomActionButtons = () => {
+    if (!isAddMatric && !isSubscribe && !isEditMatric) {
+      return (
+        <Layout
+          style={{
+            height: hp2dp('10'),
+            width: wp2dp('85%'),
+            justifyContent: 'space-around',
+            flexDirection: 'row-reverse',
+            alignItems: 'center',
+          }}
+        >
           <Button
-            onPress={() => setIsAddMatric(!isAddMatric)}
-            style={[styles.actionBtn, { right: 80 }]}
+            onPress={() => {
+              setIsAddMatric(true);
+              setMatricPhoto('');
+              setIsEditMatric(false);
+            }}
+            style={[styles.actionBtn]}
             status="control"
             size="giant"
             appearance="ghost"
-          // accessoryLeft={AddIcon}
           >
             Add
           </Button>
           <Button
             onPress={() => {
-              setIsUpdatingMatrics(true);
+              setIsUpdateMatrics(true);
               updateMatrics(allMatrics);
+              setIsAddMatric(false);
             }}
-            style={[styles.actionBtn, { right: 0, left: 80 }]}
+            style={[styles.actionBtn]}
             status="control"
             size="giant"
             appearance="ghost"
@@ -620,8 +629,276 @@ export const MatricCategory = ({
           >
             Update
           </Button>
-        </>
+        </Layout>
+      );
+    }
+  };
+
+  const weightageSum = async (): Promise<number> => {
+    return new Promise((resolve) => {
+      let matricsCpy = [...allMatrics];
+      if (deletedMatricId) {
+        matricsCpy = matricsCpy.filter((m) => m.id !== deletedMatricId);
+      }
+      let sum = matricsCpy.reduce((a, b) => {
+        return a + b.weightage;
+      }, 0);
+      resolve(sum);
+    });
+  };
+
+  const handleIncrementDecrement = async (
+    status: boolean,
+    operation: string,
+    index: number,
+  ) => {
+    setIsUpdate(true);
+    if (status) {
+      let matricsCpy = [...allMatrics];
+      if (index || index == 0) {
+        matricsCpy[index].weightage =
+          operation === 'inc'
+            ? matricsCpy[index].weightage + 1
+            : operation === 'dec'
+              ? matricsCpy[index].weightage - 1
+              : matricsCpy[index].weightage;
+      }
+
+      const sum: number = await weightageSum();
+      if (deletedMatricId) {
+        matricsCpy = matricsCpy.filter((m) => m.id !== deletedMatricId);
+      }
+
+      matricsCpy.map((m) => {
+        m.percentWeightage = parseFloat((m.weightage / sum) * 100);
+        return m;
+      });
+      setAllMatrics(matricsCpy);
+    }
+  };
+
+  const handleEditMatric = ({
+    id,
+    photo,
+    title,
+    weightage,
+    description,
+  }: any) => {
+    setIsEditMatric(true);
+    setIsAddMatric(false);
+    setIsSubscribe(false);
+    setMatricId(id);
+    if (photo && photo.uri) {
+      setMatricPhoto(photo.uri);
+    } else if (photo) {
+      setMatricPhoto(photo);
+    } else {
+      setMatricPhoto('');
+    }
+    setMatricTitle(title);
+    setMatricDescription(description);
+    setMatricWeightage(weightage.toString());
+  };
+
+  const handleDeleteMatric = (matric: {}) => {
+    setDeletedMatricId(matric.id);
+    Alert.alert(
+      'Warning!',
+      `Are you sure, you want to delete: ${matric?.title}?`,
+      [
+        {
+          text: 'Confirm',
+          onPress: () => {
+            onDeleteMatric({ matricId: matric?.id });
+            setIsDeleteMatric(true);
+          },
+        },
+        {
+          text: 'Cancel',
+          // onPress: () => { },
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  return (
+    <Layout style={styles.container}>
+      <ImageOverlay
+        style={[styles.headerContainer]}
+        source={require('../../assets/images/vector.png')}
+      >
+        <Layout style={styles.headerContainerWrap}>
+          <TouchableOpacity onPress={handleBackPress}>
+            <Image source={require('../../assets/images/backarrow.png')} />
+          </TouchableOpacity>
+        </Layout>
+
+        <Layout style={styles.addMatricHeader}>
+          {isAddMatric && !isSubscribe && !isEditMatric && (
+            <Layout style={styles.addMatricWrap}>
+              <Text style={styles.addMatricText} category="h2" status="control">
+                Metric Category
+              </Text>
+              <TouchableOpacity style={{ alignContent: 'center' }}>
+                {renderFileUri()}
+              </TouchableOpacity>
+            </Layout>
+          )}
+
+          {isEditMatric && !isAddMatric && !isSubscribe && (
+            <Layout style={styles.addMatricWrap}>
+              <Text style={styles.addMatricText} category="h2" status="control">
+                Edit Metric Category
+              </Text>
+              <TouchableOpacity style={{ alignContent: 'center' }}>
+                {renderFileUri()}
+              </TouchableOpacity>
+            </Layout>
+          )}
+
+          {!isAddMatric && !isSubscribe && !isEditMatric && (
+            <>
+              <Layout style={{ backgroundColor: 'transparent' }}>
+                <Text
+                  style={{
+                    fontSize: wp2dp('18%'),
+                    fontWeight: 'bold',
+                  }}
+                  category="h1"
+                  status="control"
+                >
+                  Metric
+                </Text>
+                <Text
+                  style={{
+                    fontSize: wp2dp('8%'),
+                    textDecorationLine: 'underline',
+                  }}
+                  category="h2"
+                  status="control"
+                >
+                  Categories
+                </Text>
+              </Layout>
+              <Layout
+                style={{
+                  backgroundColor: 'transparent',
+                  marginLeft: 'auto',
+                  marginTop: 15,
+                }}
+              >
+                <Image
+                  source={require('../../assets/images/matric-category-frame.png')}
+                />
+              </Layout>
+            </>
+          )}
+        </Layout>
+      </ImageOverlay>
+      {renderIsUpdating()}
+      {renderIsDeleting()}
+      {!isAddMatric && !isSubscribe && !isEditMatric && (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Layout style={[styles.matricsWrap]}>
+            {renderLoading()}
+            {!isLoadingMatrics && allMatrics?.length > 0 ? (
+              allMatrics.map((matric, idx) => {
+                return (
+                  <Layout key={idx + 1} style={styles.metrics} level="1">
+                    <Layout style={styles.matricsInnerWrap}>
+                      <Layout style={[styles.matricsPercentage]}>
+                        <Text category="h6">
+                          {parseFloat(matric?.percentWeightage)?.toFixed(1)}
+                        </Text>
+                      </Layout>
+                      <Layout style={styles.matricsMainBody}>
+                        <Text
+                          onPress={() => onMatricPress(matric.id)}
+                          style={styles.matricsTitle}
+                          category="h6"
+                        >
+                          {matric?.title.length > 80
+                            ? `${matric?.title.substring(0, 70)}...`
+                            : matric?.title}
+                        </Text>
+                        <Text category="h6" style={{ color: '#606060' }}>
+                          {matric?.description?.length > 80
+                            ? `${matric?.description.substring(0, 70)}...`
+                            : matric?.description}
+                        </Text>
+                        <Layout style={styles.smallBtnWrap}>
+                          <TouchableOpacity
+                            onPress={() => handleEditMatric(matric)}
+                            style={[
+                              styles.smallBtn,
+                              {
+                                marginRight: 5,
+                              },
+                            ]}
+                          >
+                            <PencilIcon />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => handleDeleteMatric(matric)}
+                            style={[styles.smallBtn]}
+                          >
+                            <DeleteIcon />
+                          </TouchableOpacity>
+                        </Layout>
+                      </Layout>
+                      <Layout
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <TouchableOpacity
+                          onPressIn={() =>
+                            handleIncrementDecrement(true, 'inc', idx)
+                          }
+                          onPressOut={() =>
+                            handleIncrementDecrement(false, 'inc', idx)
+                          }
+                        >
+                          <PlusIcon />
+                        </TouchableOpacity>
+                        <Text style={styles.matricsWeightage} category="h5">
+                          {matric?.weightage}
+                        </Text>
+                        <TouchableOpacity
+                          onPressIn={() =>
+                            handleIncrementDecrement(true, 'dec', idx)
+                          }
+                          onPressOut={() =>
+                            handleIncrementDecrement(false, 'dec', idx)
+                          }
+                        >
+                          <MinusIcon />
+                        </TouchableOpacity>
+                      </Layout>
+                    </Layout>
+                  </Layout>
+                );
+              })
+            ) : (
+                <Text
+                  style={{ backgroundColor: 'transparent', padding: 10 }}
+                  category="h6"
+                  status="info"
+                >
+                  {isLoadingMatrics ? 'Loading...' : 'No Metrics found!'}
+                </Text>
+              )}
+          </Layout>
+        </ScrollView>
       )}
+
+      {RenderAddMatricForm()}
+      {RenderEditMatricForm()}
+      {RenderSubscribtion()}
+      {RenderBottomActionButtons()}
     </Layout>
   );
 };
@@ -639,14 +916,11 @@ const styles = StyleSheet.create({
     // zIndex: 10,
   },
   actionBtn: {
-    backgroundColor: '#4ebd9c',
+    backgroundColor: colors.primaryBlue,
     borderRadius: 5,
     borderWidth: 0,
-    position: 'absolute',
-    bottom: 20,
-    right: 30,
-    width: 110,
-    height: 40,
+    width: wp2dp('30%'),
+    height: hp2dp('5%'),
 
     shadowColor: '#000',
     shadowOffset: {
@@ -662,14 +936,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 'auto',
     marginRight: 20,
-    top: 15,
+    marginTop: 15,
+    // top: 5,
+    // backgroundColor: 'red',
   },
+  photoIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    position: 'absolute',
+    borderColor: colors.primaryBlue,
+    borderWidth: 0.5,
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    bottom: 35,
+    right: 1,
+    zIndex: 2,
+  },
+  icon: { padding: 0, width: 20, height: 20 },
   smallBtn: {
-    height: 20,
-    color: 'grey',
+    // height: 20,
+    // color: 'grey',
     // borderWidth: 0.5,
+    // top: 10,
     padding: 2,
-    borderRadius: 4,
+    borderRadius: 2,
     backgroundColor: '#fff',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -680,7 +973,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.48,
     shadowRadius: 11.95,
 
-    elevation: 18,
+    elevation: 4,
   },
   smallBtnText: {
     textAlign: 'center',
@@ -713,6 +1006,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    alignItems: 'center',
   },
   bottomWrap: {
     // height: hp2dp('18%'),
@@ -810,8 +1104,8 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 10,
     right: 5,
-    width: 60,
-    height: 60,
+    width: wp2dp('15%'),
+    height: hp2dp('8%'),
 
     backgroundColor: '#fff',
     shadowColor: '#000',
@@ -889,6 +1183,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     backgroundColor: 'transparent',
     padding: 10,
+  },
+  headerContainerWrap: {
+    backgroundColor: 'transparent',
+    alignSelf: 'flex-start',
+    margin: 5,
+  },
+  addMatricHeader: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    minWidth: wp2dp('90%'),
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+  },
+  addMatricWrap: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addMatricText: {
+    // flex: 1,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: 'transparent',
   },
   loadMoreButton: {
     marginVertical: 5,

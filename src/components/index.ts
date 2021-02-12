@@ -7,6 +7,7 @@ import SegmentedControl from './segmented-control.component';
 import ToggleButton from './toggle-button.component';
 import DrawerContent from './drawer/drawer.component';
 import StepIndicator from './step-indicator';
+import LoadingComponent from './loading/loading.component';
 // import ImageOverlay from './image-overlay.component';
 
 export {
@@ -20,7 +21,9 @@ export {
   DrawerContent,
   // ImageOverlay,
   StepIndicator,
+  LoadingComponent,
 };
 
 export { default as ImageOverlay } from './image-overlay.component';
 export { default as Loading } from './spinner/spinner.component';
+export { default as BodyCard } from './body-card/body-card.component';

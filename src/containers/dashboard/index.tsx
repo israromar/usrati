@@ -16,17 +16,12 @@ export const DashboardContainer = () => {
   const dispatch = useDispatch();
 
   const handlePress = (toScreen: string) => {
-    if (toScreen === AppRoute.FAMILY_SETUP) {
-      console.log('toScreen', toScreen);
-      navigate(toScreen, { currentPosition: 2 });
-    } else {
-      navigate(toScreen);
-    }
+    navigate(toScreen, { currentPosition: 2 });
   };
 
   let familyID: null = null;
 
-  console.log('currentState', currentState);
+  console.log('DashboardScreen currentState', currentState);
 
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;

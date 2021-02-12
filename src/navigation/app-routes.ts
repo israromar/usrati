@@ -3,6 +3,8 @@ export enum AppRoute {
   AUTH_WELCOME = 'Welcome',
   DASHBOARD = 'Dashboard',
   MATRIC_CATEGORY = 'Matric Category',
+  MATRIC_SUB_CATEGORY = 'Matric Sub Category',
+  PARENT_PROFILE = 'Parent Profile',
   CHILD_PROFILE = 'Child Profile',
   FAMILY_SETUP = 'Family Setup',
   ADD_PARENT = 'Add Parent',
@@ -16,4 +18,5 @@ export enum AppRoute {
   PAGES = 'pages',
   PROFILE = 'Profile',
   ABOUT = 'About',
+  ASSIGN_TASK = 'Assign Task',
 }

@@ -5,14 +5,16 @@ import http from './usrati';
  * @returns {Promise<T | never>}
  */
 export function login(payload) {
-  return http
-    .post('user/auth/login', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      return error;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('user/auth/login', payload)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 /**
@@ -20,14 +22,16 @@ export function login(payload) {
  * @returns {Promise<T | never>}
  */
 export function createUser(payload) {
-  return http
-    .post('user', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('user', payload)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error?.response?.data ?? 'Something went wrong!');
+      });
+  });
 }
 
 /**
@@ -35,44 +39,103 @@ export function createUser(payload) {
  * @returns {Promise<T | never>}
  */
 export function createParent(payload) {
-  return http
-    .post('parent', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: payload.token,
-      },
-      email: payload.email,
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error.response.data;
-    });
+  return new Promise((resolve, reject) => {
+    http
+      .post('parent', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: payload.token,
+        },
+        email: payload.email,
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 /**
  * Add family
  * @returns {Promise<T | never>}
  */
-export function addFamily(payload) {
-  return http
-    .post('family', payload)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      throw error;
-    });
+export function addFamily(id, payload, action) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 59 ~ addFamily ~ id, payload, action',
+    id,
+    payload,
+    action,
+  );
+  if (action === 'add') {
+    return http
+      .post('family', payload)
+      .then((response) => {
+        console.log('🚀 ~ file: api.js ~ line 69 ~ .then ~ response', response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log('🚀 ~ file: api.js ~ line 73 ~ addFamily ~ error', error);
+        throw error;
+      });
+  } else {
+    return http
+      .patch(`family/${id}`, payload)
+      .then((response) => {
+        console.log('🚀 ~ file: api.js ~ line 79 ~ .then ~ response', response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log('🚀 ~ file: api.js ~ line 83 ~ addFamily ~ error', error);
+        throw error;
+      });
+  }
 }
 
 /**
- * Add user photo
+ * Add guardian user
  * @returns {Promise<T | never>}
  */
-export function addUserPhoto(payload) {
+export function addNewGuardian(id, payload, flag) {
+  console.log(
+    '🚀 ~ file: api.js ~ line 110 ~ addNewGuardian ~ id, payload, flag',
+    id,
+    payload,
+    flag,
+  );
+  if (flag === 'add') {
+    return http
+      .post('guardian', payload)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  } else {
+    return http
+      .patch(`guardian/${id}`, payload)
+      .then((response) => {
+        console.log(
+          '🚀 ~ file: api.js ~ line 119 ~ .then ~ response',
+          response,
+        );
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(
+          '🚀 ~ file: api.js ~ line 130 ~ addNewGuardian ~ error',
+          error,
+        );
+        throw error?.response?.data;
+      });
+  }
+}
+
+export function updateGuardianData(id, payload) {
   return http
-    .post('family', payload)
+    .patch(`parent/${id}`, payload)
     .then((response) => {
       return response.data;
     })
@@ -81,13 +144,9 @@ export function addUserPhoto(payload) {
     });
 }
 
-/**
- * Add guardian user
- * @returns {Promise<T | never>}
- */
-export function addNewGuardian(payload) {
+export function deleteGuardianData(id) {
   return http
-    .post('guardian', payload)
+    .delete(`parent/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -104,11 +163,39 @@ export function addNewChild(payload) {
   return http
     .post('child', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 107 ~ .then ~ response', response);
+      console.log('🚀 ~ file: api.js ~ line 161 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 111 ~ addNewChild ~ error', error);
+      console.log('🚀 ~ file: api.js ~ line 164 ~ addNewChild ~ error', error);
+      throw error;
+    });
+}
+
+export function updateChildData(id, payload) {
+  console.log('id, payload', id, payload);
+  return http
+    .patch(`child/${id}`, payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 189 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(
+        '🚀 ~ file: api.js ~ line 158 ~ updateChildData ~ error',
+        error,
+      );
+      throw error;
+    });
+}
+
+export function deleteChildData(id) {
+  return http
+    .delete(`child/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
       throw error;
     });
 }
@@ -129,9 +216,30 @@ export function getAllChildren({ familyID }) {
 }
 
 export function addMatric(payload) {
-  console.log('🚀 ~ file: api.js ~ line 115 ~ addMatric ~ payload', payload);
   return http
     .post('category', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function editMatric(id, payload) {
+  return http
+    .patch(`category/${id}`, payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function deleteMatric(id) {
+  return http
+    .delete(`category/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -152,21 +260,82 @@ export function getMatrics({ parentID }) {
 }
 
 export function updateMatrics(payload) {
-  console.log(
-    '🚀 ~ file: api.js ~ line 155 ~ updateMatrics ~ payload',
-    payload,
-  );
   return http
     .post('category/update', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 158 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log(
-        '🚀 ~ file: api.js ~ line 162 ~ updateMatrics ~ error',
-        error,
-      );
+      throw error.response.data;
+    });
+}
+
+// Sub Categories apis
+export function addSubMatric(payload) {
+  return http
+    .post('subcategory', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function taskAssign(payload) {
+  console.log('🚀 ~ file: api.js ~ line 286 ~ taskAssign ~ payload', payload);
+  return http
+    .post('task', payload)
+    .then((response) => {
+      console.log('🚀 ~ file: api.js ~ line 289 ~ .then ~ response', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('🚀 ~ file: api.js ~ line 292 ~ taskAssign ~ error', error);
+      throw error.response.data;
+    });
+}
+
+export function editSubMatric(id, payload) {
+  return http
+    .put(`subcategory/${id}`, payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function deleteSubMatric(id) {
+  return http
+    .delete(`subcategory/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getSubMatrics({ parentCategoryID }) {
+  return http
+    .get(`category/${parentCategoryID}/subcategories`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function updateSubMatrics(payload) {
+  return http
+    .post('subcategory/update', payload)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
       throw error.response.data;
     });
 }

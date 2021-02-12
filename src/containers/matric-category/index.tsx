@@ -4,10 +4,13 @@ import { MatricCategoryScreen } from '../../layouts';
 import {
   getAllMatrics,
   addMatric,
+  editMatric,
+  deleteMatric,
   updateAllMatrics,
 } from '../../store/actions/matric.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { AppRoute } from '../../navigation/app-routes';
 
 export interface ISignIn {
   email: string;
@@ -19,8 +22,6 @@ export const MatricCategoryContainer = () => {
 
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
-
-  console.log('currentStatecurrentState', currentState);
 
   let parentID: null = null;
   if (currentState?.user?.userInfo?.data) {
@@ -37,11 +38,38 @@ export const MatricCategoryContainer = () => {
   }: any) => {
     dispatch(
       addMatric({
-        parentID: parentID,
+        parentID,
         matricPhoto,
         matricTitle,
         matricWeightage,
         matricDescription,
+      }),
+    );
+  };
+
+  const handleEditMatric = ({
+    matricId,
+    matricPhoto,
+    matricTitle,
+    matricWeightage,
+    matricDescription,
+  }: any) => {
+    dispatch(
+      editMatric({
+        matricId,
+        parentID,
+        matricPhoto,
+        matricTitle,
+        matricWeightage,
+        matricDescription,
+      }),
+    );
+  };
+
+  const handleDeleteMatric = ({ matricId }: any) => {
+    dispatch(
+      deleteMatric({
+        matricId,
       }),
     );
   };
@@ -51,23 +79,27 @@ export const MatricCategoryContainer = () => {
   };
 
   const handleGetMatrices = () => {
-    dispatch(getAllMatrics({ parentID }));
+    dispatch(getAllMatrics({ parentID: parentID ?? 0 }));
   };
 
   const handleupdateMatrics = (matrics: Array<{}>) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 58 ~ handleupdateMatrics ~ matrics',
-      matrics,
-    );
     dispatch(updateAllMatrics({ matrics }));
+  };
+
+  const handleMatricPress = (matricId: number) => {
+    // dispatch(getAllSubMatrics({ matricId }));
+    navigate(AppRoute.MATRIC_SUB_CATEGORY, { matricId });
   };
 
   return (
     <MatricCategoryScreen
       currentState={currentState}
       onAddMatric={handleAddMatric}
+      onEditMatric={handleEditMatric}
+      onDeleteMatric={handleDeleteMatric}
       getAllMatrics={handleGetMatrices}
       updateMatrics={handleupdateMatrics}
+      onMatricPress={handleMatricPress}
       onBackPress={handlePress}
     />
   );

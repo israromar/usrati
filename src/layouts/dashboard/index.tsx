@@ -66,8 +66,8 @@ export const Dashboard = ({
           </Text>
         </Layout>
       </ImageOverlay>
-      <Layout style={styles.childDataWrap}>
-        <Layout style={styles.childs} level="1">
+      <Layout style={[styles.childDataWrap]}>
+        <Layout style={[styles.childs, { height: allChildren.length < 0 ? hp2dp('10%') : hp2dp('65%') }]} level="1">
           {allChildren.length > 0 && (
             <Layout
               style={{
@@ -117,8 +117,6 @@ export const Dashboard = ({
                       style={{
                         flex: 1,
                         height: hp2dp('35%'),
-                        color: 'grey',
-                        fontWeight: 'bold',
                         justifyContent: 'space-around',
                         alignItems: 'center',
                       }}
@@ -133,15 +131,6 @@ export const Dashboard = ({
                       >
                         No children data available!
                     </Text>
-                      <Button
-                        onPress={() => onPress(AppRoute.FAMILY_SETUP)}
-                        style={styles.loadMoreButton}
-                        status="control"
-                        size="medium"
-                        appearance="ghost"
-                      >
-                        Add Child
-                    </Button>
                     </Layout>
                   )}
               </Layout>
@@ -162,50 +151,11 @@ export const Dashboard = ({
         </Layout>
       </Layout>
       <Layout style={styles.bottomWrap}>
-        <Layout style={styles.bottomData}>
+        {/* <Layout style={styles.bottomData}>
           <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
-        <Layout style={styles.bottomData}>
-          <Text status={'danger'}>There is some important information</Text>
-        </Layout>
+        </Layout> */}
       </Layout>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView >
   );
 };
 

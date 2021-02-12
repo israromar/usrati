@@ -14,9 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import i18n from '../../translations';
 import {
   PersonIcon,
+  AddChildIcon,
+  HomeIcon,
+  ChildrenIcon,
   ListsIcon,
-  BookmarksIcon,
-  TopicsIcon,
+  GuardianIcon,
+  TaskIcon,
   MomentsIcon,
   ForwardIcon,
   ChevronDownIcon,
@@ -24,6 +27,7 @@ import {
   BulbIcon,
   SignOutIcon,
   FamilyIcon,
+  KpiIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
 import { AppRoute } from '../../navigation/app-routes';
@@ -31,36 +35,30 @@ import { AppRoute } from '../../navigation/app-routes';
 const Header = () => {
   const {
     user: { userInfo },
+    family: { family },
   }: any = useSelector((state) => state);
+  console.log('familyfamilyfamily', family);
+
   return (
     <Layout style={styles.headerWrap}>
       <Layout>
         <Avatar
           size="giant"
-          source={require('../../assets/images/drawer/user.png')}
+          source={
+            family?.families[0]?.photo
+              ? { uri: family.families[0].photo }
+              : require('../../assets/images/usericon.png')
+          }
         />
         <Layout style={styles.nameWrap}>
           <Layout>
-            <Text style={styles.text}>Welcome</Text>
-            <Text style={styles.textOne}>@{userInfo?.username}</Text>
+            <Text style={styles.text}>
+              {family?.families[0]?.name
+                ? family?.families[0]?.name
+                : userInfo?.username}
+            </Text>
           </Layout>
-          <Button
-            style={styles.icon}
-            appearance="ghost"
-            status="primary"
-            accessoryLeft={ChevronDownIcon || ChevronUpIcon}
-          />
         </Layout>
-      </Layout>
-      <Layout style={styles.innerWrap}>
-        <Text style={styles.text}>
-          {'14'}
-          <Text style={styles.textOne}> {i18n.t('drawer.following')}</Text>
-        </Text>
-        <Text style={styles.text}>
-          {'10'}
-          <Text style={styles.textOne}> {i18n.t('drawer.followers')}</Text>
-        </Text>
       </Layout>
     </Layout>
   );
@@ -94,7 +92,7 @@ const Footer = () => {
 };
 
 const DrawerContent = ({ navigation, state }: any) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(null);
+  // const [selectedIndex, setSelectedIndex] = React.useState(null);
   const handlePress = (toScreen: string) => {
     navigation.navigate(toScreen);
   };
@@ -103,21 +101,71 @@ const DrawerContent = ({ navigation, state }: any) => {
     <Drawer
       header={Header}
       footer={Footer}
-      selectedIndex={selectedIndex}
-      onSelect={(index) => setSelectedIndex(index)}
+      // selectedIndex={selectedIndex}
+      // onSelect={(index) => setSelectedIndex(index)}
       appearance="noDivider"
     >
       <Divider />
       <DrawerItem
+        title={'Home'}
+        accessoryLeft={HomeIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.DASHBOARD)}
+      />
+
+      <DrawerItem
         title={i18n.t('drawer.profile')}
         accessoryLeft={PersonIcon}
         accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.PARENT_PROFILE)}
       />
+
       <DrawerItem
-        title={'Family Setup'}
-        accessoryLeft={FamilyIcon}
+        title={'Add Family'}
+        accessoryLeft={ChildrenIcon}
         accessoryRight={ForwardIcon}
-        onPress={() => handlePress(AppRoute.FAMILY_SETUP)}
+        onPress={() =>
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 0,
+            isEdit: false,
+            isAddNew: true,
+            familyData: {},
+            childData: {},
+            guardianData: {},
+          })
+        }
+      />
+
+      <DrawerItem
+        title={'Add Guardian'}
+        accessoryLeft={GuardianIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() =>
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 1,
+            isEdit: false,
+            isAddNew: true,
+            familyData: {},
+            childData: {},
+            guardianData: {},
+          })
+        }
+      />
+
+      <DrawerItem
+        title={'Add Child'}
+        accessoryLeft={ChildrenIcon}
+        accessoryRight={ForwardIcon}
+        onPress={() =>
+          navigation.navigate(AppRoute.FAMILY_SETUP, {
+            currentPosition: 2,
+            isEdit: false,
+            isAddNew: true,
+            familyData: {},
+            childData: {},
+            guardianData: {},
+          })
+        }
       />
       <DrawerItem
         title={'Matric Categories'}
@@ -126,27 +174,18 @@ const DrawerContent = ({ navigation, state }: any) => {
         onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
-        title={i18n.t('drawer.topics')}
-        accessoryLeft={TopicsIcon}
+        title={'Kpis'}
+        accessoryLeft={KpiIcon}
         accessoryRight={ForwardIcon}
+      // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
-        title={i18n.t('drawer.bookmarks')}
-        accessoryLeft={BookmarksIcon}
+        title={'Assign Task'}
+        accessoryLeft={TaskIcon}
         accessoryRight={ForwardIcon}
-      />
-      <DrawerItem
-        title={i18n.t('drawer.moments')}
-        accessoryLeft={MomentsIcon}
-        accessoryRight={ForwardIcon}
+        onPress={() => handlePress(AppRoute.ASSIGN_TASK)}
       />
       <Divider />
-      <DrawerItem
-        style={styles.itemOne}
-        title={i18n.t('drawer.settingsAndPrivacy')}
-      // onPress={() => navigation.navigate('Settings')}
-      />
-      <DrawerItem style={styles.itemTwo} title={i18n.t('drawer.helpCenter')} />
     </Drawer>
   );
 };

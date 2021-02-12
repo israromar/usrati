@@ -8,10 +8,15 @@ export interface ISignIn {
 }
 
 export const ChildProfileContainer = () => {
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 12 ~ ChildProfileContainer ~ navigate',
+    navigation,
+  );
 
-  const handlePress = (toScreen: string) => {
-    navigate(toScreen);
+  const handlePress = () => {
+    // navigation.navigate();
+    navigation.goBack();
   };
 
   return <ChildProfileScreen onBackPress={handlePress} />;

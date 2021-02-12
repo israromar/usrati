@@ -1,19 +1,43 @@
 import React from 'react';
-import { ImageStyle, ImageProps } from 'react-native';
-import { Icon, IconElement } from '@ui-kitten/components';
+import { ImageProps } from 'react-native';
+import { Icon } from '@ui-kitten/components';
 
-export const EyeIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="eye" />
+export const EyeIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="eye" />
 );
-export const EyeOffIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="eye-off" />
+export const EyeOffIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="eye-off" />
 );
-export const PersonIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="person-outline" />
+export const PersonIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="person-outline" />
 );
-export const FamilyIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="people-outline" />
+
+export const GuardianIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="person-done-outline" />
 );
+
+export const KpiIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="book-open-outline" />
+);
+
+export const HomeIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="home-outline" />
+);
+export const TaskIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="briefcase-outline" />
+);
+export const AddChildIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="person-add-outline" />
+);
+
+export const FamilyIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="people-outline" />
+);
+
+export const ChildrenIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="people-outline" />
+);
+
 export const ListsIcon = (props: any): React.ReactElement<ImageProps> => (
   <Icon {...props} name="list-outline" />
 );

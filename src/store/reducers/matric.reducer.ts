@@ -5,15 +5,23 @@ const initialState = {
   isAddingMatric: false,
   isAddMatricSuccess: false,
   isAddMatricFail: false,
+  isEditingMatric: false,
+  isEditingMatricSuccess: false,
+  isEditingMatricFail: false,
   isGetMatricsLoading: false,
   isGetMatricsSuccess: false,
   isGetMatricsFail: false,
   isUpdatingMatrics: false,
   isUpdateMatricsSuccess: false,
   isUpdateMatricsFail: false,
+  isDeletingMatric: false,
+  isDeletingMatricSuccess: false,
+  isDeletingMatricFail: false,
   addMatricError: '',
+  editMatricError: '',
   getMatricsError: '',
   updateMatricsError: '',
+  deleteMatricError: '',
 };
 
 export default function (state = initialState, action) {
@@ -33,7 +41,7 @@ export default function (state = initialState, action) {
     case matricsConstants.ADD_MATRIC_SUCCESS: {
       return {
         ...state,
-        matrics: [...state.matrics, ...payload],
+        matrics: [...payload],
         isAddingMatric: false,
         isAddMatricSuccess: true,
         isAddMatricFail: false,
@@ -48,6 +56,67 @@ export default function (state = initialState, action) {
         isAddMatricSuccess: false,
         isAddMatricFail: true,
         addMatricError: payload,
+      };
+    }
+    case matricsConstants.EDIT_MATRIC_REQUEST: {
+      return {
+        ...state,
+        matrics: [...state.matrics],
+        isEditingMatric: true,
+        isEditingMatricSuccess: false,
+        isEditingMatricFail: false,
+        editMatricError: '',
+      };
+    }
+    case matricsConstants.EDIT_MATRIC_SUCCESS: {
+      return {
+        ...state,
+        // matrics: [...state.matrics, ...state.matrics[index][payload]],
+        isEditingMatric: false,
+        isEditingMatricSuccess: true,
+        isEditingMatricFail: false,
+        editMatricError: '',
+      };
+    }
+    case matricsConstants.EDIT_MATRIC_FAIL: {
+      return {
+        ...state,
+        matrics: [...state.matrics],
+        isEditingMatric: false,
+        isEditingMatricSuccess: false,
+        isEditingMatricFail: true,
+        editMatricError: payload,
+      };
+    }
+    case matricsConstants.DELETE_MATRICS_REQUEST: {
+      return {
+        ...state,
+        matrics: [...state.matrics],
+        isDeletingMatric: true,
+        isDeletingMatricSuccess: false,
+        isDeletingMatricFail: false,
+        deleteMatricError: '',
+      };
+    }
+    case matricsConstants.DELETE_MATRICS_SUCCESS: {
+      // let;
+      return {
+        ...state,
+        matrics: [...state.matrics.filter((m) => m?.id !== payload?.data.id)],
+        isDeletingMatric: false,
+        isDeletingMatricSuccess: true,
+        isDeletingMatricFail: false,
+        deleteMatricError: '',
+      };
+    }
+    case matricsConstants.DELETE_MATRICS_FAIL: {
+      return {
+        ...state,
+        matrics: [...state.matrics],
+        isDeletingMatric: false,
+        isDeletingMatricSuccess: false,
+        isDeletingMatricFail: true,
+        deleteMatricError: payload,
       };
     }
     case matricsConstants.GET_MATRICS_REQUEST: {
