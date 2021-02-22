@@ -53,8 +53,9 @@ const initialState = {
   },
 };
 
-export default function (state = initialState, action) {
+export default function (state = initialState, action: any) {
   const { type, payload } = action;
+  console.log('🚀 ~ file: family.reducer.ts ~ line 58 ~ payload', payload);
   switch (type) {
     case familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST: {
       return {
@@ -215,13 +216,13 @@ export default function (state = initialState, action) {
     }
     case familySettingsConstants.UPDATE_CHILD_SUCCESS: {
       let index = state.child.children.findIndex(
-        (a: { id: number }) => a.id === payload.parentId,
+        (a: { id: number }) => a.id === payload.id,
       );
-
+      state.child.children.splice(index, 1, payload);
       return {
         ...state,
         child: {
-          children: [...state.child.children.splice(index, 1, payload)],
+          children: [...state.child.children],
           isUpdatingChild: false,
           isUpdateChildSuccess: true,
           isUpdateChildFail: false,

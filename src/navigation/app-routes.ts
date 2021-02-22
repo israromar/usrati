@@ -2,6 +2,7 @@ export enum AppRoute {
   AUTH = 'Auth',
   AUTH_WELCOME = 'Welcome',
   DASHBOARD = 'Dashboard',
+  CHILD_DASHBOARD = 'Child Dashboard',
   MATRIC_CATEGORY = 'Matric Category',
   MATRIC_SUB_CATEGORY = 'Matric Sub Category',
   PARENT_PROFILE = 'Parent Profile',

@@ -30,7 +30,7 @@ const AppRootStack = () => {
     return state;
   });
 
-  console.log('2123123families', families, user?.familyID?.id);
+  console.log('2123123families', user);
 
 
   let isFamilyAdded = false;
@@ -46,7 +46,6 @@ const AppRootStack = () => {
 
       try {
         token = await AsyncStorage.getItem('userToken');
-        console.log('🚀 ~ file: root-navigation.tsx ~ line 49 ~ bootstrapAsync ~ token', token);
       } catch (e) {
         // Restoring token failed
       }
@@ -56,7 +55,9 @@ const AppRootStack = () => {
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       if (token !== null) {
-        dispatch(restoreToken({ token }));
+        // dispatch(restoreToken({ token }));
+      } else {
+
       }
     };
     bootstrapAsync();
@@ -65,7 +66,7 @@ const AppRootStack = () => {
   return (
     <NavigationContainer>
       {isLoggedIn && userToken ? (
-        <AppStackNavigator isFamilyAdded={isFamilyAdded} />
+        <AppStackNavigator user={user ?? {}} isFamilyAdded={isFamilyAdded} />
       ) : (
           <AuthStackNavigator />
         )}
@@ -74,22 +75,3 @@ const AppRootStack = () => {
 };
 
 export default AppRootStack;
-
-
-// To,
-
-// Manager Human Resources
-// iPlex Private Limited.
-// Rawalpindi.
-
-// Subject: Prior Notice for Job Resignation
-
-// I would like to inform you of my intention to resign from Full Stack developer at iPlex Private Limited. Please accept this message as a prior notice of my formal resignation effective from the 1st January, 2021.
-
-// Thank you so much for all of the opportunities this company has provided me. I have learned so much these past two years, and appreciate the kindness of all of my colleagues.
-
-// Especially, I would like to thanks my project manager Mr. Waseem Khan, Ahsan Naseer and Gerrard Barrows.
-
-// Thank you again, and I look forward to staying in touch.
-
-// Sincerely,

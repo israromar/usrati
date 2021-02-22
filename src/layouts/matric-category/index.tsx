@@ -8,6 +8,7 @@ import {
   View,
   PermissionsAndroid,
   Alert,
+  Keyboard,
 } from 'react-native';
 import {
   Layout,
@@ -25,6 +26,7 @@ import {
 } from 'react-native-responsive-screen';
 import { launchImageLibrary as READ_EXTERNAL_STORAGE } from 'react-native-image-picker';
 import validate from 'validate.js';
+import Toast from 'react-native-simple-toast';
 
 import { Loading, ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
@@ -32,6 +34,7 @@ import { colors } from '../../styles';
 import { PlusIcon, MinusIcon, PencilIcon, DeleteIcon } from './extra/icons';
 import constraints from '../../utils/constraints';
 import LoadingComponent from './components/loading/loading.component';
+import { KeyboardAvoidingView } from './extra/3rd-party';
 
 interface IMatricCategory {
   currentState: {};
@@ -100,7 +103,13 @@ export const MatricCategory = ({
       isLoading
     ) {
       setIsLoading(false);
-      Alert.alert('Metric category successfully added');
+      // Alert.alert('Metric category successfully added');
+      Toast.showWithGravity(
+        'Metric category successfully added',
+        Toast.LONG,
+        Toast.CENTER,
+      );
+
       setIsAddMatric(false);
       setMatricPhoto('');
       setMatricTitle('');
@@ -121,7 +130,8 @@ export const MatricCategory = ({
       !currentState.matrics.isUpdateMatricsFail &&
       isUpdateMatrics
     ) {
-      Alert.alert('Updated successfully!');
+      // Alert.alert('Updated successfully!');
+      Toast.showWithGravity('Updated successfully!', Toast.LONG, Toast.CENTER);
       setIsUpdate(false);
       setIsUpdateMatrics(false);
     }
@@ -132,6 +142,7 @@ export const MatricCategory = ({
       isUpdateMatrics
     ) {
       Alert.alert('Something went wrong, try again!');
+
       setIsUpdate(false);
       setIsUpdateMatrics(false);
     }
@@ -142,7 +153,8 @@ export const MatricCategory = ({
       !currentState?.matrics?.isDeletingMatricFail &&
       isDeleteMatric
     ) {
-      Alert.alert('Deleted successfully!');
+      Toast.showWithGravity('Deleted successfully!', Toast.LONG, Toast.CENTER);
+
       setIsDeleteMatric(false);
       // setIsUpdateMatrics(false);
       setTimeout(() => {
@@ -166,7 +178,8 @@ export const MatricCategory = ({
       !currentState.matrics.isEditingMatricFail &&
       isEditMatric
     ) {
-      Alert.alert('Edited successfully!');
+      // Alert.alert('Edited successfully!');
+      Toast.showWithGravity('Updated successfully!', Toast.LONG, Toast.CENTER);
 
       let index = allMatrics.findIndex((cat) => cat?.id === matricId);
       let cpy = [...allMatrics];
@@ -231,7 +244,7 @@ export const MatricCategory = ({
         return;
       }
     }
-
+    Keyboard.dismiss();
     setSelectedMatric({
       matricId,
       matricPhoto,
@@ -241,7 +254,7 @@ export const MatricCategory = ({
     });
 
     const validationResult = validate(
-      { matricTitle, matricWeightage, matricDescription },
+      { matricTitle, matricWeightage },
       constraints,
     );
     if (validationResult?.matricTitle) {
@@ -254,11 +267,11 @@ export const MatricCategory = ({
       setMatricWeightageErrorMsg(validationResult?.matricWeightage[0]);
       return;
     }
-    if (validationResult?.matricDescription) {
-      setMatricDescriptionError(true);
-      setMatricDescriptionErrorMsg(validationResult?.matricDescription[0]);
-      return;
-    }
+    // if (validationResult?.matricDescription) {
+    //   setMatricDescriptionError(true);
+    //   setMatricDescriptionErrorMsg(validationResult?.matricDescription[0]);
+    //   return;
+    // }
     if (!matricTitleError && !matricWeightageError && !matricDescriptionError) {
       if (isAddMatric) {
         onAddMatric({
@@ -454,7 +467,11 @@ export const MatricCategory = ({
   const RenderAddMatricForm = () => {
     if (isAddMatric && !isSubscribe && !isEditMatric) {
       return (
-        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
+        <ScrollView
+          keyboardShouldPersistTaps={'handled'}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+        >
           <Layout style={styles.formContainer}>
             <Input
               style={styles.inputField}
@@ -523,7 +540,11 @@ export const MatricCategory = ({
   const RenderEditMatricForm = () => {
     if (isEditMatric && !isAddMatric && !isSubscribe) {
       return (
-        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
+        <ScrollView
+          keyboardShouldPersistTaps={'handled'}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+        >
           <Layout style={styles.formContainer}>
             <Input
               style={styles.inputField}
@@ -581,7 +602,7 @@ export const MatricCategory = ({
               appearance="ghost"
               accessoryLeft={isLoading && LoadingIndicator}
             >
-              {isLoading ? '' : 'Edit'}
+              {isLoading ? '' : 'Update'}
             </Button>
           </Layout>
         </ScrollView>
@@ -614,21 +635,23 @@ export const MatricCategory = ({
           >
             Add
           </Button>
-          <Button
-            onPress={() => {
-              setIsUpdateMatrics(true);
-              updateMatrics(allMatrics);
-              setIsAddMatric(false);
-            }}
-            style={[styles.actionBtn]}
-            status="control"
-            size="giant"
-            appearance="ghost"
-            disabled={!isUpdate}
-          // accessoryLeft={AddIcon}
-          >
-            Update
-          </Button>
+          {isUpdate && (
+            <Button
+              onPress={() => {
+                setIsUpdateMatrics(true);
+                updateMatrics(allMatrics);
+                setIsAddMatric(false);
+              }}
+              style={[styles.actionBtn]}
+              status="control"
+              size="giant"
+              appearance="ghost"
+              disabled={!isUpdate}
+              // accessoryLeft={AddIcon}
+            >
+              Update
+            </Button>
+          )}
         </Layout>
       );
     }
@@ -660,8 +683,8 @@ export const MatricCategory = ({
           operation === 'inc'
             ? matricsCpy[index].weightage + 1
             : operation === 'dec'
-              ? matricsCpy[index].weightage - 1
-              : matricsCpy[index].weightage;
+            ? matricsCpy[index].weightage - 1
+            : matricsCpy[index].weightage;
       }
 
       const sum: number = await weightageSum();
@@ -724,165 +747,182 @@ export const MatricCategory = ({
   };
 
   return (
-    <Layout style={styles.container}>
-      <ImageOverlay
-        style={[styles.headerContainer]}
-        source={require('../../assets/images/vector.png')}
-      >
-        <Layout style={styles.headerContainerWrap}>
-          <TouchableOpacity onPress={handleBackPress}>
-            <Image source={require('../../assets/images/backarrow.png')} />
-          </TouchableOpacity>
-        </Layout>
+    <KeyboardAvoidingView
+      keyboardShouldPersistTaps={'handled'}
+      style={{ flex: 1, backgroundColor: '#fff' }}
+    >
+      <Layout style={styles.container}>
+        <ImageOverlay
+          style={[styles.headerContainer]}
+          source={require('../../assets/images/vector.png')}
+        >
+          <Layout style={styles.headerContainerWrap}>
+            <TouchableOpacity onPress={handleBackPress}>
+              <Image source={require('../../assets/images/backarrow.png')} />
+            </TouchableOpacity>
+          </Layout>
 
-        <Layout style={styles.addMatricHeader}>
-          {isAddMatric && !isSubscribe && !isEditMatric && (
-            <Layout style={styles.addMatricWrap}>
-              <Text style={styles.addMatricText} category="h2" status="control">
-                Metric Category
-              </Text>
-              <TouchableOpacity style={{ alignContent: 'center' }}>
-                {renderFileUri()}
-              </TouchableOpacity>
-            </Layout>
-          )}
-
-          {isEditMatric && !isAddMatric && !isSubscribe && (
-            <Layout style={styles.addMatricWrap}>
-              <Text style={styles.addMatricText} category="h2" status="control">
-                Edit Metric Category
-              </Text>
-              <TouchableOpacity style={{ alignContent: 'center' }}>
-                {renderFileUri()}
-              </TouchableOpacity>
-            </Layout>
-          )}
-
-          {!isAddMatric && !isSubscribe && !isEditMatric && (
-            <>
-              <Layout style={{ backgroundColor: 'transparent' }}>
+          <Layout style={styles.addMatricHeader}>
+            {isAddMatric && !isSubscribe && !isEditMatric && (
+              <Layout style={styles.addMatricWrap}>
                 <Text
-                  style={{
-                    fontSize: wp2dp('18%'),
-                    fontWeight: 'bold',
-                  }}
-                  category="h1"
-                  status="control"
-                >
-                  Metric
-                </Text>
-                <Text
-                  style={{
-                    fontSize: wp2dp('8%'),
-                    textDecorationLine: 'underline',
-                  }}
+                  style={styles.addMatricText}
                   category="h2"
                   status="control"
                 >
-                  Categories
+                  Metric Category
                 </Text>
+                <TouchableOpacity style={{ alignContent: 'center' }}>
+                  {renderFileUri()}
+                </TouchableOpacity>
               </Layout>
-              <Layout
-                style={{
-                  backgroundColor: 'transparent',
-                  marginLeft: 'auto',
-                  marginTop: 15,
-                }}
-              >
-                <Image
-                  source={require('../../assets/images/matric-category-frame.png')}
-                />
+            )}
+
+            {isEditMatric && !isAddMatric && !isSubscribe && (
+              <Layout style={styles.addMatricWrap}>
+                <Text
+                  style={styles.addMatricText}
+                  category="h2"
+                  status="control"
+                >
+                  Update Metric Category
+                </Text>
+                <TouchableOpacity style={{ alignContent: 'center' }}>
+                  {renderFileUri()}
+                </TouchableOpacity>
               </Layout>
-            </>
-          )}
-        </Layout>
-      </ImageOverlay>
-      {renderIsUpdating()}
-      {renderIsDeleting()}
-      {!isAddMatric && !isSubscribe && !isEditMatric && (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Layout style={[styles.matricsWrap]}>
-            {renderLoading()}
-            {!isLoadingMatrics && allMatrics?.length > 0 ? (
-              allMatrics.map((matric, idx) => {
-                return (
-                  <Layout key={idx + 1} style={styles.metrics} level="1">
-                    <Layout style={styles.matricsInnerWrap}>
-                      <Layout style={[styles.matricsPercentage]}>
-                        <Text category="h6">
-                          {parseFloat(matric?.percentWeightage)?.toFixed(1)}
-                        </Text>
-                      </Layout>
-                      <Layout style={styles.matricsMainBody}>
-                        <Text
-                          onPress={() => onMatricPress(matric.id)}
-                          style={styles.matricsTitle}
-                          category="h6"
+            )}
+
+            {!isAddMatric && !isSubscribe && !isEditMatric && (
+              <>
+                <Layout style={{ backgroundColor: 'transparent' }}>
+                  <Text
+                    style={{
+                      fontSize: wp2dp('18%'),
+                      fontWeight: 'bold',
+                    }}
+                    category="h1"
+                    status="control"
+                  >
+                    Metric
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: wp2dp('8%'),
+                      textDecorationLine: 'underline',
+                    }}
+                    category="h2"
+                    status="control"
+                  >
+                    Categories
+                  </Text>
+                </Layout>
+                <Layout
+                  style={{
+                    backgroundColor: 'transparent',
+                    marginLeft: 'auto',
+                    marginTop: 15,
+                  }}
+                >
+                  <Image
+                    source={require('../../assets/images/matric-category-frame.png')}
+                  />
+                </Layout>
+              </>
+            )}
+          </Layout>
+        </ImageOverlay>
+        {renderIsUpdating()}
+        {renderIsDeleting()}
+        {!isAddMatric && !isSubscribe && !isEditMatric && (
+          <ScrollView
+            keyboardShouldPersistTaps={'handled'}
+            showsVerticalScrollIndicator={false}
+          >
+            <Layout style={[styles.matricsWrap]}>
+              {renderLoading()}
+              {!isLoadingMatrics && allMatrics?.length > 0 ? (
+                allMatrics.map((matric, idx) => {
+                  return (
+                    <Layout key={idx + 1} style={styles.metrics} level="1">
+                      <Layout style={styles.matricsInnerWrap}>
+                        <Layout style={[styles.matricsPercentage]}>
+                          <Text category="h6">
+                            {parseFloat(matric?.percentWeightage)?.toFixed(1)}
+                          </Text>
+                        </Layout>
+                        <Layout style={styles.matricsMainBody}>
+                          <Text
+                            onPress={() => onMatricPress(matric.id)}
+                            style={styles.matricsTitle}
+                            category="h6"
+                          >
+                            {matric?.title.length > 80
+                              ? `${matric?.title.substring(0, 70)}...`
+                              : matric?.title}
+                          </Text>
+                          <Text category="h6" style={{ color: '#606060' }}>
+                            {matric?.description
+                              ? matric?.description?.length > 80
+                                ? `${matric?.description.substring(0, 70)}...`
+                                : matric?.description
+                              : 'No description available.'}
+                          </Text>
+                          <Layout style={styles.smallBtnWrap}>
+                            <TouchableOpacity
+                              onPress={() => handleEditMatric(matric)}
+                              style={[
+                                styles.smallBtn,
+                                {
+                                  marginRight: 5,
+                                },
+                              ]}
+                            >
+                              <PencilIcon />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => handleDeleteMatric(matric)}
+                              style={[styles.smallBtn]}
+                            >
+                              <DeleteIcon />
+                            </TouchableOpacity>
+                          </Layout>
+                        </Layout>
+                        <Layout
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
                         >
-                          {matric?.title.length > 80
-                            ? `${matric?.title.substring(0, 70)}...`
-                            : matric?.title}
-                        </Text>
-                        <Text category="h6" style={{ color: '#606060' }}>
-                          {matric?.description?.length > 80
-                            ? `${matric?.description.substring(0, 70)}...`
-                            : matric?.description}
-                        </Text>
-                        <Layout style={styles.smallBtnWrap}>
                           <TouchableOpacity
-                            onPress={() => handleEditMatric(matric)}
-                            style={[
-                              styles.smallBtn,
-                              {
-                                marginRight: 5,
-                              },
-                            ]}
+                            onPressIn={() =>
+                              handleIncrementDecrement(true, 'inc', idx)
+                            }
+                            onPressOut={() =>
+                              handleIncrementDecrement(false, 'inc', idx)
+                            }
                           >
-                            <PencilIcon />
+                            <PlusIcon />
                           </TouchableOpacity>
+                          <Text style={styles.matricsWeightage} category="h5">
+                            {matric?.weightage}
+                          </Text>
                           <TouchableOpacity
-                            onPress={() => handleDeleteMatric(matric)}
-                            style={[styles.smallBtn]}
+                            onPressIn={() =>
+                              handleIncrementDecrement(true, 'dec', idx)
+                            }
+                            onPressOut={() =>
+                              handleIncrementDecrement(false, 'dec', idx)
+                            }
                           >
-                            <DeleteIcon />
+                            <MinusIcon />
                           </TouchableOpacity>
                         </Layout>
                       </Layout>
-                      <Layout
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPressIn={() =>
-                            handleIncrementDecrement(true, 'inc', idx)
-                          }
-                          onPressOut={() =>
-                            handleIncrementDecrement(false, 'inc', idx)
-                          }
-                        >
-                          <PlusIcon />
-                        </TouchableOpacity>
-                        <Text style={styles.matricsWeightage} category="h5">
-                          {matric?.weightage}
-                        </Text>
-                        <TouchableOpacity
-                          onPressIn={() =>
-                            handleIncrementDecrement(true, 'dec', idx)
-                          }
-                          onPressOut={() =>
-                            handleIncrementDecrement(false, 'dec', idx)
-                          }
-                        >
-                          <MinusIcon />
-                        </TouchableOpacity>
-                      </Layout>
                     </Layout>
-                  </Layout>
-                );
-              })
-            ) : (
+                  );
+                })
+              ) : (
                 <Text
                   style={{ backgroundColor: 'transparent', padding: 10 }}
                   category="h6"
@@ -891,15 +931,16 @@ export const MatricCategory = ({
                   {isLoadingMatrics ? 'Loading...' : 'No Metrics found!'}
                 </Text>
               )}
-          </Layout>
-        </ScrollView>
-      )}
+            </Layout>
+          </ScrollView>
+        )}
 
-      {RenderAddMatricForm()}
-      {RenderEditMatricForm()}
-      {RenderSubscribtion()}
-      {RenderBottomActionButtons()}
-    </Layout>
+        {RenderAddMatricForm()}
+        {RenderEditMatricForm()}
+        {RenderSubscribtion()}
+        {RenderBottomActionButtons()}
+      </Layout>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -1007,6 +1048,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   bottomWrap: {
     // height: hp2dp('18%'),
@@ -1179,7 +1221,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'flex-start',
-    height: hp2dp('30%'),
+    height: hp2dp('35%'),
+    // width: "100%",
     paddingHorizontal: 45,
     backgroundColor: 'transparent',
     padding: 10,
@@ -1187,7 +1230,7 @@ const styles = StyleSheet.create({
   headerContainerWrap: {
     backgroundColor: 'transparent',
     alignSelf: 'flex-start',
-    margin: 5,
+    // margin: 5,
   },
   addMatricHeader: {
     flex: 1,
