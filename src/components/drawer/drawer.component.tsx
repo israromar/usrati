@@ -168,7 +168,7 @@ const DrawerContent = ({ navigation, state }: any) => {
         }
       />
       <DrawerItem
-        title={'Matric Categories'}
+        title={'Metric Categories'}
         accessoryLeft={ListsIcon}
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
@@ -177,7 +177,7 @@ const DrawerContent = ({ navigation, state }: any) => {
         title={'Kpis'}
         accessoryLeft={KpiIcon}
         accessoryRight={ForwardIcon}
-      // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
+        // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
         title={'Assign Task'}

@@ -1,4 +1,4 @@
-import { subMatricsConstants } from '../../constants';
+import { subMatricsConstants, childConstants } from '../../constants';
 import {
   addSubMatric as addSubMatricCat,
   editSubMatric as editSubMatricCat,
@@ -179,9 +179,12 @@ export const assignTask = ({ selectedTask, selectedChildren, rule }: any) => (
   dispatch({
     type: subMatricsConstants.ASSIGN_TASK_REQUEST,
   });
-  // const stringyFiedMatrics = JSON.stringify(matrics);
   let formData = new FormData();
-  formData.append('RecurrenceRule', JSON.stringify(rule));
+  // formData.append(
+  //   'RecurrenceRule',
+  //   'RRULE:FREQ=WEEKLY;UNTIL=20210210T225700Z;COUNT=30;INTERVAL=1;WKST=MO',
+  // );
+  formData.append('RecurrenceRule', rule);
   formData.append('childrenIDs', JSON.stringify(selectedChildren));
   formData.append('subCategoryID', JSON.stringify(selectedTask));
 

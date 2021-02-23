@@ -8,13 +8,13 @@ import {
   ParentProfileScreen,
   ChildDashboardScreen,
 } from '../containers';
-import { AppRoute } from '../navigation/app-routes';
+import { AppRoute } from './app-routes';
 // import TabNavigator from './main-tab.navigator';
 
-export const ParentStackNavigationData = [
+const StackNavigationData = [
   {
-    name: AppRoute.DASHBOARD,
-    component: DashboardScreen,
+    name: AppRoute.CHILD_DASHBOARD,
+    component: ChildDashboardScreen,
   },
   {
     name: AppRoute.FAMILY_SETUP,
@@ -42,15 +42,4 @@ export const ParentStackNavigationData = [
   },
 ];
 
-export const ChildStackNavigationData = [
-  {
-    name: AppRoute.CHILD_DASHBOARD,
-    component: ChildDashboardScreen,
-  },
-  {
-    name: AppRoute.FAMILY_SETUP,
-    component: FamilySetupScreen,
-  },
-];
-
-// export { ParentStackNavigationData, ChildStackNavigationData };
+export default StackNavigationData;

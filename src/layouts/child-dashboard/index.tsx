@@ -1,41 +1,53 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
-import { Layout, Text, Avatar, List, ListItem, Divider, CheckBox, Button } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
+import {
+  Layout,
+  Text,
+  Avatar,
+  List,
+  ListItem,
+  Divider,
+  CheckBox,
+  Button,
+} from '@ui-kitten/components';
 
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+} from 'accordion-collapse-react-native';
 import { RRule, RRuleSet, rrulestr } from 'rrule';
-import Toast from 'react-native-simple-toast';
 
-import { ArrowForward, ArrowUp, ArrowDown } from '../../components/icons/icons.component';
+import {
+  ArrowForward,
+  ArrowUp,
+  ArrowDown,
+} from '../../components/icons/icons.component';
 import { ImageOverlay, LoadingComponent } from '../../components';
-import { RecurrenceModal } from './components/recurrence-modal.component';
+// import { RecurrenceModal } from './components/recurrence-modal.component';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 import { colors } from '../../styles';
-interface IAssignTask {
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+interface IDashboard {
   currentState: {
-    family: { child: { children: [] } },
-    matrics: { matrics: [] }
+    family: { child: { children: [] } };
+    matrics: { matrics: [] };
   };
   onPress: (v: string) => void;
-  getAllChildren: () => void;
-  getAllMatrics: () => void;
-  onAssignTask: (obj: any) => void
+  getChild: () => void;
 }
 
-export const AssignTask = ({
+export const ChildDashboard = ({
   currentState,
   // onPress,
-  getAllChildren,
-  getAllMatrics,
-  onAssignTask,
-}: IAssignTask) => {
+  getChild,
+}: IDashboard) => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedChildren, setSelectedChildren] = useState<Array<number>>([]);
   const [rule, setRule] = useState('');
@@ -47,8 +59,7 @@ export const AssignTask = ({
   const [isChildCollapsed, setIsChildCollapsed] = useState(false);
 
   useEffect(() => {
-    getAllChildren();
-    getAllMatrics();
+    getChild();
     return () => {
       // cleanup;
     };
@@ -56,81 +67,58 @@ export const AssignTask = ({
   }, []);
 
   useEffect(() => {
-    if (currentState?.family) {
-      setAllChildren(currentState?.family?.child?.children);
+    // if (
+    //   isAssigningTask &&
+    //   currentState?.subMatrics.assignTaskStatus === 'ASSIGN_TASK_FAIL'
+    // ) {
+    //   setIsAssigningTask(false);
+    // }
+
+    if (currentState?.user.userInfo) {
+      setAllTasks(currentState?.user?.userInfo?.tasks);
     }
-
-    if (isAssigningTask && currentState?.subMatrics.assignTaskStatus === 'ASSIGN_TASK_SUCCESS') {
-      setIsAssigningTask(false);
-      setSelectedTask(null);
-      setSelectedChildren([]);
-      setRule('');
-
-      let cpy: any = [...allTasks];
-      cpy.map((task: { isChecked: boolean }) => {
-        task.isChecked = false;
-      });
-      setAllTasks(cpy);
-
-
-      let childCpy: any = [...allChildren];
-      // childCpy[index].isChecked = nextChecked;
-      setAllChildren(childCpy);
-
-      childCpy.map((child: { id: number, isChecked: boolean }) => {
-        child.isChecked = false;
-      });
-      setSelectedChildren(childCpy);
-
-      Toast.showWithGravity('Task successfully assigned.', Toast.LONG, Toast.CENTER);
-
-    }
-
-    if (isAssigningTask && currentState?.subMatrics.assignTaskStatus === 'ASSIGN_TASK_FAIL') {
-      setIsAssigningTask(false);
-      Alert.alert('Something went wrong, please try again.');
-    }
-
-    let arr: object[] = [];
-    if (currentState?.matrics) {
-      setAllTasks(currentState?.matrics?.matrics);
-    }
-
-    currentState?.matrics?.matrics?.map((item: { subCategories: [] }) => {
-      item?.subCategories?.map((task: object) => {
-        arr.push(task);
-      });
-    });
-    setAllTasks(arr);
+    // currentState?.matrics?.matrics?.map((item: { subCategories: [] }) => {
+    //   item?.subCategories?.map((task: object) => {
+    //     arr.push(task);
+    //   });
+    // });
+    // setAllTasks(arr);
   }, [currentState]);
 
-  const handleSelectTask = (index: number) => {
-    let cpy: any = [...allTasks];
-    cpy.map((task: { isChecked: boolean }) => {
-      if (task.isChecked) {
-        task.isChecked = false;
-      }
-    });
-    cpy[index].isChecked = true;
-    setAllTasks(cpy);
-    setSelectedTask(cpy[index].id);
-  };
+  // const handleSelectTask = (index: number) => {
+  //   let cpy: any = [...allTasks];
+  //   cpy.map((task: { isChecked: boolean }) => {
+  //     if (task.isChecked) {
+  //       task.isChecked = false;
+  //     }
+  //   });
+  //   cpy[index].isChecked = true;
+  //   setAllTasks(cpy);
+  //   setSelectedTask(cpy[index].id);
+  // };
 
-  const renderTaskItemAccessory = ({ isChecked }: { isChecked: boolean }, index: number) => {
+  const renderTaskItemAccessory = (
+    { isChecked }: { isChecked: boolean },
+    index: number,
+  ) => {
     if (isChecked) {
-      return <CheckBox
-        checked={isChecked}
-        onChange={() => handleSelectTask(index)}
-      />;
-    } return null;
+      return (
+        <CheckBox
+          checked={isChecked}
+          // onChange={() => handleSelectTask(index)}
+        />
+      );
+    }
+    return null;
   };
 
   const renderTaskData = ({ item, index }: any) => (
     <ListItem
-      title={`${item.title}`}
+      title={'Test Task'}
+      // title={`${item.title}`}
       description={`${item.description}`}
       accessoryRight={() => renderTaskItemAccessory(item, index)}
-      onPress={() => handleSelectTask(index)}
+      // onPress={() => handleSelectTask(index)}
     />
   );
 
@@ -139,7 +127,7 @@ export const AssignTask = ({
     cpy[index].isChecked = nextChecked;
     setAllChildren(cpy);
     let arr: number[] = [];
-    cpy.map((child: { id: number, isChecked: boolean }) => {
+    cpy.map((child: { id: number; isChecked: boolean }) => {
       if (child.isChecked) {
         arr.push(child.id);
       }
@@ -147,18 +135,32 @@ export const AssignTask = ({
     setSelectedChildren(arr);
   };
 
-  const renderItemAccessory = ({ isChecked }: { isChecked: boolean }, index: number) => (
+  const renderItemAccessory = (
+    { isChecked }: { isChecked: boolean },
+    index: number,
+  ) => (
     <CheckBox
       checked={isChecked}
-      onChange={nextChecked => handleSelectChild(nextChecked, index)}
+      onChange={(nextChecked) => handleSelectChild(nextChecked, index)}
     />
   );
 
   const renderItemIcon = (photoUri: string) => {
-    return <Avatar size="small" source={photoUri ? { uri: photoUri } : require('./assets/child.png')} />;
+    return (
+      <Avatar
+        size="small"
+        source={photoUri ? { uri: photoUri } : require('./assets/child.png')}
+      />
+    );
   };
 
-  const renderChildData = ({ item, index }: { item: { name: string, username: string, photo: string, isChecked: boolean }, index: number }) => {
+  const renderChildData = ({
+    item,
+    index,
+  }: {
+    item: { name: string; username: string; photo: string; isChecked: boolean };
+    index: number;
+  }) => {
     return (
       <ListItem
         title={`${item?.name}`}
@@ -180,44 +182,13 @@ export const AssignTask = ({
     );
   };
 
-
-  const handleDone = (ruleData: any) => {
-    let ruleObj = {
-      freq: RRule[ruleData.freq],
-      interval: parseInt(ruleData.interval, 10),
-      dtstart: new Date(),
-    };
-
-    let byweekday: any = [];
-    if (ruleData.freq === 'WEEKLY') {
-      ruleData?.byweekday.map((val: any) => {
-        byweekday.push(RRule[val.weekday]);
-      });
-      ruleObj.byweekday = byweekday;
-    }
-
-    if (ruleData.ends) {
-      if (typeof ruleData.ends === 'object') {
-        ruleObj.until = ruleData.ends;
-      }
-      if (typeof ruleData.ends === 'string') {
-        ruleObj.count = parseInt(ruleData.ends, 10);
-      }
-    }
-    const result = new RRule(ruleObj);
-    setRule(result.toString());
-  };
-
-  const handleAssignTask = () => {
-    onAssignTask({ selectedTask, selectedChildren, rule });
-    setIsAssigningTask(true);
-  };
-
   const renderTaskAssignLoader = () => {
     if (isAssigningTask) {
       return <LoadingComponent text={'Assigning...'} />;
     }
   };
+
+  console.log('asslltasks: ', allTasks);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -226,53 +197,74 @@ export const AssignTask = ({
         source={require('../../assets/images/vector.png')}
       >
         <Layout style={{ backgroundColor: 'none' }}>
-          <Text category="h1" status="control" style={{ fontWeight: 'bold' }} >
-            Assign
+          <Text category="h1" status="control" style={{ fontWeight: 'bold' }}>
+            Dashboard
           </Text>
           <Text category="h5" status="control">
-            Task
+            Child
           </Text>
         </Layout>
       </ImageOverlay>
       {renderTaskAssignLoader()}
       <Layout style={[styles.taskDataWrap]}>
         <Layout style={[styles.tasks]} level="1">
-          <Collapse
-            isCollapsed={isTaskCollapsed}
-            onToggle={(isCollapsed: boolean) => {
-              setIsTaskCollapsed(isCollapsed);
-              setIsChildCollapsed(false);
-            }}
-            style={styles.collaps}
-          >
-            <CollapseHeader style={styles.header}>
-              <MaterialIcon style={styles.icon} name={'add-task'} size={40} color={colors.primaryBlue} />
-              <Text category="h6" style={{ fontWeight: 'bold' }}>Tasks</Text>
-              {isTaskCollapsed ? <ArrowUp /> : <ArrowDown />}
-            </CollapseHeader>
-            <Divider />
-            <CollapseBody>
-              {allTasks.length > 0 ? (
-                <List
-                  style={styles.list}
-                  data={allTasks}
-                  ItemSeparatorComponent={Divider}
-                  renderItem={renderTaskData}
+          <TouchableOpacity>
+            <Collapse
+              isCollapsed={isTaskCollapsed}
+              onToggle={(isCollapsed: boolean) => {
+                console.log('Press', isCollapsed);
+
+                setIsTaskCollapsed(isCollapsed);
+                setIsChildCollapsed(false);
+              }}
+              style={styles.collaps}
+            >
+              <CollapseHeader style={styles.header}>
+                <MaterialIcon
+                  style={styles.icon}
+                  name={'add-task'}
+                  size={40}
+                  color={colors.primaryBlue}
                 />
-              ) : RenderNoDataMsg()}
-            </CollapseBody>
-          </Collapse>
-          <Collapse isCollapsed={isChildCollapsed}
+                <Text category="h6" style={{ fontWeight: 'bold' }}>
+                  All Tasks
+                </Text>
+                {isTaskCollapsed ? <ArrowUp /> : <ArrowDown />}
+              </CollapseHeader>
+              <Divider />
+              <CollapseBody>
+                {allTasks?.length > 0 ? (
+                  <List
+                    style={styles.list}
+                    data={allTasks}
+                    ItemSeparatorComponent={Divider}
+                    renderItem={renderTaskData}
+                  />
+                ) : (
+                  RenderNoDataMsg()
+                )}
+              </CollapseBody>
+            </Collapse>
+          </TouchableOpacity>
+          <Collapse
+            isCollapsed={isChildCollapsed}
             onToggle={(isCollapsed: boolean) => {
               setIsChildCollapsed(isCollapsed);
               setIsTaskCollapsed(false);
             }}
-            style={styles.collaps}>
+            style={styles.collaps}
+          >
             <CollapseHeader style={styles.header}>
-              <MaterialIcon style={styles.icon} name={'child-care'} size={40} color={colors.primaryBlue} />
-              <Text category="h6" style={{ fontWeight: 'bold' }}>Child</Text>
+              <MaterialIcon
+                style={styles.icon}
+                name={'child-care'}
+                size={40}
+                color={colors.primaryBlue}
+              />
+              <Text category="h6" style={{ fontWeight: 'bold' }}>
+                Completed Tasks
+              </Text>
               {isChildCollapsed ? <ArrowUp /> : <ArrowDown />}
-
             </CollapseHeader>
             <CollapseBody>
               {allChildren.length > 0 ? (
@@ -282,34 +274,48 @@ export const AssignTask = ({
                   ItemSeparatorComponent={Divider}
                   renderItem={renderChildData}
                 />
-              ) : RenderNoDataMsg()}
-
+              ) : (
+                RenderNoDataMsg()
+              )}
             </CollapseBody>
           </Collapse>
-          <Collapse onToggle={() => {
-            setVisible(!visible);
-            setIsTaskCollapsed(false);
-            setIsChildCollapsed(false);
-          }}
-            style={styles.collaps}>
-            <CollapseHeader style={styles.header}>
-              <MaterialIcon style={styles.icon} name={'calendar-today'} size={40} color={colors.primaryBlue} />
-              <Text category="h6" style={{ fontWeight: 'bold' }}>Repeat</Text>
-              <ArrowForward />
-            </CollapseHeader>
-          </Collapse>
 
-          <Layout style={styles.bottomWrap}>
-            <Button disabled={selectedTask === null ? true : selectedChildren.length === 0 ? true : rule === '' ? true : false} appearance="outline" status="info" onPress={handleAssignTask}>
-              Assign
-          </Button>
-          </Layout>
+          <Collapse
+            isCollapsed={isChildCollapsed}
+            onToggle={(isCollapsed: boolean) => {
+              setIsChildCollapsed(isCollapsed);
+              setIsTaskCollapsed(false);
+            }}
+            style={styles.collaps}
+          >
+            <CollapseHeader style={styles.header}>
+              <MaterialIcon
+                style={styles.icon}
+                name={'child-care'}
+                size={40}
+                color={colors.primaryBlue}
+              />
+              <Text category="h6" style={{ fontWeight: 'bold' }}>
+                Pending Tasks
+              </Text>
+              {isChildCollapsed ? <ArrowUp /> : <ArrowDown />}
+            </CollapseHeader>
+            <CollapseBody>
+              {allChildren.length > 0 ? (
+                <List
+                  style={styles.list}
+                  data={allChildren}
+                  ItemSeparatorComponent={Divider}
+                  renderItem={renderChildData}
+                />
+              ) : (
+                RenderNoDataMsg()
+              )}
+            </CollapseBody>
+          </Collapse>
         </Layout>
       </Layout>
-
-      <RecurrenceModal visible={visible} setModal={() => setVisible(!visible)} onDone={handleDone} />
-
-    </KeyboardAvoidingView >
+    </KeyboardAvoidingView>
   );
 };
 
@@ -321,7 +327,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     // marginVertical: 12,
   },
-  header: { flexDirection: 'row', justifyContent: 'space-between', height: 70, alignItems: 'center', borderRadius: 5 },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 70,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
@@ -423,8 +435,8 @@ const styles = StyleSheet.create({
   },
   collaps: {
     borderRadius: 5,
-    borderWidth: 0.5,
-    borderColor: colors.primaryBlue,
+    borderWidth: 0.4,
+    borderColor: 'grey',
     padding: 10,
     marginBottom: 5,
     // minHeight: hp2dp('0%'),

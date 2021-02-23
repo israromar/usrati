@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Layout, Button, Text, Card, Calendar, Input, Radio, RadioGroup } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 
 import { heightPercentageToDP as hp2dp } from 'react-native-responsive-screen';
 import { Picker } from '@react-native-picker/picker';
+// import RNPickerSelect from 'react-native-picker-select';
+
+import { KeyboardAvoidingView } from '../../matric-sub-category/extra/3rd-party';
 
 interface IRecurrenceModal {
     visible: boolean;
@@ -62,15 +65,22 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
         setByweekday(selectedDays);
     };
 
+    const handleChangeOccurence = (nextValue: string) => {
+        console.log('🚀 ~ file: recurrence-modal.component.tsx ~ line 66 ~ handleChangeOccurence ~ nextValue', nextValue);
+        setOccurence(nextValue);
+        setSelectedIndex(1);
+    };
+
     const handleDone = () => {
-        let ends = selectedIndex === 0 ? null : selectedIndex === 1 ? date : occurence;
+        let ends = selectedIndex === 0 ? date : occurence;
         onDone({ freq, interval, byweekday, ends });
         setModal();
     };
 
-    console.log('timeSpan:', date);
+    console.log('selectedIndex123123', selectedIndex);
+
     return (
-        <>
+        <KeyboardAvoidingView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: '#fff' }}>
             <Modal
                 isVisible={visible}
                 onBackdropPress={setModal}
@@ -88,10 +98,15 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                                     onChangeText={(nextValue) => setInterval(nextValue)}
                                     keyboardType="numeric"
                                 />
-                                <Layout style={styles.picker}>
+                                <Layout style={{ width: '50%', backgroundColor: '#f1f3f4', borderRadius: 5, borderWidth: 0, height: 40, marginTop: 5 }}>
                                     <Picker
+                                        style={{
+                                            height: 40,
+                                            width: '100%'
+                                        }}
                                         selectedValue={freq}
-                                        onValueChange={(itemValue: string) => setFreq(itemValue)}>
+                                        mode="dropdown"
+                                        onValueChange={(itemValue: any) => setFreq(itemValue)}>
                                         <Picker.Item label="day" value="DAILY" />
                                         <Picker.Item label="week" value="WEEKLY" />
                                         <Picker.Item label="month" value="MONTHLY" />
@@ -116,13 +131,10 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                             <Text category="h6" style={{ marginBottom: 25 }}>Ends</Text>
                             <RadioGroup
                                 selectedIndex={selectedIndex}
-                                onChange={index => setSelectedIndex(index)
+                                onChange={index => {
+                                    index === 0 || index === 1 ? setSelectedIndex(index) : setSelectedIndex(selectedIndex);
+                                }
                                 }>
-                                <Radio>
-                                    <Layout style={styles.radioOne}>
-                                        <Text>{'Never'}</Text>
-                                    </Layout>
-                                </Radio>
                                 <Radio>
                                     <Layout style={[styles.radioTwoWrap]}>
                                         <Layout style={styles.radioTwoInnerWrap}>
@@ -130,7 +142,7 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                                         </Layout>
                                         <Layout style={styles.dateWrap}>
                                             <TouchableOpacity onPress={() => setIsCalenderVisible(true)}>
-                                                <Text style={[styles.date, { color: selectedIndex === 1 ? '#111' : '#a4a9ae' }]}> {date && date?.toLocaleDateString()}</Text>
+                                                <Text style={[styles.date, { color: selectedIndex === 0 ? '#111' : '#a4a9ae' }]}> {date && date?.toLocaleDateString()}</Text>
                                             </TouchableOpacity>
                                         </Layout>
                                         <Layout style={{ flex: 0.60, backgroundColor: 'transparent' }} />
@@ -142,11 +154,14 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                                             <Text style={{ margin: 2 }}>{'After'}</Text>
                                         </Layout>
                                         <Layout style={styles.innerRadioWrapTwo}>
-                                            <Input style={[styles.input, { color: selectedIndex === 2 ? '#111' : '#a4a9ae' }]}
+                                            <Input style={[styles.input, { color: selectedIndex === 1 ? '#111' : '#a4a9ae' }]}
                                                 value={occurence}
-                                                onChangeText={(nextValue) => setOccurence(nextValue)}
+                                                onChangeText={(nextValue) => {
+                                                    handleChangeOccurence(nextValue);
+                                                }}
+
                                                 keyboardType="numeric" />
-                                            <Text style={styles.occurencesText, { color: selectedIndex === 2 ? '#111' : '#a4a9ae', marginRight: 10 }}>occurrences</Text>
+                                            <Text style={styles.occurencesText, { color: selectedIndex === 1 ? '#111' : '#a4a9ae', marginRight: 10 }}>occurrences</Text>
                                         </Layout>
                                         <Layout style={{ flex: 0.4, backgroundColor: 'transparent' }} />
                                     </Layout>
@@ -163,7 +178,7 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                         </Layout>
                     </Layout>
                 </Card>
-            </Modal>
+            </Modal >
 
             <Modal
                 isVisible={isCalenderVisible}
@@ -179,11 +194,11 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                     onSelect={(nextDate) => {
                         setDate(nextDate);
                         setIsCalenderVisible(false);
-                        setSelectedIndex(1);
+                        setSelectedIndex(0);
                     }}
                 />
             </Modal>
-        </>
+        </KeyboardAvoidingView >
     );
 };
 
@@ -192,9 +207,9 @@ const styles = StyleSheet.create({
     cardInnerWrap: { height: '100%', justifyContent: 'flex-start', alignItems: 'center' },
     title: { alignSelf: 'flex-start', marginBottom: 25 },
     repeatEveryWrap: { width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-    repeatEveryInnerWrap: { flexDirection: 'row', width: '40%' },
-    input: { maxWidth: 100, marginHorizontal: 5, backgroundColor: '#f1f3f4', color: '#a4a9ae', borderRadius: 5, borderColor: 'transparent' },
-    picker: { height: 40, justifyContent: 'center', borderRadius: 5, width: '100%', backgroundColor: '#f1f3f4' },
+    repeatEveryInnerWrap: { flexDirection: 'row', width: '70%', },
+    input: { maxWidth: 100, marginHorizontal: 5, marginTop: 5, backgroundColor: '#f1f3f4', color: '#a4a9ae', borderRadius: 5, borderColor: 'transparent' },
+    picker: { height: 40, },
     repeatedOnWrap: { width: '100%', justifyContent: 'space-around', alignItems: 'flex-start', marginBottom: 25 },
     repeatedOnTitle: { alignSelf: 'flex-start', marginBottom: 10 },
     daysWrap: { width: '100%', flexDirection: 'row', justifyContent: 'space-between' },

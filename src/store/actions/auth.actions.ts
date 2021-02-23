@@ -43,16 +43,8 @@ export const signUp = ({ username, email, password }) => async (
         let { token } = user;
         createParent({ token, email })
           .then((res) => {
-            console.log(
-              '🚀 ~ file: auth.actions.js ~ line 23 ~ .then ~ res',
-              res,
-            );
             login({ username, password })
               .then((userInfo) => {
-                console.log(
-                  '🚀 ~ file: auth.actions.ts ~ line 29 ~ .then ~ userInfo',
-                  userInfo,
-                );
                 dispatch({
                   type: authConstants.SIGNUP_SUCCESS,
                   payload: userInfo.token,
@@ -70,10 +62,6 @@ export const signUp = ({ username, email, password }) => async (
               });
           })
           .catch((error) => {
-            console.log(
-              '🚀 ~ file: auth.actions.js ~ line 37 ~ .then ~ error',
-              error,
-            );
             dispatch({
               type: authConstants.SIGNUP_FAIL,
               payload: error,
@@ -81,7 +69,6 @@ export const signUp = ({ username, email, password }) => async (
           });
       })
       .catch(({ error }) => {
-        console.log('🚀 ~ file: auth.actions.js ~ line 45 ~ error', error);
         dispatch({
           type: authConstants.SIGNUP_FAIL,
           payload: error,
@@ -90,7 +77,6 @@ export const signUp = ({ username, email, password }) => async (
 
     return Promise.resolve();
   } catch (err) {
-    console.log('error creation: ', err);
     dispatch({
       type: authConstants.SIGNUP_FAIL,
       payload: err?.error ?? 'Something went wrong, try again!',
@@ -103,7 +89,6 @@ export const signIn = ({ username, password }: any) => (dispatch: any) => {
 
   login({ username, password })
     .then((user) => {
-      console.log('🚀 ~ file: auth.actions.ts ~ line 66 ~ .then ~ user', user);
       if (user.token) {
         AsyncStorage.setItem('userToken', user.token);
 
@@ -125,7 +110,7 @@ export const signIn = ({ username, password }: any) => (dispatch: any) => {
     .catch((err) => {
       dispatch({
         type: authConstants.SIGNIN_FAIL,
-        payload: err.error,
+        payload: err?.error ?? 'Something went wrong, try again!',
       });
     });
 

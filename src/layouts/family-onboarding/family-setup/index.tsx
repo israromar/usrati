@@ -10,6 +10,7 @@ import {
   Modal as RNModal,
   PanResponder,
   View,
+  Keyboard,
 } from 'react-native';
 import {
   Avatar,
@@ -27,6 +28,7 @@ import {
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
 import Modal from 'react-native-modal';
+import Toast from 'react-native-simple-toast';
 
 import { ImageOverlay } from '../../../components';
 import { KeyboardAvoidingView } from './extra/3rd-party';
@@ -181,7 +183,7 @@ export const FamilySetup = ({
 
   // use effect to get editable data
   useEffect(() => {
-    console.log('rest?.route?.params?', family);
+    console.log('rest?.route?.params?', rest);
 
     setIsEdit(rest?.route?.params?.isEdit);
     setIsAddNew(rest?.route?.params?.isAddNew);
@@ -374,7 +376,8 @@ export const FamilySetup = ({
 
   useEffect(() => {
     if (isAddFamily && !family?.isAddingFamily && family?.isAddFamilySuccess && !family?.isAddFamilyFail) {
-      Alert.alert('Family successfully added.');
+      Toast.showWithGravity('Family successfully added.', Toast.LONG, Toast.CENTER);
+
       if (!isEdit) {
         setCurrentPosition(1);
       }
@@ -383,7 +386,8 @@ export const FamilySetup = ({
       setIsAddFamily(false);
     }
     if (isAddFamily && !family?.isUpdatingFamily && family?.isUpdateFamilySuccess && !family?.isUpdateFamilyFail) {
-      Alert.alert('Family successfully updated.');
+      Toast.showWithGravity('Family successfully updated.', Toast.LONG, Toast.CENTER);
+
       if (!isEdit) {
         setCurrentPosition(1);
       } else {
@@ -403,7 +407,6 @@ export const FamilySetup = ({
       }
     }
 
-    console.log('isAddGuardianSuccess: ', isAddGuardian, guardian);
     // GUARDIAN
     if (isAddGuardian && !guardian?.isAddingGuardian && guardian?.isAddGuardianSuccess && !guardian?.isAddGuardianFail) {
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
@@ -417,7 +420,7 @@ export const FamilySetup = ({
       }
     }
     if (isAddGuardian && !guardian?.isUpdatingGuardian && guardian?.isUpdateGuardianSuccess && !guardian?.isUpdateGuardianFail) {
-      Alert.alert('Guardian successfully updated.');
+      Toast.showWithGravity('Guardian successfully updated.', Toast.LONG, Toast.CENTER);
       if (!isEdit) {
         setCurrentPosition(1);
       } else {
@@ -446,6 +449,22 @@ export const FamilySetup = ({
     if (isAddChild && !child?.isAddingChild && child?.isAddChildSuccess && !child?.isAddChildFail) {
       afterSuccessAlert('child', 'Child successfully added, do you want to add another one?');
     }
+      if (isEdit && !child?.isUpdatingChild && child?.isUpdateChildSuccess && !child?.isUpdateChildFail) {
+        Toast.showWithGravity('Child successfully updated.', Toast.LONG, Toast.CENTER);
+        setChildId(null);
+        setChildPhoto(null);
+        setChildName('');
+        setDate(new Date('Jan 01, 2010 00:20:18'));
+        setSchoolName('');
+        setChildInterest('');
+        setChildUsername('');
+        setChildPassword('');
+        setIsAddChild(false);
+        setIsNext(false);
+        setIsEdit(false);
+        onGoBack();
+    }
+
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
       Alert.alert(child?.addChildError);
       if (child?.addChildError === 'Username already in use') {
@@ -471,6 +490,7 @@ export const FamilySetup = ({
 
   const handleAddFamilySetup = (position: number) => {
     if (position === 1) {
+      Keyboard.dismiss();
       if (familyName) {
         setIsAddFamily(true);
         if (isEdit) {
@@ -479,8 +499,10 @@ export const FamilySetup = ({
           onAddFamilySettings({ id: 0, familyName, familyPhoto, isFamilyPhotoDeleted, flag: 'add' });
         }
       }
+
       setFamilyNameError(!familyName);
     } else {
+      Keyboard.dismiss();
       const validationResult = validate({ username: guardianUsername, email: guardianEmail, password: guardianPassword }, constraints);
       if (validationResult?.username) {
         setGuardianUsernameError(true);
@@ -526,6 +548,7 @@ export const FamilySetup = ({
         return;
       }
     } else {
+      Keyboard.dismiss();
       const validationResult = validate({ interest: childInterest, username: childUsername, password: childPassword }, constraints);
       if (validationResult?.interest) {
         setChildInterestError(true);
@@ -542,8 +565,6 @@ export const FamilySetup = ({
         setChildPasswordErrorMsg(validationResult?.password[0]);
         return;
       }
-
-      console.log('isEditisEditisEdit', isEdit, isAddNew);
 
       if (
         flag === 'Add' &&
@@ -565,7 +586,7 @@ export const FamilySetup = ({
         !childPasswordError &&
         isEdit && !isAddNew
       ) {
-        onUpdateChild({ id: childId, photo: isChildPhotoUpdated ? childPhoto : null, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword });
+        onUpdateChild({ id: childId, photo: isChildPhotoUpdated ? childPhoto : null, childName, dob: date, schoolName, interest: childInterest, username: childUsername, password: childPassword, isChildPhotoDeleted });
       }
     }
   };
@@ -1099,9 +1120,12 @@ export const FamilySetup = ({
             status="control"
             size="giant"
             appearance="ghost"
-            accessoryLeft={child?.isAddingChild && isAddChild && LoadingIndicator}
+            accessoryLeft={child?.isAddingChild ? LoadingIndicator : child?.isUpdatingChild ? LoadingIndicator : ''}
+            // accessoryLeft={child?.isAddingChild && isAddChild && LoadingIndicator}
           >
-            {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : isEdit && !isAddNew ? 'Update' : 'Add'}
+            {/* {child.isAddingChild && isAddChild ? '' : !isNext ? 'Next' : isEdit && !isAddNew ? 'Update' : 'Add'} */}
+            {child.isAddingChild || child?.isUpdatingChild ? '' : !isNext ? 'Next' : isEdit && !isAddNew ? 'Update' : 'Add'}
+
           </Button>
           <Layout style={styles.skipForNowWrap}>
             {renderSkipForNow()}
@@ -1137,7 +1161,7 @@ export const FamilySetup = ({
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <KeyboardAvoidingView keyboardShouldPersistTaps={'handled'} style={{ flex: 1, backgroundColor: '#fff' }}>
       {RenderModal()}
       {RenderHeaderImageOverlay()}
       {RenderAddFamilyForm()}
