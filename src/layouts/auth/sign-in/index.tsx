@@ -24,6 +24,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import { Swiper } from '../common/swiper';
+import i18n from '../../../translations';
 
 interface ISignIn {
   signIn(obj: IPropsSignIn): void;
@@ -111,7 +112,7 @@ export const SignIn = ({
             <Image source={require('./assets/backarrow.png')} />
           </TouchableOpacity>
           <Text category="h1" status="control">
-            Sign In
+            {i18n.t('signIn.signIn')}
           </Text>
         </View>
       </ImageOverlay>
@@ -157,9 +158,13 @@ export const SignIn = ({
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>
-            <Text style={{ color: '#B5AFAF' }}>Don't have an account? </Text>
+            <Text style={{ color: '#B5AFAF' }}>
+              {i18n.t('signIn.dontHaveAnAccount')}
+            </Text>
             <TouchableOpacity onPress={onSignUpButtonPress}>
-              <Text style={{ color: '#6F99EB' }}>Sign Up</Text>
+              <Text style={{ color: '#6F99EB' }}>
+                {i18n.t('signIn.signUp')}
+              </Text>
             </TouchableOpacity>
           </Layout>
           <Swiper style={{ marginBottom: 10 }} position={2} />

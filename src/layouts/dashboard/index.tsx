@@ -1,16 +1,18 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { I18nManager, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Layout, Button, Text, Card, Avatar } from '@ui-kitten/components';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
+import RNRestart from 'react-native-restart';
 
 import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
+import i18n from '../../translations';
 interface IDashboard {
   currentState: {};
   onPress: (v: string) => void;
@@ -51,6 +53,14 @@ export const Dashboard = ({
     );
   };
 
+  const languageRestart = async () => {
+    //changing language based on what was chosen
+    const aa = await I18nManager.forceRTL(!I18nManager.isRTL);
+    RNRestart.Restart();
+    console.log('🚀 ~ file: index.tsx ~ line 57 ~ languageRestart ~ aa', aa);
+	  // RNRestart.Restart();
+  };
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ImageOverlay
@@ -59,10 +69,10 @@ export const Dashboard = ({
       >
         <Layout style={{ backgroundColor: 'none' }}>
           <Text category="h5" status="control">
-            Parent
+            {i18n.t('parentDashboard.parent')}
           </Text>
           <Text category="h1" status="control">
-            Dashboard
+            {i18n.t('parentDashboard.dashboard')}
           </Text>
         </Layout>
       </ImageOverlay>
@@ -77,14 +87,14 @@ export const Dashboard = ({
               }}
             >
               <Text category="h6" status="control" style={{ color: 'grey' }}>
-                To see the progress
+            {i18n.t('parentDashboard.toSeeTheProgress')}
               </Text>
               <Text
                 category="h4"
                 status="control"
                 style={{ color: 'grey', fontWeight: 'bold' }}
               >
-                Select Child
+                {i18n.t('parentDashboard.selectChild')}
               </Text>
             </Layout>
           )}

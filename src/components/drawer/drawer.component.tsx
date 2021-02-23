@@ -1,20 +1,24 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { I18nManager, StyleSheet } from 'react-native';
 import {
   Avatar,
   Layout,
   Text,
   Divider,
   Drawer,
+  DrawerGroup,
   DrawerItem,
   Button,
 } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
+import RNRestart from 'react-native-restart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { changeLanguage } from '../../store/actions/language.actions';
+import languageReducer from '../../store/reducers/language.reducer';
 import i18n from '../../translations';
 import {
   PersonIcon,
-  AddChildIcon,
   HomeIcon,
   ChildrenIcon,
   ListsIcon,
@@ -22,15 +26,17 @@ import {
   TaskIcon,
   MomentsIcon,
   ForwardIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
   BulbIcon,
   SignOutIcon,
-  FamilyIcon,
   KpiIcon,
+  LangaugeIcon,
+  TickIcon,
+  CircleIcon,
 } from './icons';
 import { logout } from '../../store/actions/auth.actions';
 import { AppRoute } from '../../navigation/app-routes';
+import { languageConstants } from '../../constants';
+import { toggleTheme } from '../../store/actions/theme.actions';
 
 const Header = () => {
   const {
@@ -89,11 +95,43 @@ const Footer = () => {
   );
 };
 
-const DrawerContent = ({ navigation, state }: any) => {
-  // const [selectedIndex, setSelectedIndex] = React.useState(null);
+const DrawerContent = ({ navigation }: any) => {
+  const {
+    language: { activeLanguage },
+  }: any = useSelector((state) => state);
+  const dispatch = useDispatch();
+
   const handlePress = (toScreen: string) => {
     navigation.navigate(toScreen);
   };
+  const handleLanguageChange = async (language: string) => {
+    dispatch(changeLanguage({ language }));
+    i18n.locale = language;
+    // dispatch(toggleTheme({ theme: 'light' }));
+    await AsyncStorage.setItem('activeLanguage', language);
+    if (activeLanguage === 'en') {
+      if (I18nManager.isRTL) {
+        await I18nManager.forceRTL(true);
+      }
+    } else {
+      if (!I18nManager.isRTL) {
+        await I18nManager.forceRTL(true);
+      }
+    }
+    // RNRestart.Restart();
+  };
+
+  useEffect(() => {
+    const bootstrapAsync = async () => {
+      if (activeLanguage === 'en') {
+        await I18nManager.forceRTL(false);
+      } else {
+        await I18nManager.forceRTL(true);
+      }
+      // RNRestart.Restart();
+    };
+    bootstrapAsync();
+  }, [activeLanguage]);
 
   return (
     <Drawer
@@ -105,21 +143,19 @@ const DrawerContent = ({ navigation, state }: any) => {
     >
       <Divider />
       <DrawerItem
-        title={'Home'}
+        title={i18n.t('drawer.home')}
         accessoryLeft={HomeIcon}
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.DASHBOARD)}
       />
-
       <DrawerItem
         title={i18n.t('drawer.profile')}
         accessoryLeft={PersonIcon}
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.PARENT_PROFILE)}
       />
-
       <DrawerItem
-        title={'Add Family'}
+        title={i18n.t('drawer.addFamily')}
         accessoryLeft={ChildrenIcon}
         accessoryRight={ForwardIcon}
         onPress={() =>
@@ -133,9 +169,8 @@ const DrawerContent = ({ navigation, state }: any) => {
           })
         }
       />
-
       <DrawerItem
-        title={'Add Guardian'}
+        title={i18n.t('drawer.addGuardian')}
         accessoryLeft={GuardianIcon}
         accessoryRight={ForwardIcon}
         onPress={() =>
@@ -149,9 +184,8 @@ const DrawerContent = ({ navigation, state }: any) => {
           })
         }
       />
-
       <DrawerItem
-        title={'Add Child'}
+        title={i18n.t('drawer.addChild')}
         accessoryLeft={ChildrenIcon}
         accessoryRight={ForwardIcon}
         onPress={() =>
@@ -166,23 +200,40 @@ const DrawerContent = ({ navigation, state }: any) => {
         }
       />
       <DrawerItem
-        title={'Metric Categories'}
+        title={i18n.t('drawer.metricCategories')}
         accessoryLeft={ListsIcon}
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
-        title={'Kpis'}
+        title={i18n.t('drawer.kpis')}
         accessoryLeft={KpiIcon}
         accessoryRight={ForwardIcon}
         // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
       <DrawerItem
-        title={'Assign Task'}
+        title={i18n.t('drawer.assignTask')}
         accessoryLeft={TaskIcon}
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.ASSIGN_TASK)}
       />
+      <DrawerGroup
+        title={i18n.t('drawer.language')}
+        accessoryLeft={LangaugeIcon}
+      >
+        <DrawerItem
+          title={i18n.t('drawer.english')}
+          onPress={() => handleLanguageChange('en')}
+          accessoryLeft={CircleIcon}
+          accessoryRight={activeLanguage === 'en' ? TickIcon : ''}
+        />
+        <DrawerItem
+          title={i18n.t('drawer.arabic')}
+          onPress={() => handleLanguageChange('ar')}
+          accessoryLeft={CircleIcon}
+          accessoryRight={activeLanguage === 'ar' ? TickIcon : ''}
+        />
+      </DrawerGroup>
       <Divider />
     </Drawer>
   );

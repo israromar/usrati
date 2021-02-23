@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -11,6 +11,7 @@ import {
 import { ImageOverlay } from '../../../components';
 import { AppRoute } from '../../../navigation/app-routes';
 import { fonts } from '../../../styles';
+import i18n from '../../../translations';
 
 export const Onboarding = ({ onPress }: any): React.ReactElement => {
   const onButtonPress = (screen: string) => {
@@ -25,7 +26,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
       >
         <Layout style={styles.headerElements}>
           <Text style={styles.title} category="h1" status="control">
-            Are You
+            {i18n.t('onboarding.areYou')}
           </Text>
           <Layout style={{ backgroundColor: 'none', top: 30 }}>
             <TouchableOpacity
@@ -35,7 +36,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
                 source={require('../../../assets/images/parent-group.png')}
               />
               <Text style={styles.innerText} category="h5" status="control">
-                A Parent
+                {i18n.t('onboarding.parent')}
               </Text>
             </TouchableOpacity>
           </Layout>
@@ -45,7 +46,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
                 source={require('../../../assets/images/child-group.png')}
               />
               <Text style={styles.innerText} category="h5" status="control">
-                A Child
+                {i18n.t('onboarding.child')}
               </Text>
             </TouchableOpacity>
           </Layout>
@@ -59,7 +60,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
 };
 
 const styles = StyleSheet.create({
-  container:{display:'flex', width: wp2dp('100%'), height: hp2dp('100%')},
+  container: { display: 'flex', width: wp2dp('100%'), height: hp2dp('100%') },
   stretch: {
     marginTop: wp2dp('-30%'),
     alignSelf: 'center',
@@ -76,12 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     width: wp2dp('100%'),
-    height: hp2dp('80%')
+    height: hp2dp('80%'),
   },
   headerElements: {
     marginTop: wp2dp('-50%'),
     alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor:'transparent'
+    backgroundColor: 'transparent',
   },
 });

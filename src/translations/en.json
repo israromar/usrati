@@ -9,8 +9,27 @@
         "pages": "Pages",
         "components": "Components"
     },
-    "signIn": {},
-    "signOut": {},
+    "onboarding":{
+        "areYou":"Are You",
+        "parent":"Parent",
+        "child":"Child"
+    },
+    "signIn": {
+        "signIn":"Sign In",
+        "signUp":"Sign Up",
+        "dontHaveAnAccount":"Don't have an account?"
+    },
+    "signUp": {
+        "signIn":"Sign In",
+        "signUp":"Sign Up",
+        "alreadyHaveAnAccount":"Already have an account?"
+    },
+    "parentDashboard":{
+        "parent":"Parent",
+        "dashboard":"Dashboard",
+        "toSeeTheProgress":"To see the progress",
+        "selectChild":"Select Child"
+    },
     "home": {
         "welcome": "Welcome",
         "hello": "Hello",
@@ -29,14 +48,16 @@
         "signOut": "Sing Out"
     },
     "drawer": {
-        "following": "Following",
-        "followers": "Followers",
+        "home": "home",
         "profile": "Profile",
-        "lists": "Lists",
-        "topics": "Topics",
-        "bookmarks": "Bookmarks",
-        "moments": "Moments",
-        "settingsAndPrivacy": "Settings and privacy",
-        "helpCenter": "Help Center"
+        "addFamily": "Add Family",
+        "addGuardian": "Add Guardian",
+        "addChild": "Add Child",
+        "metricCategories": "Metric Categories",
+        "kpis": "Kips",
+        "assignTask": "Assign Task",
+        "language": "Language",
+        "english":"English",
+        "arabic":"Arabic"
     }
 }

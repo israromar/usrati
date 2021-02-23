@@ -69,3 +69,15 @@ export const QrIcon = (props: any): React.ReactElement<ImageProps> => (
 export const SignOutIcon = (props: any): React.ReactElement<ImageProps> => (
   <Icon {...props} name="log-out-outline" />
 );
+
+export const LangaugeIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="globe-outline" />
+);
+
+export const TickIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} fill="seagreen" name="checkmark-outline" />
+);
+
+export const CircleIcon = (props: any): React.ReactElement<ImageProps> => (
+  <Icon {...props} name="arrow-right-outline" />
+);

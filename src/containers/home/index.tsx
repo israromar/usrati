@@ -19,7 +19,7 @@ export const HomeContainer = () => {
   const [checked, setChecked] = useState(activeTheme === 'dark' ? true : false);
 
   useEffect(() => {
-    i18n.locale = activeLanguage;
+    // i18n.locale = activeLanguage;
     dispatch(toggleTheme({ theme: activeTheme }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLanguage]);

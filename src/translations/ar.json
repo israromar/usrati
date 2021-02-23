@@ -9,8 +9,27 @@
     "pages": "الصفحات",
     "components": "مكونات"
   },
-  "signIn": {},
-  "signOut": {},
+  "onboarding":{
+      "areYou":"أنت",
+      "parent":"الأبوين",
+      "child":"طفل"
+  },
+  "signIn": {
+    "signIn":"تسجيل الدخول",
+    "signUp":"اشتراك",
+    "dontHaveAnAccount":"ليس لديك حساب"
+  },
+  "signUp": {
+    "signIn":"تسجيل الدخول",
+    "signUp":"اشتراك",
+    "alreadyHaveAnAccount":"هل لديك حساب"
+  },
+  "parentDashboard":{
+      "parent":"الأبوين",
+      "dashboard":"لوحة القيادة",
+      "toSeeTheProgress":"لنرى التقدم",
+      "selectChild":"اختر الطفل"
+    },
   "home": {
     "welcome": "أهلاً بالعالم",
     "hello": "أهلاً بالعالم",
@@ -29,14 +48,16 @@
     "signOut": "خروج"
   },
   "drawer": {
-    "following": "التالية",
-    "followers": "متابعون",
-    "profile": "الملف الشخصي",
-    "lists": "سجل",
-    "topics": "المواضيع",
-    "bookmarks": "إشارات مرجعية",
-    "moments": "لحظات",
-    "settingsAndPrivacy": "الإعدادات والخصوصية",
-    "helpCenter": "مركز المساعدة"
+      "home": "الصفحة الرئيسية",
+      "profile": "الملف الشخصي",
+      "addFamily": "أضف العائلة",
+      "addGuardian": "إضافة وصي",
+      "addChild": "أضف الطفل",
+      "metricCategories": "فئات المقاييس",
+      "kpis": "المهام الصغيرة",
+      "assignTask": "تعيين المهمة",
+      "language": "لغة",
+      "english":"الإنجليزية",
+      "arabic":"عربي"
   }
 }
