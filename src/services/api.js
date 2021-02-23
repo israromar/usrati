@@ -5,6 +5,7 @@ import http from './usrati';
  * @returns {Promise<T | never>}
  */
 export function login(payload) {
+  console.log('🚀 ~ file: api.js ~ line 8 ~ login ~ payload', payload);
   return new Promise((resolve, reject) => {
     http
       .post('user/auth/login', payload)
@@ -62,32 +63,22 @@ export function createParent(payload) {
  * @returns {Promise<T | never>}
  */
 export function addFamily(id, payload, action) {
-  console.log(
-    '🚀 ~ file: api.js ~ line 59 ~ addFamily ~ id, payload, action',
-    id,
-    payload,
-    action,
-  );
   if (action === 'add') {
     return http
       .post('family', payload)
       .then((response) => {
-        console.log('🚀 ~ file: api.js ~ line 69 ~ .then ~ response', response);
         return response.data;
       })
       .catch((error) => {
-        console.log('🚀 ~ file: api.js ~ line 73 ~ addFamily ~ error', error);
         throw error;
       });
   } else {
     return http
       .patch(`family/${id}`, payload)
       .then((response) => {
-        console.log('🚀 ~ file: api.js ~ line 79 ~ .then ~ response', response);
         return response.data;
       })
       .catch((error) => {
-        console.log('🚀 ~ file: api.js ~ line 83 ~ addFamily ~ error', error);
         throw error;
       });
   }
@@ -98,12 +89,6 @@ export function addFamily(id, payload, action) {
  * @returns {Promise<T | never>}
  */
 export function addNewGuardian(id, payload, flag) {
-  console.log(
-    '🚀 ~ file: api.js ~ line 110 ~ addNewGuardian ~ id, payload, flag',
-    id,
-    payload,
-    flag,
-  );
   if (flag === 'add') {
     return http
       .post('guardian', payload)
@@ -117,17 +102,9 @@ export function addNewGuardian(id, payload, flag) {
     return http
       .patch(`guardian/${id}`, payload)
       .then((response) => {
-        console.log(
-          '🚀 ~ file: api.js ~ line 119 ~ .then ~ response',
-          response,
-        );
         return response.data;
       })
       .catch((error) => {
-        console.log(
-          '🚀 ~ file: api.js ~ line 130 ~ addNewGuardian ~ error',
-          error,
-        );
         throw error?.response?.data;
       });
   }
@@ -163,28 +140,20 @@ export function addNewChild(payload) {
   return http
     .post('child', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 161 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 164 ~ addNewChild ~ error', error);
       throw error;
     });
 }
 
 export function updateChildData(id, payload) {
-  console.log('id, payload', id, payload);
   return http
     .patch(`child/${id}`, payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 189 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log(
-        '🚀 ~ file: api.js ~ line 158 ~ updateChildData ~ error',
-        error,
-      );
       throw error;
     });
 }
@@ -283,15 +252,12 @@ export function addSubMatric(payload) {
 }
 
 export function taskAssign(payload) {
-  console.log('🚀 ~ file: api.js ~ line 286 ~ taskAssign ~ payload', payload);
   return http
     .post('task', payload)
     .then((response) => {
-      console.log('🚀 ~ file: api.js ~ line 289 ~ .then ~ response', response);
       return response.data;
     })
     .catch((error) => {
-      console.log('🚀 ~ file: api.js ~ line 292 ~ taskAssign ~ error', error);
       throw error.response.data;
     });
 }
@@ -321,6 +287,17 @@ export function deleteSubMatric(id) {
 export function getSubMatrics({ parentCategoryID }) {
   return http
     .get(`category/${parentCategoryID}/subcategories`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+export function getChildInfo({ childId }) {
+  return http
+    .get(`child/${childId}`)
     .then((response) => {
       return response.data;
     })

@@ -33,6 +33,7 @@ export interface IAddChild {
   interest: string;
   username: string;
   password: string;
+  isChildPhotoDeleted: boolean;
 }
 
 export const FamilySetupContainer = ({ ...rest }) => {
@@ -135,6 +136,7 @@ export const FamilySetupContainer = ({ ...rest }) => {
     interest,
     username,
     password,
+    isChildPhotoDeleted,
   }: IAddChild) => {
     dispatch(
       updateChild({
@@ -146,6 +148,7 @@ export const FamilySetupContainer = ({ ...rest }) => {
         interest,
         username,
         password,
+        isChildPhotoDeleted,
       }),
     );
   };

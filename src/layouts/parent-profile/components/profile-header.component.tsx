@@ -42,7 +42,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                 <TouchableOpacity style={{ borderRadius: 5, overflow: 'hidden' }} onPress={() => onCardPress(data)}>
                     <Avatar
                         shape="square"
-                        source={data?.photo ? { uri: data.photo } : selectedTab === 2 ? require('../assets/guardian-avatar.png') : require('../assets/child.png')}
+                        source={data?.photo ? { uri: data.photo } : selectedTab === 2 ? require('../assets/guardian-avatar.png') : require('../assets/child-avatar.png')}
                         style={{ width: wp2dp('22%'), height: hp2dp('10.5%') }}
                     />
                 </TouchableOpacity>

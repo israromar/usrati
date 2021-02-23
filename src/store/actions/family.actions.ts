@@ -200,6 +200,17 @@ export const addChild = ({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });
 
+  console.log(
+    'addChildaddChild',
+    childPhoto,
+    // childName,
+    // dob,
+    schoolName,
+    interest,
+    // username,
+    // password,
+  );
+
   let bd = dob.toString();
 
   var formData = new FormData();
@@ -222,7 +233,6 @@ export const addChild = ({
 
   addNewChild(formData)
     .then((res) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 236 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_SUCCESS,
         payload: res.data,
@@ -248,34 +258,35 @@ export const updateChild = ({
   interest,
   username,
   password,
+  isChildPhotoDeleted,
 }) => (dispatch) => {
   dispatch({
     type: familySettingsConstants.UPDATE_CHILD_REQUEST,
   });
 
-  console.log(
-    '2123123123',
-    id,
-    childPhoto,
-    childName,
-    dob,
-    schoolName,
-    interest,
-    username,
-    password,
-  );
-
   let bd = dob.toString();
 
   var formData = new FormData();
-  formData.append('name', childName);
-  formData.append('username', username);
-  formData.append('password', password);
-  formData.append('dob', bd);
+  // formData.append('name', childName);
+  // formData.append('username', username);
+  // formData.append('password', password);
+  // formData.append('dob', bd);
   formData.append('interest', interest);
   formData.append('schoolname', schoolName);
+  formData.append('photoDeleted', isChildPhotoDeleted);
 
   if (childPhoto) {
+    console.log(
+      '11111111',
+      id,
+      childPhoto,
+      // childName,
+      // dob,
+      schoolName,
+      interest,
+      // username,
+      // password,
+    );
     const { uri, type, fileName: name } = childPhoto;
     var photo = {
       uri,
@@ -283,17 +294,30 @@ export const updateChild = ({
       name,
     };
     formData.append('photo', photo);
+  } else {
+    console.log(
+      '22222222',
+      id,
+      childPhoto,
+      // childName,
+      // dob,
+      schoolName,
+      interest,
+      // username,
+      // password,
+    );
+    formData.append('photo', '');
   }
 
   updateChildData(id, formData)
-    .then((res) => {
+    .then((res: any) => {
       console.log('🚀 ~ file: family.actions.ts ~ line 289 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.UPDATE_CHILD_SUCCESS,
-        payload: res,
+        payload: res?.data,
       });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       console.log('🚀 ~ file: family.actions.ts ~ line 296 ~ error', error);
       dispatch({
         type: familySettingsConstants.UPDATE_CHILD_FAIL,
