@@ -14,7 +14,6 @@ export const ForgotContainer = () => {
   // const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const handleSubmit = ({ email }: IForgotPassword) => {
-    console.log('handleSubmit -> email', email);
     // dispatch(forgotPassword({ email }));
     navigate(AppRoute.SIGN_IN);
   };

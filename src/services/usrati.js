@@ -26,15 +26,10 @@ const usrati = axios.create({
 usrati.interceptors.request.use(
   (config) => {
     return getUser().then((token) => {
-      console.log(
-        '🚀 ~ file: usrati.js ~ line 29 ~ returngetUser ~ user',
-        token,
-      );
       // user = JSON.parse(token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      console.log(config);
       return Promise.resolve(config);
     });
   },

@@ -145,7 +145,12 @@ export const MatricSubCategory = ({
       currentState.subMatrics.isUpdateSubMatricsFail &&
       isUpdateSubMatrics
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
       setIsUpdate(false);
       setIsUpdateSubMatrics(false);
     }
@@ -168,7 +173,13 @@ export const MatricSubCategory = ({
       currentState.subMatrics.isDeletingSubMatricFail &&
       isDeleteMatric
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
+
       setIsDeleteMatric(false);
       // setIsUpdateSubMatrics(false);
     }
@@ -210,7 +221,12 @@ export const MatricSubCategory = ({
       currentState.subMatrics.isEditingSubMatricFail &&
       isEditMatric
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
       setIsLoading(false);
     }
 

@@ -88,7 +88,8 @@ export const AssignTask = ({
 
     if (isAssigningTask && currentState?.subMatrics.assignTaskStatus === 'ASSIGN_TASK_FAIL') {
       setIsAssigningTask(false);
-      Alert.alert('Something went wrong, please try again.');
+      // Alert.alert('Something went wrong, please try again.');
+      Toast.showWithGravity('Something went wrong, please try again.', Toast.LONG, Toast.CENTER);
     }
 
     let arr: object[] = [];

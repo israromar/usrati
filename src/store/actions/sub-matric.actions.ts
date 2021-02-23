@@ -170,20 +170,10 @@ export const updateAllSubMatrics = ({ matrics }: any) => (dispatch: any) => {
 export const assignTask = ({ selectedTask, selectedChildren, rule }: any) => (
   dispatch: any,
 ) => {
-  console.log('selectedTask, selectedChildren, rule', {
-    selectedTask,
-    selectedChildren,
-    rule,
-  });
-
   dispatch({
     type: subMatricsConstants.ASSIGN_TASK_REQUEST,
   });
   let formData = new FormData();
-  // formData.append(
-  //   'RecurrenceRule',
-  //   'RRULE:FREQ=WEEKLY;UNTIL=20210210T225700Z;COUNT=30;INTERVAL=1;WKST=MO',
-  // );
   formData.append('RecurrenceRule', rule);
   formData.append('childrenIDs', JSON.stringify(selectedChildren));
   formData.append('subCategoryID', JSON.stringify(selectedTask));

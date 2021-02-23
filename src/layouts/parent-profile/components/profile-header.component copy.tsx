@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import { Layout, Button, Text, Avatar } from '@ui-kitten/components';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { Layout, Text, Avatar } from '@ui-kitten/components';
 import {
     widthPercentageToDP as wp2dp,
     heightPercentageToDP as hp2dp,
@@ -14,10 +14,7 @@ interface IDashboard {
     selected: number
 }
 
-export const ProfileHeader = ({ currentState, style, selected }: IDashboard) => {
-    console.log('🚀 ~ file: profile-header.component.tsx ~ line 18 ~ ProfileHeader ~ selected', selected);
-    console.log('currentState', currentState);
-
+export const ProfileHeader = ({ selected }: IDashboard) => {
     return (
         <Layout style={[styles.profileHeaderWrap]}>
             <Layout style={selected === 0 ? styles.innerWrap : styles.innerWrapWithChild} level="1">

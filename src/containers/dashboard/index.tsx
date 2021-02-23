@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { getChildren } from '../../store/actions/family.actions';
 import { DashboardScreen } from '../../layouts';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppRoute } from '../../navigation/app-routes';
 
 export interface ISignIn {
   email: string;
@@ -18,11 +17,7 @@ export const DashboardContainer = () => {
   const handlePress = (toScreen: string) => {
     navigate(toScreen, { currentPosition: 2 });
   };
-
   let familyID: null = null;
-
-  console.log('DashboardScreen currentState', currentState);
-
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;
   } else if (currentState?.family?.family?.families.length > 0) {

@@ -41,7 +41,7 @@ export const Dashboard = ({
       <>
         <Avatar
           shape="square"
-          source={child?.photo ? { uri: child.photo } : require('./assets/child.png')}
+          source={child?.photo ? { uri: child.photo } : require('./assets/child-avatar.png')}
           style={styles.avatar}
         />
         <Text category="s1" style={{ color: 'grey' }}>

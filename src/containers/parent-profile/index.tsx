@@ -21,7 +21,6 @@ export const ParentProfileContainer = () => {
 
   const handlePress = (toScreen: string) => {
     if (toScreen === AppRoute.FAMILY_SETUP) {
-      console.log('toScreen', toScreen);
       navigate(toScreen, { currentPosition: 2 });
     } else {
       navigate(toScreen);
@@ -29,8 +28,6 @@ export const ParentProfileContainer = () => {
   };
 
   let familyID: null = null;
-
-  console.log('currentState', currentState);
 
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;
@@ -43,18 +40,10 @@ export const ParentProfileContainer = () => {
   };
 
   const handleDeleteChild = ({ childId }: any) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 42 ~ handleDeleteChild ~ childId',
-      childId,
-    );
     dispatch(deleteChild({ childId }));
   };
 
   const handleDeleteGuardian = ({ parentId }: any) => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 50 ~ handleDeleteGuardian ~ parentId',
-      parentId,
-    );
     dispatch(deleteGuardian({ parentId }));
   };
 

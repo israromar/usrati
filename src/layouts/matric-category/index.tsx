@@ -122,7 +122,12 @@ export const MatricCategory = ({
       isLoading
     ) {
       setIsLoading(false);
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
     }
 
     if (
@@ -141,7 +146,12 @@ export const MatricCategory = ({
       currentState.matrics.isUpdateMatricsFail &&
       isUpdateMatrics
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
 
       setIsUpdate(false);
       setIsUpdateMatrics(false);
@@ -168,7 +178,12 @@ export const MatricCategory = ({
       currentState.matrics.isDeletingMatricFail &&
       isUpdateMatrics
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
       setIsDeleteMatric(false);
       // setIsUpdateMatrics(false);
     }
@@ -210,7 +225,12 @@ export const MatricCategory = ({
       currentState.matrics.isEditingMatricFail &&
       isEditMatric
     ) {
-      Alert.alert('Something went wrong, try again!');
+      // Alert.alert('Something went wrong, try again!');
+      Toast.showWithGravity(
+        'Something went wrong, try again!',
+        Toast.LONG,
+        Toast.CENTER,
+      );
       setIsLoading(false);
     }
 

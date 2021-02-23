@@ -124,17 +124,12 @@ export const getAllMatrics = ({ parentID }: any) => (dispatch: any) => {
 
   getMatrics({ parentID })
     .then((res: any) => {
-      console.log('🚀 ~ file: matric.actions.ts ~ line 127 ~ .then ~ res', res);
       dispatch({
         type: matricsConstants.GET_MATRICS_SUCCESS,
         payload: res?.data,
       });
     })
     .catch((error: any) => {
-      console.log(
-        '🚀 ~ file: matric.actions.ts ~ line 134 ~ getAllMatrics ~ error',
-        error,
-      );
       dispatch({
         type: matricsConstants.GET_MATRICS_FAIL,
         payload: error?.ERROR

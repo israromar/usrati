@@ -15,11 +15,8 @@ export const signUp = ({ username, email, password }) => async (
 
   try {
     // const user = await createUser({ username, password, userType: 'parent' });
-    // console.log('🚀 ~ file: auth.actions.ts ~ line 18 ~ user', user);
     // const parent = await createParent({ token: user?.token, email });
-    // console.log('🚀 ~ file: auth.actions.ts ~ line 19 ~ parent', parent);
     // const userInfo = await login({ username, password });
-    // console.log('🚀 ~ file: auth.actions.ts ~ line 20 ~ userInfo', userInfo);
 
     // if (userInfo) {
     //   dispatch({
@@ -43,11 +40,16 @@ export const signUp = ({ username, email, password }) => async (
         let { token } = user;
         createParent({ token, email })
           .then((res) => {
+            // signIn({ username, password });
             login({ username, password })
               .then((userInfo) => {
                 dispatch({
                   type: authConstants.SIGNUP_SUCCESS,
-                  payload: userInfo.token,
+                  payload: userInfo,
+                });
+                dispatch({
+                  type: authConstants.SIGNIN_SUCCESS,
+                  payload: userInfo,
                 });
                 dispatch({
                   type: userConstants.UPDATE_USER,

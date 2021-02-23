@@ -43,7 +43,8 @@ export default function (state = initialState, action) {
     case authConstants.SIGNUP_SUCCESS: {
       return {
         ...state,
-        userToken: payload,
+        userToken: payload.token,
+        user: payload.data,
         isLoading: false,
         isLoggedIn: true,
         isSignInFailed: false,
@@ -52,8 +53,6 @@ export default function (state = initialState, action) {
       };
     }
     case authConstants.SIGNIN_SUCCESS: {
-      console.log('payload: qw1 qw ', payload);
-
       return {
         ...state,
         userToken: payload.token,

@@ -55,7 +55,6 @@ const initialState = {
 
 export default function (state = initialState, action: any) {
   const { type, payload } = action;
-  console.log('🚀 ~ file: family.reducer.ts ~ line 58 ~ payload', payload);
   switch (type) {
     case familySettingsConstants.ADD_FAMILY_SETTINGS_REQUEST: {
       return {
@@ -309,18 +308,11 @@ export default function (state = initialState, action: any) {
       };
     }
     case familySettingsConstants.UPDATE_GUARDIAN_SUCCESS: {
-      console.log(
-        'payloadpayloadpayload',
-        // index,
-        state.guardian.guardians,
-        payload,
-      );
-
       let index = state.guardian.guardians.findIndex(
-        (a: { id: number }) => a.id === payload?.data?.id,
+        (a: { id: number }) => a.id === payload?.id,
       );
 
-      state.guardian.guardians.splice(index, 1, payload.data);
+      state.guardian.guardians.splice(index, 1, payload);
 
       return {
         ...state,

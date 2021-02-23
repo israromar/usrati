@@ -24,8 +24,6 @@ export const AssignTaskContainer = () => {
   let familyID: null = null;
   let parentID: number = 0;
 
-  console.log('DashboardScreen currentState', currentState);
-
   if (currentState?.auth?.user?.familyID) {
     familyID = currentState?.auth?.user?.familyID?.id;
   } else if (currentState?.family?.family?.families.length > 0) {

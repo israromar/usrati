@@ -38,7 +38,7 @@ import { logout } from '../../../store/actions/auth.actions';
 //   Parent(obj: IPropsSignIn): void;
 // }
 
-export const Parent = ({ }): React.ReactElement => {
+export const Parent = ({}): React.ReactElement => {
   const { navigate, ...rest } = useNavigation();
   const dispatch = useDispatch();
 
@@ -102,8 +102,6 @@ export const Parent = ({ }): React.ReactElement => {
       <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
     </TouchableWithoutFeedback>
   );
-
-  console.log('hereeeeeeeee-09-9-09-0');
 
   const onSignOutPress = () => {
     dispatch(logout());

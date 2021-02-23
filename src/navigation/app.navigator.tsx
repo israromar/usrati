@@ -1,6 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 // import { createStackNavigator } from '@react-navigation/stack';
+
 import { AppRoute } from '../navigation/app-routes';
 import {
   ParentStackNavigationData,
@@ -11,22 +12,21 @@ import { DrawerContent } from '../components';
 const { Navigator, Screen } = createDrawerNavigator();
 // const { Navigator, Screen } = createStackNavigator();
 interface IAppNavigator {
-  // user: { child: [{}]; parent: [{}] };
+  user: { child: [{}]; parent: [{}] };
   isFamilyAdded: boolean;
 }
 
 export const AppNavigator = ({
   user,
   isFamilyAdded,
-}: IAppNavigator): React.ReactElement => {
+  navigation,
+}: IAppNavigator) => {
   // let isFamilyAdded = false;
   // if (families?.length > 0 || user?.familyID?.id) {
   //   isFamilyAdded = true;
   // }
 
-  // console.log('useruseruse1231r', user);
-
-  if (user?.parent.length > 0) {
+  if (user?.parent?.length > 0) {
     return (
       <Navigator
         drawerContent={(props) => {
@@ -51,7 +51,7 @@ export const AppNavigator = ({
     );
   }
 
-  if (user?.child.length > 0) {
+  if (user?.child?.length > 0) {
     return (
       <Navigator
         drawerContent={(props) => {
@@ -72,5 +72,7 @@ export const AppNavigator = ({
         ))}
       </Navigator>
     );
+  } else {
+    navigation.navigate(AppRoute.SIGN_UP);
   }
 };

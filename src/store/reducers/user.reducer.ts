@@ -6,7 +6,6 @@ const initialState = {
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log('🚀 ~ file: user.reducer.ts ~ line 9 ~ payload', payload);
   switch (type) {
     case userConstants.UPDATE_USER: {
       return {

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -29,9 +29,6 @@ const AppRootStack = () => {
   } = useSelector((state: IAppRooStack) => {
     return state;
   });
-
-  console.log('2123123families', user);
-
 
   let isFamilyAdded = false;
   if (families?.length > 0 || user?.familyID?.id) {
@@ -66,7 +63,7 @@ const AppRootStack = () => {
   return (
     <NavigationContainer>
       {isLoggedIn && userToken ? (
-        <AppStackNavigator user={user ?? {}} isFamilyAdded={isFamilyAdded} />
+        <AppStackNavigator user={user ?? {}} isFamilyAdded={isFamilyAdded} navigation={useNavigation}/>
       ) : (
           <AuthStackNavigator />
         )}

@@ -18,10 +18,6 @@ export interface ISignIn {
 
 export const MatricSubCategoryContainer = ({ ...rest }) => {
   const [parentMatricId, setParentMatricId] = useState(null);
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 20 ~ MatricSubCategoryContainer ~ rest',
-    rest,
-  );
   const { navigate } = useNavigation();
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);

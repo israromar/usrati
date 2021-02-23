@@ -93,8 +93,6 @@ export const ParentProfile = ({
     }
   };
 
-
-
   const handleAddNewPress = (flag: string) => {
     if (flag === 'family') {
       navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 0, isEdit: false, isAddNew: true, familyData: {} });
@@ -104,9 +102,6 @@ export const ParentProfile = ({
       navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 2, isEdit: false, isAddNew: true, childData: {} });
     }
   };
-
-
-
 
   return (
     <KeyboardAvoidingView style={styles.container}>

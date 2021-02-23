@@ -8,7 +8,6 @@ export const getChildData = ({ childId }: any) => (dispatch: any) => {
 
   getChildInfo({ childId })
     .then((res: any) => {
-      console.log('🚀 ~ file: child.actions.ts ~ line 11 ~ .then ~ res', res);
       dispatch({
         type: childConstants.GET_CHILD_DATA_SUCCESS,
         payload: res?.child,

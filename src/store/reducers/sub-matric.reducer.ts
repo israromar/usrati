@@ -27,8 +27,6 @@ const initialState = {
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log('🚀 ~ file: sub-matric.reducer.ts ~ line 29 ~ payload', payload);
-
   switch (type) {
     case subMatricsConstants.ADD_SUB_MATRIC_REQUEST: {
       return {

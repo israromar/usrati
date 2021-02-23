@@ -188,8 +188,6 @@ export const ChildDashboard = ({
     }
   };
 
-  console.log('asslltasks: ', allTasks);
-
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ImageOverlay
@@ -212,8 +210,6 @@ export const ChildDashboard = ({
             <Collapse
               isCollapsed={isTaskCollapsed}
               onToggle={(isCollapsed: boolean) => {
-                console.log('Press', isCollapsed);
-
                 setIsTaskCollapsed(isCollapsed);
                 setIsChildCollapsed(false);
               }}

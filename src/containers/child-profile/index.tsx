@@ -9,10 +9,6 @@ export interface ISignIn {
 
 export const ChildProfileContainer = () => {
   const navigation = useNavigation();
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 12 ~ ChildProfileContainer ~ navigate',
-    navigation,
-  );
 
   const handlePress = () => {
     // navigation.navigate();

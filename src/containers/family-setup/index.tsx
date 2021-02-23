@@ -37,10 +37,6 @@ export interface IAddChild {
 }
 
 export const FamilySetupContainer = ({ ...rest }) => {
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 31 ~ FamilySetupContainer ~ props',
-    rest,
-  );
   const { navigate, goBack } = useNavigation();
   const dispatch = useDispatch();
   const currentState = useSelector((state) => state);
@@ -82,16 +78,6 @@ export const FamilySetupContainer = ({ ...rest }) => {
     isGuardianPhotoDeleted,
     flag,
   }: IAddGuardian) => {
-    console.log(
-      '123123123123123',
-      id,
-      photo,
-      email,
-      username,
-      password,
-      isGuardianPhotoDeleted,
-      flag,
-    );
     dispatch(
       addGuardian({
         id,
@@ -164,8 +150,6 @@ export const FamilySetupContainer = ({ ...rest }) => {
   const handleGoBack = (): void => {
     goBack();
   };
-
-  console.log('08023480234', currentPosition);
 
   return (
     <FamilySetupScreen

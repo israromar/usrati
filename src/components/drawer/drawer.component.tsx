@@ -37,8 +37,6 @@ const Header = () => {
     user: { userInfo },
     family: { family },
   }: any = useSelector((state) => state);
-  console.log('familyfamilyfamily', family);
-
   return (
     <Layout style={styles.headerWrap}>
       <Layout>

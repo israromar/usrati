@@ -20,9 +20,6 @@ export const ChildDashboardContainer = () => {
   };
 
   let childId: null = null;
-
-  console.log('ChildDashboardScreen currentState', currentState);
-
   if (currentState?.auth?.user?.child) {
     childId = currentState?.auth?.user?.child[0]?.id;
   } else if (currentState?.user?.userInfo?.child[0]) {

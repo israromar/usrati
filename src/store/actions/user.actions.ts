@@ -31,7 +31,6 @@ export const addFamilySettings = ({ familyName, familyId, familyPhoto }) => (
       });
     })
     .catch((error) => {
-      console.log(error);
       dispatch({
         type: familySettingsConstants.ADD_FAMILY_SETTINGS_FAIL,
         payload: error,

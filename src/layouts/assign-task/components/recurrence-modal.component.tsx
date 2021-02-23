@@ -66,7 +66,6 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
     };
 
     const handleChangeOccurence = (nextValue: string) => {
-        console.log('🚀 ~ file: recurrence-modal.component.tsx ~ line 66 ~ handleChangeOccurence ~ nextValue', nextValue);
         setOccurence(nextValue);
         setSelectedIndex(1);
     };
@@ -76,8 +75,6 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
         onDone({ freq, interval, byweekday, ends });
         setModal();
     };
-
-    console.log('selectedIndex123123', selectedIndex);
 
     return (
         <KeyboardAvoidingView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: '#fff' }}>
@@ -102,7 +99,7 @@ export const RecurrenceModal = ({ visible, setModal, onDone }: IRecurrenceModal)
                                     <Picker
                                         style={{
                                             height: 40,
-                                            width: '100%'
+                                            width: '100%',
                                         }}
                                         selectedValue={freq}
                                         mode="dropdown"
@@ -207,9 +204,9 @@ const styles = StyleSheet.create({
     cardInnerWrap: { height: '100%', justifyContent: 'flex-start', alignItems: 'center' },
     title: { alignSelf: 'flex-start', marginBottom: 25 },
     repeatEveryWrap: { width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-    repeatEveryInnerWrap: { flexDirection: 'row', width: '70%', },
+    repeatEveryInnerWrap: { flexDirection: 'row', width: '70%' },
     input: { maxWidth: 100, marginHorizontal: 5, marginTop: 5, backgroundColor: '#f1f3f4', color: '#a4a9ae', borderRadius: 5, borderColor: 'transparent' },
-    picker: { height: 40, },
+    picker: { height: 40 },
     repeatedOnWrap: { width: '100%', justifyContent: 'space-around', alignItems: 'flex-start', marginBottom: 25 },
     repeatedOnTitle: { alignSelf: 'flex-start', marginBottom: 10 },
     daysWrap: { width: '100%', flexDirection: 'row', justifyContent: 'space-between' },

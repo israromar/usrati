@@ -5,7 +5,6 @@ import http from './usrati';
  * @returns {Promise<T | never>}
  */
 export function login(payload) {
-  console.log('🚀 ~ file: api.js ~ line 8 ~ login ~ payload', payload);
   return new Promise((resolve, reject) => {
     http
       .post('user/auth/login', payload)

@@ -16,7 +16,7 @@ export const addFamilySettings = ({
   familyPhoto,
   isFamilyPhotoDeleted: photoDeleted,
   flag,
-}) => (dispatch) => {
+}: any) => (dispatch: any) => {
   dispatch({
     type:
       flag === 'add'
@@ -42,7 +42,6 @@ export const addFamilySettings = ({
 
   addFamily(id, formData, flag)
     .then((res) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 49 ~ .then ~ res', res);
       dispatch({
         type:
           flag === 'add'
@@ -70,9 +69,9 @@ export const addGuardian = ({
   email,
   username,
   password,
-  isGuardianPhotoDeleted: photoDeleted,
+  isGuardianPhotoDeleted,
   flag,
-}) => (dispatch) => {
+}: any) => (dispatch: any) => {
   dispatch({
     type:
       flag === 'add'
@@ -84,7 +83,7 @@ export const addGuardian = ({
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
-  formData.append('photoDelete', photoDeleted);
+  formData.append('photoDelete', isGuardianPhotoDeleted);
 
   if (guardianPhoto) {
     const { uri, type, fileName: name } = guardianPhoto;
@@ -94,17 +93,27 @@ export const addGuardian = ({
       name,
     };
     formData.append('photo', photo);
+  } else {
+    formData.append('photo', '');
   }
 
   // addNewGuardian({ email, username, password })
   addNewGuardian(id, formData, flag)
     .then((res) => {
+      let data = res?.data;
+      // if (isGuardianPhotoDeleted) {
+      //   data = {
+      //     ...res.data,
+      //     photo: '',
+      //   };
+      // }
+
       dispatch({
         type:
           flag === 'add'
             ? familySettingsConstants.ADD_GUARDIAN_SUCCESS
             : familySettingsConstants.UPDATE_GUARDIAN_SUCCESS,
-        payload: flag === 'add' ? res.data : res,
+        payload: flag === 'add' ? res.data : data,
       });
     })
     .catch((error) => {
@@ -120,50 +129,48 @@ export const addGuardian = ({
     });
 };
 
-export const editGuardian = ({
-  parentId,
-  photo: guardianPhoto,
-  email,
-  username,
-  password,
-}) => (dispatch) => {
-  dispatch({
-    type: familySettingsConstants.DELETE_GUARDIAN_REQUEST,
-  });
+// export const editGuardian = ({
+//   parentId,
+//   photo: guardianPhoto,
+//   email,
+//   username,
+//   password,
+// }: any) => (dispatch: any) => {
+//   dispatch({
+//     type: familySettingsConstants.DELETE_GUARDIAN_REQUEST,
+//   });
 
-  var formData = new FormData();
-  formData.append('email', email);
-  formData.append('username', username);
-  formData.append('password', password);
+//   var formData = new FormData();
+//   formData.append('email', email);
+//   formData.append('username', username);
+//   formData.append('password', password);
 
-  if (guardianPhoto) {
-    const { uri, type, fileName: name } = guardianPhoto;
-    var photo = {
-      uri,
-      type,
-      name,
-    };
-    formData.append('photo', photo);
-  }
+//   if (guardianPhoto) {
+//     const { uri, type, fileName: name } = guardianPhoto;
+//     var photo = {
+//       uri,
+//       type,
+//       name,
+//     };
+//     formData.append('photo', photo);
+//   }
 
-  updateGuardianData(parentId, formData)
-    .then((res) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 164 ~ .then ~ res', res);
-      dispatch({
-        type: familySettingsConstants.DELETE_GUARDIAN_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((error) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 171 ~ error', error);
-      dispatch({
-        type: familySettingsConstants.DELETE_GUARDIAN_FAIL,
-        payload: error?.ERROR
-          ? error?.ERROR
-          : 'Something went wrong, please try again.',
-      });
-    });
-};
+//   updateGuardianData(parentId, formData)
+//     .then((res: any) => {
+//       dispatch({
+//         type: familySettingsConstants.DELETE_GUARDIAN_SUCCESS,
+//         payload: res.data,
+//       });
+//     })
+//     .catch((error: any) => {
+//       dispatch({
+//         type: familySettingsConstants.DELETE_GUARDIAN_FAIL,
+//         payload: error?.ERROR
+//           ? error?.ERROR
+//           : 'Something went wrong, please try again.',
+//       });
+//     });
+// };
 
 export const deleteGuardian = ({ parentId }: any) => (dispatch: any) => {
   dispatch({
@@ -195,24 +202,12 @@ export const addChild = ({
   interest,
   username,
   password,
-}) => (dispatch) => {
+}: any) => (dispatch: any) => {
   dispatch({
     type: familySettingsConstants.ADD_CHILD_REQUEST,
   });
 
-  console.log(
-    'addChildaddChild',
-    childPhoto,
-    // childName,
-    // dob,
-    schoolName,
-    interest,
-    // username,
-    // password,
-  );
-
   let bd = dob.toString();
-
   var formData = new FormData();
   formData.append('name', childName);
   formData.append('username', username);
@@ -239,7 +234,6 @@ export const addChild = ({
       });
     })
     .catch((error) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 243 ~ error', error);
       dispatch({
         type: familySettingsConstants.ADD_CHILD_FAIL,
         payload: error?.ERROR
@@ -252,19 +246,19 @@ export const addChild = ({
 export const updateChild = ({
   id,
   photo: childPhoto,
-  childName,
-  dob,
+  // childName,
+  // dob,
   schoolName,
   interest,
-  username,
-  password,
+  // username,
+  // password,
   isChildPhotoDeleted,
-}) => (dispatch) => {
+}: any) => (dispatch: any) => {
   dispatch({
     type: familySettingsConstants.UPDATE_CHILD_REQUEST,
   });
 
-  let bd = dob.toString();
+  // let bd = dob.toString();
 
   var formData = new FormData();
   // formData.append('name', childName);
@@ -276,17 +270,6 @@ export const updateChild = ({
   formData.append('photoDeleted', isChildPhotoDeleted);
 
   if (childPhoto) {
-    console.log(
-      '11111111',
-      id,
-      childPhoto,
-      // childName,
-      // dob,
-      schoolName,
-      interest,
-      // username,
-      // password,
-    );
     const { uri, type, fileName: name } = childPhoto;
     var photo = {
       uri,
@@ -295,30 +278,17 @@ export const updateChild = ({
     };
     formData.append('photo', photo);
   } else {
-    console.log(
-      '22222222',
-      id,
-      childPhoto,
-      // childName,
-      // dob,
-      schoolName,
-      interest,
-      // username,
-      // password,
-    );
     formData.append('photo', '');
   }
 
   updateChildData(id, formData)
     .then((res: any) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 289 ~ .then ~ res', res);
       dispatch({
         type: familySettingsConstants.UPDATE_CHILD_SUCCESS,
         payload: res?.data,
       });
     })
     .catch((error: any) => {
-      console.log('🚀 ~ file: family.actions.ts ~ line 296 ~ error', error);
       dispatch({
         type: familySettingsConstants.UPDATE_CHILD_FAIL,
         payload: error?.ERROR
@@ -340,7 +310,7 @@ export const deleteChild = ({ childId }: any) => (dispatch: any) => {
         payload: { childId },
       });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       dispatch({
         type: familySettingsConstants.DELETE_CHILD_FAIL,
         payload: error?.ERROR

@@ -183,20 +183,14 @@ export const FamilySetup = ({
 
   // use effect to get editable data
   useEffect(() => {
-    console.log('rest?.route?.params?', rest);
-
     setIsEdit(rest?.route?.params?.isEdit);
     setIsAddNew(rest?.route?.params?.isAddNew);
-
     if (rest?.route?.params?.currentPosition) {
       setCurrentPosition(rest?.route?.params?.currentPosition);
     } else if (family?.families?.length === 0) {
       setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
     }
-
     // setCurrentPosition(rest?.route?.params?.currentPosition ?? 0);
-
-
     if (rest?.route?.params?.isAddNew && !isAddChild) {
       //reset child form
       setChildPhoto(null);
@@ -399,7 +393,9 @@ export const FamilySetup = ({
       setIsAddFamily(false);
     }
     if (isAddFamily && !family?.isUpdatingFamily && !family?.isUpdateFamilySuccess && family?.isUpdateFamilyFail) {
-      Alert.alert(family?.updateFamilyError);
+      // Alert.alert(family?.updateFamilyError);
+      Toast.showWithGravity(family?.updateFamilyError, Toast.LONG, Toast.CENTER);
+
       setIsAddFamily(false);
       // setCurrentPosition(0);
       if (!isEdit) {
@@ -412,7 +408,9 @@ export const FamilySetup = ({
       afterSuccessAlert('guardian', 'Guardian successfully added, do you want to add another one?');
     }
     if (isAddGuardian && !guardian?.isAddingGuardian && !guardian?.isAddGuardianSuccess && guardian?.isAddGuardianFail) {
-      Alert.alert(guardian.addGuardianError);
+      // Alert.alert(guardian.addGuardianError);
+      Toast.showWithGravity(guardian?.addGuardianError, Toast.LONG, Toast.CENTER);
+
       setIsAddGuardian(false);
       setCurrentPosition(1);
       if (!isEdit) {
@@ -433,7 +431,9 @@ export const FamilySetup = ({
     }
 
     if (isAddGuardian && !guardian?.isUpdatingGuardian && !guardian?.isUpdateGuardianSuccess && guardian?.isUpdateGuardianFail) {
-      Alert.alert('Updating guardian failed, something went wrong!');
+      // Alert.alert('Updating guardian failed, something went wrong!');
+      Toast.showWithGravity('Updating guardian failed, something went wrong!', Toast.LONG, Toast.CENTER);
+
       // if (!isEdit) {
       //   setCurrentPosition(1);
       // } else {
@@ -466,7 +466,9 @@ export const FamilySetup = ({
     }
 
     if (isAddChild && !child?.isAddingChild && !child?.isAddChildSuccess && child?.isAddChildFail) {
-      Alert.alert(child?.addChildError);
+      // Alert.alert(child?.addChildError);
+        Toast.showWithGravity(child?.addChildError, Toast.LONG, Toast.CENTER);
+
       if (child?.addChildError === 'Username already in use') {
         setChildUsernameError(true);
         setChildUsernameErrorMsg('Username already in use');
