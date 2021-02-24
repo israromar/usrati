@@ -205,12 +205,12 @@ const DrawerContent = ({ navigation }: any) => {
         accessoryRight={ForwardIcon}
         onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
       />
-      <DrawerItem
+      {/* <DrawerItem
         title={i18n.t('drawer.kpis')}
         accessoryLeft={KpiIcon}
         accessoryRight={ForwardIcon}
         // onPress={() => handlePress(AppRoute.MATRIC_CATEGORY)}
-      />
+      /> */}
       <DrawerItem
         title={i18n.t('drawer.assignTask')}
         accessoryLeft={TaskIcon}

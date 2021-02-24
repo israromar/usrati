@@ -35,6 +35,7 @@ import { PlusIcon, MinusIcon, PencilIcon, DeleteIcon } from './extra/icons';
 import constraints from '../../utils/constraints';
 import LoadingComponent from './components/loading/loading.component';
 import { KeyboardAvoidingView } from './extra/3rd-party';
+import i18n from '../../translations';
 
 interface IMatricCategory {
   currentState: {};
@@ -61,7 +62,7 @@ export const MatricCategory = ({
   const [isUpdate, setIsUpdate] = useState(false);
   const [isUpdateMatrics, setIsUpdateMatrics] = useState(false);
   const [isDeleteMatric, setIsDeleteMatric] = useState(false);
-  const [deletedMatricId, setDeletedMatricId] = useState(null);
+  const [deletedMatricId, setDeletedMatricId] = useState<any>(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -549,7 +550,7 @@ export const MatricCategory = ({
               appearance="ghost"
               accessoryLeft={isLoading && LoadingIndicator}
             >
-              {isLoading ? '' : 'Add'}
+              {isLoading ? '' : i18n.t('metricCategories.add')}
             </Button>
           </Layout>
         </ScrollView>
@@ -653,7 +654,7 @@ export const MatricCategory = ({
             size="giant"
             appearance="ghost"
           >
-            Add
+            {i18n.t('metricCategories.add')}
           </Button>
           {isUpdate && (
             <Button
@@ -669,7 +670,7 @@ export const MatricCategory = ({
               disabled={!isUpdate}
               // accessoryLeft={AddIcon}
             >
-              Update
+              {i18n.t('metricCategories.update')}
             </Button>
           )}
         </Layout>
@@ -709,7 +710,10 @@ export const MatricCategory = ({
 
       const sum: number = await weightageSum();
       if (deletedMatricId) {
-        matricsCpy = matricsCpy.filter((m) => m.id !== deletedMatricId);
+        matricsCpy = matricsCpy.filter(
+          (m: { id: number; percentWeightage: any }) =>
+            m.id !== deletedMatricId,
+        );
       }
 
       matricsCpy.map((m) => {
@@ -743,21 +747,23 @@ export const MatricCategory = ({
     setMatricWeightage(weightage.toString());
   };
 
-  const handleDeleteMatric = (matric: {}) => {
+  const handleDeleteMatric = (matric: { id: number; title: string }) => {
     setDeletedMatricId(matric.id);
     Alert.alert(
-      'Warning!',
-      `Are you sure, you want to delete: ${matric?.title}?`,
+      i18n.t('metricCategories.warning'),
+      `${i18n.t('metricCategories.areUouSureYouWantToDelete')}: ${
+        matric?.title
+      }?`,
       [
         {
-          text: 'Confirm',
+          text: i18n.t('metricCategories.confirm'),
           onPress: () => {
             onDeleteMatric({ matricId: matric?.id });
             setIsDeleteMatric(true);
           },
         },
         {
-          text: 'Cancel',
+          text: i18n.t('metricCategories.cancel'),
           // onPress: () => { },
           style: 'cancel',
         },
@@ -790,7 +796,8 @@ export const MatricCategory = ({
                   category="h2"
                   status="control"
                 >
-                  Metric Category
+                  {/* Metric Category */}
+                  {i18n.t('metricCategories.metricCategory')}
                 </Text>
                 <TouchableOpacity style={{ alignContent: 'center' }}>
                   {renderFileUri()}
@@ -824,7 +831,8 @@ export const MatricCategory = ({
                     category="h1"
                     status="control"
                   >
-                    Metric
+                    {/* Metric */}
+                    {i18n.t('metricCategories.metric')}
                   </Text>
                   <Text
                     style={{
@@ -834,7 +842,7 @@ export const MatricCategory = ({
                     category="h2"
                     status="control"
                   >
-                    Categories
+                    {i18n.t('metricCategories.categories')}
                   </Text>
                 </Layout>
                 <Layout
@@ -954,7 +962,6 @@ export const MatricCategory = ({
             </Layout>
           </ScrollView>
         )}
-
         {RenderAddMatricForm()}
         {RenderEditMatricForm()}
         {RenderSubscribtion()}
@@ -963,3 +970,220 @@ export const MatricCategory = ({
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  subscribeWrap: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    marginTop: -200,
+    // minHeight: hp2dp('30%'),
+    width: wp2dp('90%'),
+    margin: 100,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    // zIndex: 10,
+  },
+  actionBtn: {
+    backgroundColor: colors.primaryBlue,
+    borderRadius: 5,
+    borderWidth: 0,
+    width: wp2dp('30%'),
+    height: hp2dp('5%'),
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 20,
+    },
+    shadowOpacity: 2.23,
+    shadowRadius: 4.62,
+    elevation: 10,
+  },
+  smallBtnWrap: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: 'auto',
+    marginRight: 20,
+    marginTop: 15,
+    // top: 5,
+    // backgroundColor: 'red',
+  },
+  photoIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    position: 'absolute',
+    borderColor: colors.primaryBlue,
+    borderWidth: 0.5,
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    bottom: 35,
+    right: 1,
+    zIndex: 2,
+  },
+  icon: { padding: 0, width: 20, height: 20 },
+  smallBtn: {
+    padding: 2,
+    borderRadius: 2,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 11.95,
+
+    elevation: 4,
+  },
+  smallBtnText: {
+    textAlign: 'center',
+    color: 'grey',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  formContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 20,
+    // height: hp2dp('100%'),
+  },
+  primarySubmitButton: {
+    width: wp2dp('85%'),
+    marginTop: 120,
+    borderRadius: 5,
+    backgroundColor: '#6F99EB',
+    fontFamily: 'Verdana',
+    alignSelf: 'center',
+  },
+  indicator: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputField: { marginTop: 10, width: wp2dp('85%') },
+  avatar: {
+    width: 150,
+    height: 150,
+    margin: 8,
+  },
+  matricsWrap: {
+    marginTop: hp2dp('2%'),
+    alignItems: 'center',
+  },
+  matricsInnerWrap: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+  },
+  matricsPercentage: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 0,
+    borderRadius: 10,
+    right: 5,
+    width: wp2dp('15%'),
+    height: hp2dp('8%'),
+
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 0.95,
+
+    elevation: 5,
+  },
+  matricsWeightage: {
+    // borderWidth: 0.5,
+    padding: 5,
+    borderRadius: 5,
+    borderColor: '#606060',
+    color: '#606060',
+    marginVertical: 5,
+
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 0.95,
+
+    elevation: 5,
+  },
+  metrics: {
+    padding: 10,
+    margin: 5,
+    borderColor: 'grey',
+    minHeight: hp2dp('14%'),
+    width: wp2dp('85%'),
+    borderRadius: 10,
+    // backgroundColor: colors.primaryBlue,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  matricsMainBody: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    paddingLeft: 5,
+    paddingBottom: 0,
+    justifyContent: 'space-between',
+  },
+  matricsTitle: {
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+  },
+  headerContainer: {
+    alignItems: 'flex-start',
+    height: hp2dp('35%'),
+    paddingHorizontal: 45,
+    backgroundColor: 'transparent',
+    padding: 10,
+  },
+  headerContainerWrap: {
+    backgroundColor: 'transparent',
+    alignSelf: 'flex-start',
+    // margin: 5,
+  },
+  addMatricHeader: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    minWidth: wp2dp('90%'),
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+  },
+  addMatricWrap: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addMatricText: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+});

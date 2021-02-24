@@ -22,7 +22,9 @@ const appReducer = combineReducers({
 
 export const rootReducer = (state: any, action: { type: string }) => {
   if (action.type === authConstants.LOGOUT) {
-    state = undefined;
+    let lang = { language: {} };
+    lang.language = state.language;
+    state = lang;
   }
   return appReducer(state, action);
 };

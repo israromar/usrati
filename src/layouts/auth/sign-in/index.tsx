@@ -124,7 +124,7 @@ export const SignIn = ({
             value={username.trim()}
             caption={usernameError ? usernameErrorMsg : ''}
             status={usernameError ? 'danger' : 'basic'}
-            placeholder="Username"
+            placeholder={i18n.t('signIn.username')}
             accessoryRight={AtIcon}
             // onChangeText={(nextValue) => handleInput('username', nextValue)}
             onChangeText={(nextValue) =>
@@ -136,7 +136,7 @@ export const SignIn = ({
             value={password.trim()}
             caption={passwordError ? passwordErrorMsg : ''}
             status={passwordError ? 'danger' : 'basic'}
-            placeholder="Password"
+            placeholder={i18n.t('signIn.password')}
             accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
             // onChangeText={(nextValue) => handleInput('password', nextValue)}
@@ -154,11 +154,12 @@ export const SignIn = ({
               appearance="ghost"
               accessoryLeft={auth.isLoading && LoadingIndicator}
             >
-              {auth.isLoading ? '' : 'Sign In'}
+              {auth.isLoading ? '' : i18n.t('signIn.signIn')}
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>
             <Text style={{ color: '#B5AFAF' }}>
+              {' '}
               {i18n.t('signIn.dontHaveAnAccount')}
             </Text>
             <TouchableOpacity onPress={onSignUpButtonPress}>

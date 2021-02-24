@@ -3,22 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
-import {
-  widthPercentageToDP as wp2dp,
-  heightPercentageToDP as hp2dp,
-} from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp2dp} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
 import { ImageOverlay, BodyCard } from '../../components';
 import { ProfileHeader } from './components/profile-header.component';
-// import { BodyCard } from './components/body-elements.component';
 import { KeyboardAvoidingView } from '../auth/welcome/extra/3rd-party';
 import { AppRoute } from '../../navigation/app-routes';
-
-import { UpIcon, AddIcon } from './assets/icons';
+import i18n from '../../translations';
 
 interface IDashboard {
-  currentState: {};
+  currentState: { user: { userInfo: {}},family:{child:{children:[]}}};
   onPress: (v: string) => void;
   getAllChildren: () => void;
   onDeleteGuardian: (v: object) => void;
@@ -35,11 +30,11 @@ export const ParentProfile = ({
   const navigation = useNavigation();
   const [allChildren, setAllChildren] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [renderBodyElements, setRenderBodyElements] = useState([]);
+  const [renderBodyElements, setRenderBodyElements] = useState<{}>([]);
   const [bodyElements] = useState([
-    { id: 1, text: 'Manage Family', icon: 'family-restroom' },
-    { id: 2, text: 'Manage Guardians', icon: 'add-moderator' },
-    { id: 3, text: 'Manage Children', icon: 'child-care' },
+    { id: 1, text: 'manageFamily', icon: 'family-restroom' },
+    { id: 2, text: 'manageGuardians', icon: 'add-moderator' },
+    { id: 3, text: 'manageChildren', icon: 'child-care' },
   ]);
 
   useEffect(() => {
@@ -67,9 +62,9 @@ export const ParentProfile = ({
     let temp = [...bodyElements];
     temp = temp.filter((item) => item.id !== selectedTab);
     setRenderBodyElements(temp);
-  }, [selectedTab]);
+  }, [bodyElements, selectedTab]);
 
-  const handleCardPress = (child: {}) => {
+  const handleCardPress = () => {
     navigation.navigate(AppRoute.CHILD_PROFILE);
   };
 
@@ -77,7 +72,7 @@ export const ParentProfile = ({
     navigation.navigate(AppRoute.FAMILY_SETUP, { currentPosition: 0, isEdit: true, isAddNew: false, familyData });
   };
 
-  const handleGuardianAction = (actionType: string, guardianData: object) => {
+  const handleGuardianAction = (actionType: string, guardianData: {id:number}) => {
     if (actionType === 'delete') {
       onDeleteGuardian({ parentId: guardianData?.id ?? 0 });
     } else {
@@ -85,7 +80,7 @@ export const ParentProfile = ({
     }
   };
 
-  const handleChildAction = (actionType: string, childData: object) => {
+  const handleChildAction = (actionType: string, childData: {id:number}) => {
     if (actionType === 'delete') {
       onDeleteChild({ childId: childData?.id ?? 0 });
     } else {
@@ -116,7 +111,7 @@ export const ParentProfile = ({
           status="info"
           style={styles.headerText}
         >
-          Manage {selectedTab === 1 ? 'Family' : selectedTab === 2 ? 'Guardians' : selectedTab === 3 ? 'Children' : 'Profile'}
+           {i18n.t('parentProfile.manage')} {selectedTab === 1 ? i18n.t('parentProfile.family') : selectedTab === 2 ? i18n.t('parentProfile.guardians') : selectedTab === 3 ? i18n.t('parentProfile.children') : i18n.t('parentProfile.profile')}
         </Text>
       </ImageOverlay>
       <ProfileHeader
@@ -131,7 +126,7 @@ export const ParentProfile = ({
         onEditFamilyPress={handleEditFamilyPress}
       />
 
-      {renderBodyElements.map((item) => {
+      {renderBodyElements.map((item:any) => {
         return <BodyCard key={item.id} currentState={currentState} item={item} onPressItem={handlePressItem} />;
       })}
     </KeyboardAvoidingView >

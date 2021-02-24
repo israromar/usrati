@@ -30,6 +30,7 @@ import { ISignUp as IPropsSignUp } from '../../../containers/sign-up';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Swiper } from '../common/swiper';
 import { constraints } from '../../../utils/constraints';
+import i18n from '../../../translations';
 
 export const LoadingIndicator = (props: any) => (
   <View style={[props.style, styles.indicator]}>
@@ -136,7 +137,7 @@ export const SignUp = ({
             <Image source={require('./assets/backarrow.png')} />
           </TouchableOpacity>
           <Text category="h1" status="control">
-            Sign Up
+            {i18n.t('signUp.signUp')}
           </Text>
         </View>
       </ImageOverlay>
@@ -149,7 +150,7 @@ export const SignUp = ({
             value={username.trim()}
             caption={usernameError ? userNameErrorMsg : ''}
             status={usernameError ? 'danger' : 'basic'}
-            placeholder="username"
+            placeholder={i18n.t('signUp.username')}
             accessoryRight={PersonIcon}
             onChangeText={(nextValue) =>
               handleInput(setUsername, setUsernameError, nextValue)
@@ -160,7 +161,7 @@ export const SignUp = ({
             value={email.trim()}
             caption={emailError ? emailErrorMsg : ''}
             status={emailError ? 'danger' : 'basic'}
-            placeholder="Email"
+            placeholder={i18n.t('signUp.email')}
             accessoryRight={AtIcon}
             onChangeText={(nextValue) =>
               handleInput(setEmail, setEmailError, nextValue)
@@ -171,7 +172,7 @@ export const SignUp = ({
             value={password.trim()}
             caption={passwordError ? passwordErrorMsg : ''}
             status={passwordError ? 'danger' : 'basic'}
-            placeholder="Password"
+            placeholder={i18n.t('signUp.password')}
             accessoryRight={renderIcon}
             secureTextEntry={secureTextEntry}
             onChangeText={(nextValue) =>
@@ -188,13 +189,18 @@ export const SignUp = ({
               appearance="ghost"
               accessoryLeft={auth?.isLoading && LoadingIndicator}
             >
-              {auth.isLoading ? '' : 'Sign Up'}
+              {auth.isLoading ? '' : i18n.t('signUp.signUp')}
             </Button>
           </TouchableOpacity>
           <Layout style={styles.bottomText}>
-            <Text style={{ color: '#B5AFAF' }}>Already have an account? </Text>
+            <Text style={{ color: '#B5AFAF' }}>
+              {' '}
+              {i18n.t('signUp.alreadyHaveAnAccount')}
+            </Text>
             <TouchableOpacity onPress={onSignInButtonPress}>
-              <Text style={{ color: '#6F99EB' }}>Sign In</Text>
+              <Text style={{ color: '#6F99EB' }}>
+                {i18n.t('signUp.signIn')}
+              </Text>
             </TouchableOpacity>
           </Layout>
           <Swiper style={{ marginBottom: 10 }} position={3} />

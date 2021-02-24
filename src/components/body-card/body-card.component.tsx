@@ -12,14 +12,14 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { ArrowForward } from '../icons/icons.component';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { colors } from '../../styles';
+import i18n from '../../translations';
 
 interface IProfileBodyCard {
-  currentState: {};
-  item: { id: number, text: string }
+  item: { id: number, text: string, icon: string}
   onPressItem: (i: number) => void
 }
 
-const BodyCard = ({ currentState, item, onPressItem }: IProfileBodyCard) => {
+const BodyCard = ({ item, onPressItem }: IProfileBodyCard) => {
   return (
     <TouchableWithoutFeedback onPress={() => onPressItem(item.id)}>
       <Layout style={styles.bodyWrap}>
@@ -30,7 +30,7 @@ const BodyCard = ({ currentState, item, onPressItem }: IProfileBodyCard) => {
             status="info"
             style={styles.text}
           >
-            {item.text}
+            {i18n.t(`parentProfile.${item.text}`)}
           </Text>
         </Layout>
         <Layout>

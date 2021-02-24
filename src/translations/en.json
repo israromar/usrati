@@ -14,14 +14,22 @@
         "parent":"Parent",
         "child":"Child"
     },
+    "welcome":{
+        "welcomeTo":"Welcome to"
+    },
     "signIn": {
         "signIn":"Sign In",
         "signUp":"Sign Up",
+        "username":"Username",
+        "password":"Password",
         "dontHaveAnAccount":"Don't have an account?"
     },
     "signUp": {
         "signIn":"Sign In",
         "signUp":"Sign Up",
+        "username":"Username",
+        "email":"Email",
+        "password":"Password",
         "alreadyHaveAnAccount":"Already have an account?"
     },
     "parentDashboard":{
@@ -29,6 +37,34 @@
         "dashboard":"Dashboard",
         "toSeeTheProgress":"To see the progress",
         "selectChild":"Select Child"
+    },
+    "parentProfile":{
+        "manage":"Manage",
+        "profile":"Profile",
+        "family":"Family",
+        "guardians":"Guardians",
+        "children":"Children",
+        "parent":"Parent",
+        "noDataAreAvailable":"No data are available!",
+        "manageFamily":"Manage Family",
+        "manageGuardians":"Manage Guardians",
+        "manageChildren":"Manage Children",
+        "edit":"Edit",
+        "selectGuardian":"Select Guardian",
+        "selectChild":"Select Child",
+        "noFamilyAdded":"No family added",
+        "add":"Add",
+        "loadMore":"Load more"
+    },
+    "metricCategories":{
+        "metric":"Metric",
+        "categories":"Categories",
+        "add":"Add",
+        "update":"Update",
+        "warning":"Warning",
+        "areUouSureYouWantToDelete":"Are you sure, you want to delete",
+        "confirm":"CONFIRM",
+        "cancel":"CANCEL"
     },
     "home": {
         "welcome": "Welcome",

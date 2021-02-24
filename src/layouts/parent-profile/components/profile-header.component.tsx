@@ -11,6 +11,7 @@ import { PencilIcon, DeleteIcon } from '../assets/icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors } from '../../../styles';
 import { UpIcon, AddIcon } from '../assets/icons';
+import i18n from '../../../translations';
 interface IDashboard {
     currentState: {},
     userInfo: {},
@@ -77,7 +78,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                                 color: 'grey',
                             }}
                         >
-                            Parent
+                            {i18n.t('parentProfile.parent')}
                     </Text>
                     </Layout>
                     {selectedTab !== 0 && <TouchableOpacity style={styles.upIcon} onPress={onPressUp}>
@@ -125,7 +126,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                                     appearance="ghost"
                                     onPress={() => onEditFamilyPress(currentState?.family?.family?.families[0])}
                                 >
-                                    Edit
+                                   {i18n.t('parentProfile.edit')}
                                     </Button>
                             </Layout>
                         </> : userInfo?.familyID ?
@@ -143,16 +144,16 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                                         appearance="ghost"
                                         onPress={() => onEditFamilyPress(userInfo?.familyID)}
                                     >
-                                        Edit
+                                        {i18n.t('parentProfile.edit')}
                                 </Button>
                                 </Layout>
                             </> :
                             <>
                                 <Text category="h4" status="info" style={{ color: 'grey', fontWeight: 'bold' }}>
-                                    No Family Added
+                                  {i18n.t('parentProfile.noFamilyAdded')}
                             </Text>
                                 <Button onPress={() => onAddNewPress('family')} style={styles.familyActionButtons} status="control" size="medium" appearance="ghost">
-                                    Add
+                                    {i18n.t('parentProfile.add')}
                            </Button>
                             </>
                     }
@@ -171,7 +172,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             status="control"
                             style={{ color: 'grey', fontWeight: 'bold', marginBottom: 5 }}
                         >
-                            Select Guardian
+                           {i18n.t('parentProfile.selectGuardian')}
                         </Text>
                     )}
                     <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
@@ -190,7 +191,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             ) : (
                                     <Layout style={[styles.noDataWrap]}>
                                         <Text category="h4" status="info" style={styles.noDataText}>
-                                            No data available!
+                                             {i18n.t('parentProfile.noDataAreAvailable')}
                                         </Text>
                                         <TouchableOpacity style={styles.addIcon} onPress={() => onAddNewPress('guardian')}>
                                             <AddIcon />
@@ -211,7 +212,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             size="medium"
                             appearance="ghost"
                         >
-                            Load more
+                            {i18n.t('parentProfile.loadMore')}
                         </Button>
                     )}
                 </Layout>
@@ -229,7 +230,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             status="control"
                             style={{ color: 'grey', fontWeight: 'bold', marginBottom: 5 }}
                         >
-                            Select Child
+                           {i18n.t('parentProfile.selectChild')}
                         </Text>
                     )}
                     <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
@@ -247,7 +248,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             ) : (
                                     <Layout style={styles.noDataWrap}>
                                         <Text category="h4" status="info" style={styles.noDataText}>
-                                            No children data available!
+                                            {i18n.t('parentProfile.noDataAreAvailable')}
                                         </Text>
                                         <TouchableOpacity style={styles.addIcon} onPress={() => onAddNewPress('child')}>
                                             <AddIcon />
@@ -268,7 +269,7 @@ export const ProfileHeader = ({ currentState, userInfo, selectedTab, onPressUp, 
                             size="medium"
                             appearance="ghost"
                         >
-                            Load more
+                           {i18n.t('parentProfile.loadMore')}
                         </Button>
                     )}
                 </Layout>

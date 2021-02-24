@@ -14,14 +14,22 @@
       "parent":"الأبوين",
       "child":"طفل"
   },
+  "welcome":{
+      "welcomeTo":"مرحبا بك في"
+  },
   "signIn": {
     "signIn":"تسجيل الدخول",
     "signUp":"اشتراك",
+    "username":"اسم االمستخدم",
+    "password":"كلمه السر",
     "dontHaveAnAccount":"ليس لديك حساب"
   },
   "signUp": {
     "signIn":"تسجيل الدخول",
     "signUp":"اشتراك",
+    "username":"اسم االمستخدم",
+    "email":"البريد الإلكتروني",
+    "password":"كلمه السر",
     "alreadyHaveAnAccount":"هل لديك حساب"
   },
   "parentDashboard":{
@@ -29,6 +37,34 @@
       "dashboard":"لوحة القيادة",
       "toSeeTheProgress":"لنرى التقدم",
       "selectChild":"اختر الطفل"
+    },
+     "parentProfile":{
+        "manage":"تدبير",
+        "profile":"الملف الشخصي",
+        "family":"الأسرة",
+        "guardians":"الأوصياء",
+        "children":"الأطفال",
+        "parent":"الأبوين",
+        "noDataAreAvailable":"لا توجد بيانات متاحة!",
+        "manageFamily":"إدارة الأسرة",
+        "manageGuardians":"إدارة الأوصياء",
+        "manageChildren":"إدارة الأطفال",
+        "edit":"تعديل",
+        "selectGuardian":"حدد وصي",
+        "selectChild":"اختر الطفل",
+        "noFamilyAdded":"لا عائلة مضافة",
+        "add":"يضيف",
+        "loadMore":"تحميل المزيد"
+    },
+     "metricCategories":{
+        "metric":"قياس",
+        "categories":"التصنيفات",
+        "add":"يضيف",
+        "update":"تحديث",
+        "warning":"تحذير",
+        "areUouSureYouWantToDelete":"هل أنت متأكد أنك تريد حذف",
+        "confirm":"تؤكد",
+        "cancel":"إلغاء"
     },
   "home": {
     "welcome": "أهلاً بالعالم",

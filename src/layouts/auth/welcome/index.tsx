@@ -14,6 +14,7 @@ import { AppRoute } from '../../../navigation/app-routes';
 import { colors, fonts } from '../../../styles';
 
 import { Swiper } from '../common/swiper';
+import i18n from '../../../translations';
 // import { ISignIn as IPropsSignIn } from '../../../containers/sign-in';
 
 // interface ISignIn {
@@ -33,7 +34,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
       >
         <Layout style={styles.headerElements}>
           <Text category="h5" status="control">
-            Welcome To
+            {i18n.t('welcome.welcomeTo')}
           </Text>
           <Text style={styles.title} category="h1" status="control">
             Usrati
@@ -50,7 +51,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
               size="giant"
               appearance="ghost"
             >
-              Sign In
+              {i18n.t('signIn.signIn')}
             </Button>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onButtonPress(AppRoute.SIGN_UP)}>
@@ -60,7 +61,7 @@ export const Welcome = ({ onPress }: any): React.ReactElement => {
               size="giant"
               appearance="ghost"
             >
-              Sign Up
+              {i18n.t('signIn.signUp')}
             </Button>
           </TouchableOpacity>
           <Swiper position={1} />

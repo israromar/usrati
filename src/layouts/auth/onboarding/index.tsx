@@ -35,7 +35,7 @@ export const Onboarding = ({ onPress }: any): React.ReactElement => {
               <Image
                 source={require('../../../assets/images/parent-group.png')}
               />
-              <Text style={styles.innerText} category="h5" status="control">
+              <Text style={[styles.innerText]} category="h5" status="control">
                 {i18n.t('onboarding.parent')}
               </Text>
             </TouchableOpacity>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 64,
     lineHeight: 78,
   },
-  innerText: { alignSelf: 'center', fontWeight: 'bold', top: 5 },
+  innerText: { alignSelf: 'center', fontWeight: 'bold', top: 0 },
   headerContainer: {
     // flex: 1,
     justifyContent: 'center',
