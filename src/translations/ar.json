@@ -36,7 +36,8 @@
       "parent":"الأبوين",
       "dashboard":"لوحة القيادة",
       "toSeeTheProgress":"لنرى التقدم",
-      "selectChild":"اختر الطفل"
+      "selectChild":"اختر الطفل",
+      "noChildrenDataAvailable":"لا توجد بيانات أطفال متاحة!"
     },
      "parentProfile":{
         "manage":"تدبير",

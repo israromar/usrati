@@ -69,9 +69,13 @@ export default function (state = initialState, action) {
       };
     }
     case subMatricsConstants.EDIT_SUB_MATRIC_SUCCESS: {
+      let index = state?.subMatrics.findIndex(
+        (a: { id: number }) => a.id === payload?.id,
+      );
+      state.subMatrics.splice(index, 1, payload);
       return {
         ...state,
-        // subMatrics: [...state.subMatrics, ...state.subMatrics[index][payload]],
+        subMatrics: [...state.subMatrics],
         isEditingSubMatric: false,
         isEditingSubMatricSuccess: true,
         isEditingSubMatricFail: false,

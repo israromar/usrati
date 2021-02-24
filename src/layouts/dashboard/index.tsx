@@ -1,13 +1,12 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { I18nManager, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Layout, Button, Text, Card, Avatar } from '@ui-kitten/components';
 import {
   widthPercentageToDP as wp2dp,
   heightPercentageToDP as hp2dp,
 } from 'react-native-responsive-screen';
-import RNRestart from 'react-native-restart';
 
 import { ImageOverlay } from '../../components';
 import { AppRoute } from '../../navigation/app-routes';
@@ -51,14 +50,6 @@ export const Dashboard = ({
         </Text>
       </>
     );
-  };
-
-  const languageRestart = async () => {
-    //changing language based on what was chosen
-    const aa = await I18nManager.forceRTL(!I18nManager.isRTL);
-    RNRestart.Restart();
-    console.log('🚀 ~ file: index.tsx ~ line 57 ~ languageRestart ~ aa', aa);
-	  // RNRestart.Restart();
   };
 
   return (
@@ -138,8 +129,7 @@ export const Dashboard = ({
                           color: 'grey',
                           fontWeight: 'bold',
                         }}
-                      >
-                        No children data available!
+                      > {i18n.t('parentDashboard.noChildrenDataAvailable')}
                     </Text>
                     </Layout>
                   )}
@@ -153,7 +143,7 @@ export const Dashboard = ({
                   size="medium"
                   appearance="ghost"
                 >
-                  Load more
+                  {i18n.t('parentProfile.loadMore')}
                 </Button>
               </Layout>
             )}

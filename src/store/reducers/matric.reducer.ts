@@ -69,9 +69,13 @@ export default function (state = initialState, action) {
       };
     }
     case matricsConstants.EDIT_MATRIC_SUCCESS: {
+      let index = state?.matrics.findIndex(
+        (a: { id: number }) => a.id === payload?.id,
+      );
+      state.matrics.splice(index, 1, payload);
       return {
         ...state,
-        // matrics: [...state.matrics, ...state.matrics[index][payload]],
+        matrics: [...state.matrics],
         isEditingMatric: false,
         isEditingMatricSuccess: true,
         isEditingMatricFail: false,

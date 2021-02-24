@@ -299,7 +299,7 @@ export const MatricCategory = ({
           matricPhoto,
           matricTitle,
           matricWeightage,
-          matricDescription: matricDescription ?? 'No description provided.',
+          matricDescription: matricDescription ? matricDescription : 'N/A',
         });
       } else if (isEditMatric) {
         onEditMatric({
@@ -307,7 +307,7 @@ export const MatricCategory = ({
           matricPhoto: isPhotoUpdated ? matricPhoto : '',
           matricTitle,
           matricWeightage,
-          matricDescription: matricDescription ?? 'No description provided.',
+          matricDescription: matricDescription ? matricDescription : 'N/A',
         });
       }
       setIsLoading(true);
@@ -599,7 +599,7 @@ export const MatricCategory = ({
 
             <Input
               style={styles.inputField}
-              value={matricDescription.trim()}
+              value={matricDescription}
               caption={matricDescriptionError ? matricDescriptionErrorMsg : ''}
               status={matricDescriptionError ? 'danger' : 'basic'}
               placeholder="Description"

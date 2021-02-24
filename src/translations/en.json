@@ -36,7 +36,8 @@
         "parent":"Parent",
         "dashboard":"Dashboard",
         "toSeeTheProgress":"To see the progress",
-        "selectChild":"Select Child"
+        "selectChild":"Select Child",
+        "noChildrenDataAvailable":"No children data available!"
     },
     "parentProfile":{
         "manage":"Manage",
