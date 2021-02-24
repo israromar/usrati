@@ -118,7 +118,7 @@ const DrawerContent = ({ navigation }: any) => {
         await I18nManager.forceRTL(true);
       }
     }
-    // RNRestart.Restart();
+    RNRestart.Restart();
   };
 
   useEffect(() => {
